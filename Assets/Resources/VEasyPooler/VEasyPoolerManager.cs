@@ -12,6 +12,8 @@ public class VEasyPoolerManager : MonoBehaviour
     // use this, than can changing object`s parents
     // please NOT change whan runtime
     public bool visualizeObjectList = false;
+    
+    public int countOfAll = 0;
 
     [System.Serializable]
     private struct NameCount
@@ -70,13 +72,13 @@ public class VEasyPoolerManager : MonoBehaviour
 
         if (to == TargetObject.ACTIVE_ONLY)
         {
-            count = poolDic[name].activeCount;
-            startIndex = poolDic[name].inActiveCount;
+            count = poolDic[name].ActiveCount;
+            startIndex = poolDic[name].InActiveCount;
         }
         else if (to == TargetObject.INACTIVE_ONLY)
-            count = poolDic[name].inActiveCount;
+            count = poolDic[name].InActiveCount;
         else
-            count = poolDic[name].activeCount + poolDic[name].inActiveCount;
+            count = poolDic[name].ActiveCount + poolDic[name].InActiveCount;
 
         for (int i = startIndex; i < startIndex + count; ++i)
         {
@@ -137,6 +139,25 @@ public class VEasyPoolerManager : MonoBehaviour
         return poolDic[name].GetObjectCountRequest(active);
     }
 
+    public static List<GameObject> RefObjectListAtLayer(LayerManager.LayerNumber number)
+    {
+        List<GameObject> retList = new List<GameObject>();
+
+        var keyColl = poolDic.Keys;
+
+        foreach (string s in keyColl)
+        {
+            if((LayerManager.LayerNumber)poolDic[s].GetModelObject().layer == number)
+            {
+                retList.AddRange(poolDic[s].objectList);
+            }
+        }
+
+        return retList;
+    }
+
+    // get object
+
     public static GameObject GetObjectRequest(string name)
     {
         List<GameObject> list = GetObjectListRequest(name, 1);
@@ -153,7 +174,7 @@ public class VEasyPoolerManager : MonoBehaviour
         return list[0];
     }
 
-    // get list
+    // get object list
 
     public static List<GameObject> GetObjectListRequest(string name, int count)
     {

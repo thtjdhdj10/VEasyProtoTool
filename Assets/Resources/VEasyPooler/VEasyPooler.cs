@@ -8,8 +8,39 @@ public class VEasyPooler : MonoBehaviour
     public string originName;
     public string originTag;
 
-    public int inActiveCount = 0;
-    public int activeCount = 0;
+//    public int inActiveCount = 0;
+
+    int inActiveCount = 0;
+    public int InActiveCount
+    {
+        get
+        {
+            return inActiveCount;
+        }
+        set
+        {
+            int delta = value - inActiveCount;
+            inActiveCount = value;
+
+            VEasyPoolerManager.manager.countOfAll += delta;
+        }
+    }
+
+    int activeCount = 0;
+    public int ActiveCount
+    {
+        get
+        {
+            return activeCount;
+        }
+        set
+        {
+            int delta = value - activeCount;
+            activeCount = value;
+
+            VEasyPoolerManager.manager.countOfAll += delta;
+        }
+    }
 
     private int objectNumber = 0;
 
@@ -95,7 +126,7 @@ public class VEasyPooler : MonoBehaviour
             {
                 state = list[i].AddComponent<ObjectState>();
                 state.IsUse = true;
-                state.indexOfPool = inActiveCount + i;
+                state.indexOfPool = InActiveCount + i;
                 state.originalName = originName;
             }
 
@@ -104,7 +135,7 @@ public class VEasyPooler : MonoBehaviour
                 list[i].transform.parent = gameObject.transform;
         }
 
-        activeCount += list.Count;
+        ActiveCount += list.Count;
 
         objectList.AddRange(list);
     }
@@ -115,7 +146,7 @@ public class VEasyPooler : MonoBehaviour
     {
         ExactlyLog("create inActive " + originName + " * " + count);
 
-        for (int i = inActiveCount; i < inActiveCount + activeCount; ++i)
+        for (int i = InActiveCount; i < InActiveCount + ActiveCount; ++i)
         {
             objectList[i].name = originName + "_" + objectNumber++;
 
@@ -138,7 +169,7 @@ public class VEasyPooler : MonoBehaviour
 
             ObjectState state = obj.GetComponent<ObjectState>();
             state.IsUse = false;
-            state.indexOfPool = inActiveCount + i;
+            state.indexOfPool = InActiveCount + i;
             state.originalName = originName;
 
             obj.name = originName + "_" + objectNumber++;
@@ -148,9 +179,9 @@ public class VEasyPooler : MonoBehaviour
             newObjects.Add(obj);
         }
 
-        objectList.InsertRange(inActiveCount, newObjects);
+        objectList.InsertRange(InActiveCount, newObjects);
 
-        inActiveCount += count;
+        InActiveCount += count;
     }
 
     public List<GameObject> CreateActiveObjectRequset(int count, bool active)
@@ -180,7 +211,7 @@ public class VEasyPooler : MonoBehaviour
             objectList.Add(obj);
         }
 
-        activeCount += count;
+        ActiveCount += count;
 
         return objectList.GetRange(objectList.Count - count, count);
     }
@@ -199,7 +230,7 @@ public class VEasyPooler : MonoBehaviour
     {
         ExactlyLog("get " + originName + " * " + count);
 
-        int needCount = count - inActiveCount;
+        int needCount = count - InActiveCount;
 
         if (needCount > 0)
         {
@@ -210,7 +241,7 @@ public class VEasyPooler : MonoBehaviour
 
             if (countMinusNeed > 0)
             {
-                int startIdx = inActiveCount - countMinusNeed;
+                int startIdx = InActiveCount - countMinusNeed;
 
                 List<GameObject> addList = GetObjectList(startIdx, countMinusNeed, active, pos, rot, scale);
 
@@ -221,7 +252,7 @@ public class VEasyPooler : MonoBehaviour
         }
         else
         {
-            int getIndex = inActiveCount - count;
+            int getIndex = InActiveCount - count;
 
             return GetObjectList(getIndex, count, active, pos, rot, scale);
         }
@@ -229,8 +260,8 @@ public class VEasyPooler : MonoBehaviour
 
     private List<GameObject> GetObjectList(int startIdx, int count, bool active, Vector3 pos, Vector3 rot, Vector3 scale)
     {
-        inActiveCount -= count;
-        activeCount += count;
+        InActiveCount -= count;
+        ActiveCount += count;
 
         for (int i = startIdx; i < startIdx + count; ++i)
         {
@@ -254,8 +285,8 @@ public class VEasyPooler : MonoBehaviour
     public int GetObjectCountRequest(bool active)
     {
         if (active == true)
-            return activeCount;
-        else return inActiveCount;
+            return ActiveCount;
+        else return InActiveCount;
     }
 
     // get finite
@@ -310,7 +341,7 @@ public class VEasyPooler : MonoBehaviour
             releaseObjState.IsUse = false;
 
             int relIdx = releaseObjState.indexOfPool;
-            if(relIdx < inActiveCount || relIdx >= objectList.Count)
+            if(relIdx < InActiveCount || relIdx >= objectList.Count)
             {
                 Debug.LogWarning("release request fail");
                 Debug.LogWarning("\"" + obj[i].name + "\" this object already released");
@@ -318,11 +349,11 @@ public class VEasyPooler : MonoBehaviour
                 return;
             }
 
-            int changeIdx = inActiveCount;
+            int changeIdx = InActiveCount;
             if (changeIdx == relIdx)
             {
-                inActiveCount += 1;
-                activeCount -= 1;
+                InActiveCount += 1;
+                ActiveCount -= 1;
                 continue;
             }
 
@@ -336,8 +367,8 @@ public class VEasyPooler : MonoBehaviour
             releaseObjState.indexOfPool = changeObjState.indexOfPool;
             changeObjState.indexOfPool = tempInt;
 
-            inActiveCount += 1;
-            activeCount -= 1;
+            InActiveCount += 1;
+            ActiveCount -= 1;
         }
     }
 

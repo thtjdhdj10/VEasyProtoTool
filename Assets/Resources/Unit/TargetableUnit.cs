@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TargetableUnit : Unit {
+public class TargetableUnit : MonoBehaviour
+{ 
 
 	// Use this for initialization
 	void Start () {
-	
+//        g.
 	}
 	
 	// Update is called once per frame
