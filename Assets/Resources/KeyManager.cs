@@ -8,27 +8,28 @@ System.Collections.Generic.Dictionary<UnityEngine.KeyCode,
 
 public class KeyManager : MonoBehaviour {
     
-
-    public int keySetNumber = 0;
+    private int keySetNumber = 0;
     private int keySetCount = 0;
 
     public static DicKeyNumber keySettings = new DicKeyNumber();
 
-    // 이하의 코드를 KeyManager 클래스를 만들고, 그 안에 넣기
-    // 
-
     void Update()
     {
-        // 사용중인 key 값으로 dictionary 순회
+        // 사용중인 key 값으로 dictionary 순회.
+        // 유효한 KeyCode 들이 선택되어, Controlable 레이어에 있는 모든 유닛들에게
+        // KeyCode 와 매칭되는 KeyNumber 가 전달된다.
 
         List<GameObject> controlableUnitList =
             VEasyPoolerManager.RefObjectListAtLayer(LayerSetting.StringToMask("Controlable"));
 
+
         if (controlableUnitList != null)
         {
-            for (int i = 0; i < keySettings[keySetNumber].Count; ++i)
+            List<KeyCode> keyCodeList = keySettings[keySetNumber].Keys.ToList();
+
+            for (int i = 0; i < keyCodeList.Count; ++i)
             {
-                KeyCode keyCode = keySettings[keySetNumber].Keys.ToList()[i];
+                KeyCode keyCode = keyCodeList[i];
 
                 if (Input.GetKeyDown(keyCode))
                 {
@@ -37,10 +38,22 @@ public class KeyManager : MonoBehaviour {
                         var controler = controlableUnitList[j].GetComponent<ControlableUnit>();
                         if (controler == null)
                             continue;
+
+                        KeyNumber command = keySettings[keySetNumber][keyCode];
+
+                        controler.ReceiveCommand(command);
                     }
                 }
             }
         }
+    }
+
+    void Start()
+    {
+        // 임시로 V_CODE 에 해당하는 KeySetting 사용
+
+        int number = CreateKeySettings(GetDefaultKeySetting2());
+        SetKeySetting(number);
     }
 
     public enum KeyNumber
@@ -254,11 +267,13 @@ public class KeyManager : MonoBehaviour {
         return ret;
     }
 
-    void CreateKeySettings(Dictionary<KeyCode, KeyNumber> keySet)
+    int CreateKeySettings(Dictionary<KeyCode, KeyNumber> keySet)
     {
         keySettings[keySetCount] = keySet;
 
         keySetCount++;
+
+        return keySetCount - 1;
     }
 
     void EditKeySettings(Dictionary<KeyCode, KeyNumber> keySet, int idx)
