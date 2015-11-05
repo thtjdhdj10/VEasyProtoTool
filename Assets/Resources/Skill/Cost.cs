@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Cost : MonoBehaviour {
 
-    public Player.Relatations costConsumer = Player.Relatations.ME;
+    public Player.Relations costConsumer = Player.Relations.ALLY;
 
     struct TargetCostValue
     {

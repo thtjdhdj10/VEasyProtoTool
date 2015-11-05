@@ -112,7 +112,7 @@ public class Unit : MonoBehaviour
     void SearchEnemy()
     {
         List<GameObject> targetableUnitList =
-            VEasyPoolerManager.RefObjectListAtLayer(LayerManager.LayerNumber.TARGETABLE);
+            VEasyPoolerManager.RefObjectListAtLayer(LayerSetting.StringToMask("Targetable"));
 
         // GetComponent 하기 싫어서 두개의 List 사용
         List<Unit> inRangeRectUnits = new List<Unit>();

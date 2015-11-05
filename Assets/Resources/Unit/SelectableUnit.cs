@@ -26,7 +26,7 @@ public class SelectableUnit : MonoBehaviour {
 
         처음에 주어지는 플레이어 유닛에게 ControlableUnit 컴포넌트를 붙여놓고,
 
-        그 스크립트에 있는 disposable flag 를 false 로 하여 계속 명령할 수 있게 하면 된다.
+        그 스크립트에 있는 continual flag 를 true 로 하여 계속 명령할 수 있게 하면 된다.
 
     */
 
