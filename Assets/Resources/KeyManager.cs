@@ -20,7 +20,7 @@ public class KeyManager : MonoBehaviour {
         // KeyCode 와 매칭되는 KeyNumber 가 전달된다.
 
         List<GameObject> controlableUnitList =
-            VEasyPoolerManager.RefObjectListAtLayer(LayerSetting.StringToMask("Controlable"));
+            VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
 
 
         if (controlableUnitList != null)
