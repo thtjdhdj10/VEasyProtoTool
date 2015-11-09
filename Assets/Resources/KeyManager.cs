@@ -33,7 +33,7 @@ public class KeyManager : MonoBehaviour {
 
                 if (Input.GetKeyDown(keyCode))
                 {
-                    for(int j = 0; j < controlableUnitList.Count; ++j)
+                    for (int j = 0; j < controlableUnitList.Count; ++j)
                     {
                         var controler = controlableUnitList[j].GetComponent<ControlableUnit>();
                         if (controler == null)

@@ -16,7 +16,7 @@ public class ControlableUnit : MonoBehaviour {
 
     public void ReceiveCommand(KeyManager.KeyNumber command)
     {
-        Debug.Log("dd");
+        Debug.Log(gameObject.name + "->" + command);
     }
 
 
