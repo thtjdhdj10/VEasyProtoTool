@@ -14,9 +14,17 @@ public class ControlableUnit : MonoBehaviour {
         layerSetting.layerMask = layerSetting.layerMask | LayerManager.StringToMask("Controlable");
     }
 
-    public void ReceiveCommand(KeyManager.KeyNumber command)
+    void Update()
     {
-        Debug.Log(gameObject.name + "->" + command);
+
+    }
+
+    public void ReceiveCommand(KeyManager.KeyNumber command, KeyManager.KeyPressType type)
+    {
+        if (type == KeyManager.KeyPressType.PRESS)
+            return;
+
+        Debug.Log(gameObject.name + "->" + command + " " + type);
     }
 
 

@@ -145,18 +145,16 @@ public class VEasyPoolerManager : MonoBehaviour
     {
         List<GameObject> retList = new List<GameObject>();
 
-        var keyColl = poolDic.Keys;
-
-        foreach (string s in keyColl)
+        foreach (var key in poolDic.Keys)
         {
-            GameObject obj = poolDic[s].GetModelObject();
+            GameObject obj = poolDic[key].GetModelObject();
             var layerSetting = obj.GetComponent<LayerSetting>();
             if (layerSetting == null)
                 continue;
 
             if (System.Convert.ToBoolean(layerSetting.layerMask & layerMask) == true)
             {
-                retList.AddRange(poolDic[s].objectList);
+                retList.AddRange(poolDic[key].objectList);
             }
         }
 

@@ -13,39 +13,78 @@ public class KeyManager : MonoBehaviour {
 
     public static DicKeyNumber keySettings = new DicKeyNumber();
 
+    //
+
+    private delegate bool GetKeyEachType(KeyCode kc);
+    
+    private Dictionary<KeyPressType, GetKeyEachType> GetKeyFunctions = new Dictionary<KeyPressType, GetKeyEachType>();
+
+    public enum KeyPressType
+    {
+        DOWN = 0,
+        UP,
+        PRESS,
+    }
+
+    private void GetFunctionMatch()
+    {
+        GetKeyFunctions[KeyPressType.DOWN] = Input.GetKeyDown;
+        GetKeyFunctions[KeyPressType.UP] = Input.GetKeyUp;
+        GetKeyFunctions[KeyPressType.PRESS] = Input.GetKey;
+    }
+
+    //
+
+    void Awake()
+    {
+        GetFunctionMatch();
+
+    }
+
     void Update()
     {
-        // 사용중인 key 값으로 dictionary 순회.
-        // 유효한 KeyCode 들이 선택되어, Controlable 레이어에 있는 모든 유닛들에게
-        // KeyCode 와 매칭되는 KeyNumber 가 전달된다.
 
+        GiveCommand();
+
+    }
+
+    // 사용중인 key 값으로 dictionary 순회.
+    // 유효한 KeyCode 들이 선택되어, Controlable 레이어에 있는 모든 유닛들에게
+    // KeyCode 와 매칭되는 KeyNumber 가 전달된다.
+    void GiveCommand()
+    {
         List<GameObject> controlableUnitList =
-            VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
+               VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
 
+        if (controlableUnitList == null)
+            return;
 
-        if (controlableUnitList != null)
+        List<KeyCode> keyCodeList = keySettings[keySetNumber].Keys.ToList();
+
+        for (int i = 0; i < keyCodeList.Count; ++i)
         {
-            List<KeyCode> keyCodeList = keySettings[keySetNumber].Keys.ToList();
-
-            for (int i = 0; i < keyCodeList.Count; ++i)
+            KeyCode keyCode = keyCodeList[i];
+            
+            foreach(KeyPressType type in GetKeyFunctions.Keys)
             {
-                KeyCode keyCode = keyCodeList[i];
+                if (GetKeyFunctions[type](keyCode) == false)
+                    continue;
 
-                if (Input.GetKeyDown(keyCode))
+                for (int j = 0; j < controlableUnitList.Count; ++j)
                 {
-                    for (int j = 0; j < controlableUnitList.Count; ++j)
-                    {
-                        var controler = controlableUnitList[j].GetComponent<ControlableUnit>();
-                        if (controler == null)
-                            continue;
+                    var controler = controlableUnitList[j].GetComponent<ControlableUnit>();
+                    if (controler == null)
+                        continue;
 
-                        KeyNumber command = keySettings[keySetNumber][keyCode];
+                    KeyNumber command = keySettings[keySetNumber][keyCode];
 
-                        controler.ReceiveCommand(command);
-                    }
+                    controler.ReceiveCommand(command, type);
                 }
             }
+
+                
         }
+
     }
 
     void Start()
