@@ -43,7 +43,6 @@ public class KeyManager : MonoBehaviour {
 
     void Update()
     {
-
         GiveCommand();
 
     }
@@ -53,8 +52,16 @@ public class KeyManager : MonoBehaviour {
     // KeyCode 와 매칭되는 KeyNumber 가 전달된다.
     void GiveCommand()
     {
-        List<GameObject> controlableUnitList =
-               VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
+
+        List<GameObject> controlableUnitList = new List<GameObject>();
+
+        ControlableUnit[] unitArr = FindObjectsOfType<ControlableUnit>();
+        for (int i = 0; i < unitArr.Length; ++i)
+        {
+            controlableUnitList.Add(unitArr[i].gameObject);
+        }
+
+//               VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
 
         if (controlableUnitList == null)
             return;
@@ -80,9 +87,7 @@ public class KeyManager : MonoBehaviour {
 
                     controler.ReceiveCommand(command, type);
                 }
-            }
-
-                
+            }  
         }
 
     }

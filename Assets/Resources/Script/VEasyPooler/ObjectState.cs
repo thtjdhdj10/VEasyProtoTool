@@ -78,6 +78,12 @@ public class ObjectState : MonoBehaviour
         {
             gameObject.SetActive(value);
 
+            MonoBehaviour[] c = gameObject.GetComponents<MonoBehaviour>();
+            for(int i = 0; i < c.Length; ++i)
+            {
+                c[i].enabled = value;
+            }
+
             isUse = value;
         }
     }

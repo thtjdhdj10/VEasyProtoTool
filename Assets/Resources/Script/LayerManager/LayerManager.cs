@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 
 public class LayerManager : MonoBehaviour {
+    
+    public const int MaxLayerCount = 32;
 
     void Awake()
     {
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < MaxLayerCount; i++)
         {
             string name = LayerMask.LayerToName(i);
 
@@ -15,7 +17,6 @@ public class LayerManager : MonoBehaviour {
             }
         }
     }
-    
 
     static Dictionary<string, int> layerNameNumber = new Dictionary<string, int>();
 
@@ -150,10 +151,21 @@ public class LayerManager : MonoBehaviour {
         if (layerNameNumber.ContainsKey(str) == false)
         {
             Debug.LogWarning(str + " is unvalid layer name");
-            return 0;
+            return -1;
         }
 
         return NumberToMask(layerNameNumber[str]);
+    }
+
+    static public int StringToNumber(string str)
+    {
+        if (layerNameNumber.ContainsKey(str) == false)
+        {
+            Debug.LogWarning(str + " is unvalid layer name");
+            return -1;
+        }
+
+        return layerNameNumber[str];
     }
 
     static public int NumberToMask(int number)

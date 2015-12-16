@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Skill : MonoBehaviour {
 
-    Requirement req;
+    Condition req;
     Cost cost;
     Effect effect;
 

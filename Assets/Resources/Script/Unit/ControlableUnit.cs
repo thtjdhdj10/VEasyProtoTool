@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 public class ControlableUnit : MonoBehaviour {
     
-    void Awake()
+    void Start()
     {
         var layerSetting = gameObject.GetComponent<LayerSetting>();
         if(layerSetting == null)
         {
             layerSetting = gameObject.AddComponent<LayerSetting>();
         }
-
-        layerSetting.layerMask = layerSetting.layerMask | LayerManager.StringToMask("Controlable");
+        
+        layerSetting.AddLayer("Controlable");
     }
 
     void Update()

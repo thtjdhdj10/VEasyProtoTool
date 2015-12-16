@@ -97,7 +97,7 @@ public class VEasyPooler : MonoBehaviour
 
         if (modelObject == null)
         {
-            Debug.LogError("GameObject instantiate fail");
+            Debug.LogError(modelObject.name + " instantiate fail");
             originName = null;
             return;
         }

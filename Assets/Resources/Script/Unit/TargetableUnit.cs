@@ -3,13 +3,17 @@ using System.Collections;
 
 public class TargetableUnit : MonoBehaviour
 { 
+	void Start ()
+    {
+        var layerSetting = gameObject.GetComponent<LayerSetting>();
+        if (layerSetting == null)
+        {
+            layerSetting = gameObject.AddComponent<LayerSetting>();
+        }
 
-	// Use this for initialization
-	void Start () {
-//        g.
-	}
+        layerSetting.AddLayer("Targetable");
+    }
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}

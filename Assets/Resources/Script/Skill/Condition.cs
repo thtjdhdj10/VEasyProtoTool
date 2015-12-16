@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Requirement : MonoBehaviour {
+public class Condition : MonoBehaviour {
 
     enum Command
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 
 public class Unit : MonoBehaviour
-{ 
-
+{
     public Player.PlayerType unitOwner = Player.PlayerType.ME;
 
     public TargetableUnit targetUnit;
+    
     Vector3 toPosition;
 
     public enum AttackMode
@@ -26,11 +26,7 @@ public class Unit : MonoBehaviour
     {
         public float attackPoint;
         public float defencePoint;
-
-        public float maxHp;
         public float currentHp;
-                 
-        public float maxMp;
         public float currentMp;
     }
 
@@ -43,7 +39,6 @@ public class Unit : MonoBehaviour
         public float searchRange; // default : sight
 
         public float attackDelay;
-        float currentAttackDelay;
     }
 
     public class ExtraAbility
@@ -58,6 +53,8 @@ public class Unit : MonoBehaviour
 
         public float logicalSize;
         public float visualSize;
+
+        public float moveSpeed;
     }
 
     public class LogicalPosition
@@ -67,16 +64,28 @@ public class Unit : MonoBehaviour
         public float height;
     }
 
-    public Ability originalAbility;
-    public Ability currentAbility;
+    public Ability originalAbility = new Ability();
+    public Ability currentAbility = new Ability();
 
-    public AttackAbility originalAttackAbility;
-    public AttackAbility currentAttackAbility;
+    public AttackAbility originalAttackAbility = new AttackAbility();
+    public AttackAbility currentAttackAbility = new AttackAbility();
 
-    public ExtraAbility originalExtraAbility;
-    public ExtraAbility currentExtraAbility;
+    public ExtraAbility originalExtraAbility = new ExtraAbility();
+    public ExtraAbility currentExtraAbility = new ExtraAbility();
 
-    public LogicalPosition logicalPosition;
+    public LogicalPosition logicalPosition = new LogicalPosition();
+
+    public void Init()
+    {
+        currentAbility = originalAbility;
+        currentAttackAbility = originalAttackAbility;
+        currentExtraAbility = originalExtraAbility;
+    }
+
+    public void CompleteInit()
+    {
+        // model object 이용
+    }
 
     //public class TempValue
     //{
@@ -86,6 +95,29 @@ public class Unit : MonoBehaviour
     //public TempValue tempValue;
 
     //
+
+    void Awake()
+    {
+
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        logicalPosition.x = transform.position.x;
+        logicalPosition.y = transform.position.z;
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            SearchEnemy();
+        }
+    }
 
     void AutomaticAttack()
     {
@@ -111,10 +143,19 @@ public class Unit : MonoBehaviour
     // 단, attack start range 를 벗어난 적은 그 차이만큼 importance 를 낮게 책정한다.
     void SearchEnemy()
     {
-        List<GameObject> targetableUnitList =
-            VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Targetable"));
+        if (unitOwner != Player.PlayerType.ME)
+            return;
 
-        // GetComponent 하기 싫어서 두개의 List 사용
+        List<GameObject> targetableUnitList = new List<GameObject>();
+
+        TargetableUnit[] targetArr = FindObjectsOfType<TargetableUnit>();
+        for (int i = 0; i < targetArr.Length; ++i)
+        {
+            targetableUnitList.Add(targetArr[i].gameObject);
+        }
+
+        //            VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Targetable"));
+
         List<Unit> inRangeRectUnits = new List<Unit>();
         List<TargetableUnit> targetList = new List<TargetableUnit>();
 
@@ -125,27 +166,30 @@ public class Unit : MonoBehaviour
             if (target == null)
                 continue;
 
-            var targetUnit = targetableUnitList[i].GetComponent<Unit>();
+            var unit = targetableUnitList[i].GetComponent<Unit>();
 
-            if (targetUnit == null)
+            if (unit == null)
                 continue;
 
-            if (Player.TypeToRelations(targetUnit.unitOwner) == Player.Relations.ENEMY)
+            if (Player.TypeToRelations(unit.unitOwner) == Player.Relations.ENEMY)
             {
-                if (VEasyCalculator.CheckMyRect(logicalPosition, targetUnit.logicalPosition, currentAttackAbility.searchRange))
+                // search 에 따라 대충 계산한 사각형 내에 있는 유닛들을 후보로 둔다.
+                if (VEasyCalculator.CheckMyRect(logicalPosition, unit.logicalPosition, currentAttackAbility.searchRange))
                 {
-                    inRangeRectUnits.Add(targetUnit);
+                    inRangeRectUnits.Add(unit);
                     targetList.Add(target);
                 }
             }
         }
-        
-        if (inRangeRectUnits == null)
+
+        if (inRangeRectUnits.Count == 0)
             return;
-        
+
+        // 후보 내의 유닛을 중요도 순으로 정렬
         inRangeRectUnits.Sort(SortByImportance);
 
         {
+            // 가장 중요한 유닛이 공격 범위 안에 있다면, target 으로 선택
             float distanceSquare = VEasyCalculator.CalcDistanceSquare2D(logicalPosition, inRangeRectUnits[0].logicalPosition);
 
             float searchRangeSquare = currentAttackAbility.searchRange * currentAttackAbility.searchRange;
@@ -157,7 +201,7 @@ public class Unit : MonoBehaviour
         }
         
         float mostImportant = 0f;
-
+        
         for (int i = 1; i < inRangeRectUnits.Count; ++i)
         {
             float distance = VEasyCalculator.CalcDistance2D(logicalPosition, inRangeRectUnits[i].logicalPosition);
@@ -183,21 +227,9 @@ public class Unit : MonoBehaviour
                 // searchRange 밖의 유닛들은 공격 대상에서 제외
             }
         }
-        
-    }
-
-    // Use this for initialization
-    void Start () {
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
-
-
-
+    
     private int SortByImportance(Unit o1, Unit o2)
     {
         if (o1.currentExtraAbility.importance > o2.currentExtraAbility.importance)
