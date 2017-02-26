@@ -86,7 +86,7 @@ public class VEasyPooler : MonoBehaviour
 
         if (prefab == null)
         {
-            Debug.LogWarning("\"" + originName + "\" is unvalid prefab name");
+            Debug.LogError("GameObject Get Request Fail: " + "\"" + originName + "\" is invalid prefab name.");
             originName = null;
             return;
         }
@@ -97,7 +97,7 @@ public class VEasyPooler : MonoBehaviour
 
         if (modelObject == null)
         {
-            Debug.LogError(modelObject.name + " instantiate fail");
+            Debug.LogError(modelObject.name + " instantiate fail.");
             originName = null;
             return;
         }

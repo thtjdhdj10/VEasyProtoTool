@@ -3,14 +3,15 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
+// last update: 2017 02 24
 
 public class VEasyPoolerManager : MonoBehaviour
 {
     public bool useDebugFlow = true;
     public bool getOnResetTransform = true;
 
-    // use this, than can changing object`s parents
-    // please NOT change whan runtime
+    // true: can`t change object`s parents
+    // don`t change at runtime
     public bool visualizeObjectList = false;
     
     public int countOfAll = 0;
@@ -43,7 +44,6 @@ public class VEasyPoolerManager : MonoBehaviour
 
     void Awake()
     {
-
         manager = this;
 
         for (int i = 0; i < poolingFromHierarchy.Count; ++i)
@@ -295,31 +295,27 @@ public class VEasyPoolerManager : MonoBehaviour
     {
         if (obj == null)
         {
-            Debug.LogWarning("release request fail");
+            Debug.LogWarning("release request fail: target is null object.");
             return;
         }
 
         if (obj.Count == 0)
         {
-            Debug.LogWarning("release request fail");
-            Debug.LogWarning("wrong release request");
-            Debug.LogWarning("this list.Count is zero");
+            Debug.LogWarning("release request fail: list.Count is zero.");
             return;
         }
         
         ObjectState state = obj[0].GetComponent<ObjectState>();
         if (state == null)
         {
-            Debug.LogWarning("release request fail");
-            Debug.LogError(obj[0].name + " have not ObjectState script");
+            Debug.LogWarning("release request fail: " + obj[0].name + " don`t have ObjectState script.");
             return;
         }
         
         string name = state.originalName;
         if(IsValidArgs(name) == false)
         {
-            Debug.LogWarning("release request fail");
-            Debug.LogError("\"" + name + "\" is unvalid key");
+            Debug.LogWarning("release request fail: " + "\"" + name + "\" is invalid key.");
             return;
         }
 
@@ -442,7 +438,7 @@ public class VEasyPoolerManager : MonoBehaviour
     {
         if (count < 0)
         {
-            Debug.LogWarning(count + " this objectCount is too little");
+            Debug.LogWarning(count + " is invalid Object count.");
             return false;
         }
         return true;
@@ -452,7 +448,7 @@ public class VEasyPoolerManager : MonoBehaviour
     {
         if (lifeTime < 0.0f)
         {
-            Debug.LogWarning(lifeTime + " this lifeTime is too little");
+            Debug.LogWarning(lifeTime + " is invalid Object lifetime.");
             return false;
         }
         return true;

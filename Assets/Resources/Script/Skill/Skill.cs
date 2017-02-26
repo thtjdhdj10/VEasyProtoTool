@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Skill : MonoBehaviour {
 
-    Condition req;
-    Cost cost;
-    Effect effect;
+    SkillCondition req;
+    SkillCost cost;
+    SkillEffect effect;
 
 	// Use this for initialization
 	void Start () {
