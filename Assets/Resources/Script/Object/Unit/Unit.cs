@@ -11,6 +11,9 @@ using System.Collections.Generic;
 
 public class Unit : MyObject
 {
+    public float hp;
+    public float currentHp;
+
     public bool unitActive = true;
 
     public static List<Unit> unitList = new List<Unit>();

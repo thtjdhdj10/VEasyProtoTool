@@ -9,6 +9,11 @@ public class Attackable : Operable
 
     public float range;
 
+    public float damage;
+
+    public float attackDelay;
+    public float currentAttackDelay;
+
     public static List<Attackable> attackableList = new List<Attackable>();
 
     protected virtual void Awake()
@@ -26,6 +31,39 @@ public class Attackable : Operable
     void Start()
     {
         target = GetTarget();
+    }
+
+    public virtual void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    void FixedUpdate()
+    {
+        if (AttackDelayCheck() == true)
+        {
+            Shoot();
+        }
+    }
+
+    protected virtual void Shoot()
+    {
+
+    }
+
+    bool AttackDelayCheck()
+    {
+        if (currentAttackDelay > 0f)
+        {
+            currentAttackDelay -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            currentAttackDelay = attackDelay;
+            return true;
+        }
+
+        return false;
     }
 
     public Unit GetTarget()
