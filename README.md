@@ -17,7 +17,7 @@ Unity 는 Unreal과 달리 퍼포먼스보단 생산성에 맞춰져 있기에, 
   또한 Component, Inspector 같은 빠르게 접근할 수 있는 장치를 적극적으로 활용하여, 보다 쉽게 프로토타이핑할 수 있는 환경을 구성할 것이다.
 
 
-## 구성 요소
+## 구성
 ### Trigger
   복수의 Condition 과 Action 을 가지고 있는 조건부 실행 컴포넌트. 종류에 따라 n frame 마다, 혹은 후술할 Operable 을 통해 이벤트를 받으면 Condition 이 성립하는지 확인하고, 통과하면 Action 들을 수행한다.
   
