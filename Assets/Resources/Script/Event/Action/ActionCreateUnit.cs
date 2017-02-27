@@ -7,7 +7,7 @@ public class ActionCreateUnit : Action
     public Unit target;
     public Vector2 pos;
 
-    public override void Activate()
+    public override void Activate(Trigger trigger)
     {
         VEasyPoolerManager.GetModifiedObjectRequest(target.name, pos);
     }

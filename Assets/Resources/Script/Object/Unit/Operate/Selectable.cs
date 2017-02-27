@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class Selectable : Operable
 {
+    // Select 를 따로 기능으로 구현하는 것이 나을듯.
     public static List<Selectable> selectableList = new List<Selectable>();
 
     protected virtual void Awake()

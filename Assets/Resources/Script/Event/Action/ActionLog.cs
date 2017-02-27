@@ -6,7 +6,7 @@ public class ActionLog : Action
 {
     public string text;
 
-    public override void Activate()
+    public override void Activate(Trigger trigger)
     {
         Debug.Log(text);
     }

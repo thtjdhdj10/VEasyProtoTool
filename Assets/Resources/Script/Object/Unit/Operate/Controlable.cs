@@ -22,6 +22,7 @@ public class Controlable : Operable
     public virtual void ReceiveCommand(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType)
     {
         TriggerForKeyInput.UnitEventReceive(owner, command, pressType);
+        TriggerForKeyInputs.UnitEventReceive(owner, command, pressType);
     }
 
     //

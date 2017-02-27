@@ -50,7 +50,7 @@ public class Trigger : MonoBehaviour
 
         for (int i = 0; i < actionList.Count;++i )
         {
-            actionList[i].Activate();
+            actionList[i].Activate(this);
 
             if (isDiposableAction == true)
                 Destroy(this);

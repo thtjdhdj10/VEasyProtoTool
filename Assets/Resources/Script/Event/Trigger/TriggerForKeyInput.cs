@@ -9,6 +9,8 @@ using CmdTypeObject = System.Collections.Generic.KeyValuePair<
     System.Collections.Generic.KeyValuePair<KeyManager.KeyCommand,
     KeyManager.KeyPressType>, MyObject>;
 
+// TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
+
 public class TriggerForKeyInput : Trigger
 {
     static Dictionary<CmdTypeObject, TriggerForKeyInput> unitTriggerBindingDic

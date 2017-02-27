@@ -60,11 +60,8 @@ public class Movable : Operable
         {
             case BounceType.BOUNCE_WALL_TARGET:
                 {
-                    if (VEasyCalculator.CheckTerritory(owner) != GameManager.Direction.NONE)
-                    {
-                        float dirToTarget = VEasyCalculator.GetDirection(owner, target);
-                        direction = dirToTarget;
-                    }
+                    float dirToTarget = VEasyCalculator.GetDirection(owner, target);
+                    direction = dirToTarget;
                 }
                 break;
             case BounceType.BOUNCE_WALL_REVERSE:
