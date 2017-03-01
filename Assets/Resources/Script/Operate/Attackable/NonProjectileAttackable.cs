@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public class NonProjectileAttackable : Attackable
 {
-
-
-
     protected override void Shoot()
     {
         if(target == null)
@@ -13,7 +10,12 @@ public class NonProjectileAttackable : Attackable
             return;
         }
 
-        target.currentHp -= damage;
+        if(target.unitStatus == null)
+        {
+            return;
+        }
+
+        target.unitStatus.CurrentHp -= damage;
 
     }
 }

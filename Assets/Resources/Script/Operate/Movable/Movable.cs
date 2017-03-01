@@ -102,10 +102,10 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_TARGET:
                 {
-                    Hittable hittable = (Hittable)owner.GetOperable(typeof(Hittable));
-                    if (hittable != null)
+                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    if (col != null)
                     {
-                        Unit colUnit = hittable.FirstCollisionCheck(Unit.Relation.ALL).owner;
+                        Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
 
                         if (colUnit != null)
                         {
@@ -117,10 +117,10 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_REVERSE:
                 {
-                    Hittable hittable = (Hittable)owner.GetOperable(typeof(Hittable));
-                    if (hittable != null)
+                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    if (col != null)
                     {
-                        Unit colUnit = hittable.FirstCollisionCheck(Unit.Relation.ALL).owner;
+                        Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
 
                         if (colUnit != null)
                         {
@@ -132,10 +132,10 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_TARGET:
                 {
-                    Hittable hittable = (Hittable)owner.GetOperable(typeof(Hittable));
-                    if (hittable != null)
+                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    if (col != null)
                     {
-                        Unit colUnit = hittable.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
+                        Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
 
                         if (colUnit != null)
                         {
@@ -147,10 +147,10 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_REVERSE:
                 {
-                    Hittable hittable = (Hittable)owner.GetOperable(typeof(Hittable));
-                    if (hittable != null)
+                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    if (col != null)
                     {
-                        Unit colUnit = hittable.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
+                        Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
 
                         if (colUnit != null)
                         {

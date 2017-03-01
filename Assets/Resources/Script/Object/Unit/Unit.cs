@@ -11,8 +11,7 @@ using System.Collections.Generic;
 
 public class Unit : MyObject
 {
-    public float hp;
-    public float currentHp;
+    public UnitStatus unitStatus;
 
     public bool unitActive = true;
 
@@ -32,8 +31,6 @@ public class Unit : MyObject
     public float colCircle;
 
     public Vector2 colRect;
-
-    public List<SpriteRenderer> spriteList = new List<SpriteRenderer>();
 
     public Force force = Force.NONE;
 
@@ -69,6 +66,8 @@ public class Unit : MyObject
     protected virtual void Awake()
     {
         TriggerForUnits.UnitEventReceive(this, TriggerForUnits.Type.CREATE_UNIT);
+
+        Init();
     }
 
     protected virtual void Start()

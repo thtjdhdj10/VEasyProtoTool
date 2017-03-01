@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+// TODO: 동맹관계를 따져서 공격하도록 수정
+
 public class Attackable : Operable
 {
     public Unit owner;

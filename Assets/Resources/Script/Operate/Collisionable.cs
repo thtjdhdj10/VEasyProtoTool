@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Hittable : Operable
+public class Collisionable : Operable
 {
     public Unit owner;
 
-    public static List<Hittable> hittableList = new List<Hittable>();
+    public static List<Collisionable> collisionableList = new List<Collisionable>();
 
     protected virtual void Awake()
     {
         owner = GetComponent<Unit>();
 
-        hittableList.Add(this);
+        collisionableList.Add(this);
     }
 
     protected virtual void OnDestroy()
     {
-        hittableList.Remove(this);
+        collisionableList.Remove(this);
     }
 
     public List<Unit.Relation> checkForce = new List<Unit.Relation>();
@@ -24,6 +24,11 @@ public class Hittable : Operable
     protected virtual void Hit(Unit behitter)
     {
         TriggerForCollisions.UnitEventReceive(owner, behitter);
+    }
+
+    protected virtual void BeHit(Unit hitter)
+    {
+        TriggerForCollisions.UnitEventReceive(hitter, owner);
     }
 
     protected virtual void FixedUpdate()
@@ -36,7 +41,7 @@ public class Hittable : Operable
         if (owner.unitActive == false)
             return;
 
-        List<BeHittable> colTargetList = CollisionCheck();
+        List<Collisionable> colTargetList = CollisionCheck();
         if (colTargetList == null)
             return;
 
@@ -47,9 +52,9 @@ public class Hittable : Operable
         }
     }
 
-    public virtual BeHittable FirstCollisionCheck(Unit.Relation targetRelation)
+    public virtual Collisionable FirstCollisionCheck(Unit.Relation targetRelation)
     {
-        List<BeHittable> colTargetLit = CollisionCheck(targetRelation);
+        List<Collisionable> colTargetLit = CollisionCheck(targetRelation);
 
         if (colTargetLit == null)
             return null;
@@ -57,18 +62,18 @@ public class Hittable : Operable
         return colTargetLit[0];
     }
 
-    public virtual List<BeHittable> CollisionCheck()
+    public virtual List<Collisionable> CollisionCheck()
     {
         return CollisionCheck(Unit.Relation.ENEMY);
     }
 
-    public virtual List<BeHittable> CollisionCheck(Unit.Relation targetRelation)
+    public virtual List<Collisionable> CollisionCheck(Unit.Relation targetRelation)
     {
-        List<BeHittable> ret = new List<BeHittable>();
+        List<Collisionable> ret = new List<Collisionable>();
 
-        for (int i = 0; i < BeHittable.behittableList.Count; ++i)
+        for (int i = 0; i < Collisionable.collisionableList.Count; ++i)
         {
-            BeHittable target = BeHittable.behittableList[i];
+            Collisionable target = Collisionable.collisionableList[i];
 
             if (target == null)
                 continue;
@@ -94,7 +99,7 @@ public class Hittable : Operable
         return null;
     }
 
-    public virtual bool CollisionCheck(BeHittable target)
+    public virtual bool CollisionCheck(Collisionable target)
     {
         return VEasyCalculator.IntersectCheck(owner, target.owner);
     }
