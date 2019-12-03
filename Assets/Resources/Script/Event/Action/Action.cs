@@ -2,17 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Action
+public abstract class Action
 {
     public virtual void Init()
     {
 
     }
 
-    public virtual void Activate(Trigger trigger)
-    {
-
-    }
+    public abstract void Activate(Trigger trigger);
 
 
 }

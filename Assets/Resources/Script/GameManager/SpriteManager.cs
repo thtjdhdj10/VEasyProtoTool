@@ -124,7 +124,7 @@ public class SpriteManager : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("Load Sprite Count: " + countLoadSprite);
+        Debug.Log("Load Sprite Count: " + countLoadSprite);
     }
 
     public static void SetSpriteCycleTime(ref SpriteAttribute sa, float time)
