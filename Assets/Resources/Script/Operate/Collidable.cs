@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Collisionable : Operable
+public class Collidable : Operable
 {
     public Unit owner;
 
-    public static List<Collisionable> collisionableList = new List<Collisionable>();
+    public static List<Collidable> collisionableList = new List<Collidable>();
 
     protected virtual void Awake()
     {
@@ -21,14 +21,9 @@ public class Collisionable : Operable
 
     public List<Unit.Relation> checkForce = new List<Unit.Relation>();
 
-    protected virtual void Hit(Unit behitter)
+    protected virtual void Hit(Unit target)
     {
-        TriggerForCollisions.UnitEventReceive(owner, behitter);
-    }
-
-    protected virtual void BeHit(Unit hitter)
-    {
-        TriggerForCollisions.UnitEventReceive(hitter, owner);
+        TriggerCollision.UnitEventReceive(owner, target);
     }
 
     protected virtual void FixedUpdate()
@@ -41,39 +36,38 @@ public class Collisionable : Operable
         if (owner.unitActive == false)
             return;
 
-        List<Collisionable> colTargetList = CollisionCheck();
+        List<Collidable> colTargetList = CollisionCheck();
         if (colTargetList == null)
             return;
 
         for (int i = 0; i < colTargetList.Count; ++i)
         {
             Hit(colTargetList[i].owner);
-            colTargetList[i].BeHit(owner);
         }
     }
 
-    public virtual Collisionable FirstCollisionCheck(Unit.Relation targetRelation)
+    public virtual Collidable FirstCollisionCheck(Unit.Relation targetRelation)
     {
-        List<Collisionable> colTargetLit = CollisionCheck(targetRelation);
+        List<Collidable> colTargetList = CollisionCheck(targetRelation);
 
-        if (colTargetLit == null)
+        if (colTargetList == null)
             return null;
 
-        return colTargetLit[0];
+        return colTargetList[0];
     }
 
-    public virtual List<Collisionable> CollisionCheck()
+    public virtual List<Collidable> CollisionCheck()
     {
         return CollisionCheck(Unit.Relation.ENEMY);
     }
 
-    public virtual List<Collisionable> CollisionCheck(Unit.Relation targetRelation)
+    public virtual List<Collidable> CollisionCheck(Unit.Relation targetRelation)
     {
-        List<Collisionable> ret = new List<Collisionable>();
+        List<Collidable> ret = new List<Collidable>();
 
-        for (int i = 0; i < Collisionable.collisionableList.Count; ++i)
+        for (int i = 0; i < Collidable.collisionableList.Count; ++i)
         {
-            Collisionable target = Collisionable.collisionableList[i];
+            Collidable target = Collidable.collisionableList[i];
 
             if (target == null)
                 continue;
@@ -86,20 +80,16 @@ public class Collisionable : Operable
 
             Unit.Relation relation = Unit.GetRelation(owner.force, target.owner.force);
             if (targetRelation != relation)
-            {
                 continue;
-            }
 
             if (CollisionCheck(target) == true)
-            {
                 ret.Add(target);
-            }
         }
 
         return null;
     }
 
-    public virtual bool CollisionCheck(Collisionable target)
+    public virtual bool CollisionCheck(Collidable target)
     {
         return VEasyCalculator.IntersectCheck(owner, target.owner);
     }

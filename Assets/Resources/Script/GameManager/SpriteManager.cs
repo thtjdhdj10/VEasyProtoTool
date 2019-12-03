@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+// TODO
+// Awake 가 아니라 에디터 이용해서 하도록 수정
+
 using TypeSpriteDictionary =
 System.Collections.Generic.Dictionary<string,
 System.Collections.Generic.Dictionary<string,
@@ -121,7 +124,7 @@ public class SpriteManager : MonoBehaviour
             }
         }
 
-        CustomLog.CompleteLog("Load Sprite Count: " + countLoadSprite);
+        Debug.LogWarning("Load Sprite Count: " + countLoadSprite);
     }
 
     public static void SetSpriteCycleTime(ref SpriteAttribute sa, float time)

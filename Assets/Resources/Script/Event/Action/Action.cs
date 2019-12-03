@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class Action
 {
+    public virtual void Init()
+    {
+
+    }
 
     public virtual void Activate(Trigger trigger)
     {

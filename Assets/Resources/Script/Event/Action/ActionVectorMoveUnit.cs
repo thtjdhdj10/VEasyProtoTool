@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// TriggerKeyInputs 로만 활용이 가능한 액션
 public class ActionVectorMoveUnit : Action
 {
     public float speed;
@@ -28,12 +29,10 @@ public class ActionVectorMoveUnit : Action
 
     public override void Activate(Trigger trigger)
     {
-        if (trigger.GetType() != typeof(TriggerForKeyInputs))
-        {
+        if (trigger.GetType() != typeof(TriggerKeyInputs))
             return;
-        }
 
-        TriggerForKeyInputs triggerKeyInputs = (TriggerForKeyInputs)trigger;
+        TriggerKeyInputs triggerKeyInputs = (TriggerKeyInputs)trigger;
 
         UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
 

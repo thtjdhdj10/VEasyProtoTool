@@ -10,39 +10,37 @@ using System.Collections.Generic;
 // 하지만 둘이 커플링되는 문제
 
 // 특정 종류의 유닛들을 대상으로 하는 Trigger
-public class TriggerForUnits : Trigger
+public class TriggerUnits : Trigger
 {
-    static Dictionary<System.Type, TriggerForUnits> unitTriggerBindingDic
-        = new Dictionary<System.Type, TriggerForUnits>();
+    public TriggerUnits(Unit _owner)
+        : base(_owner) { }
+
+    static Dictionary<System.Type, TriggerUnits> unitTriggerDic
+        = new Dictionary<System.Type, TriggerUnits>();
 
     // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(Unit unit, TriggerForUnits.Type type)
+    public static void UnitEventReceive(Unit unit, TriggerType type)
     {
-        if (unitTriggerBindingDic.ContainsKey(unit.GetType()) == true)
-        {
-            if (type == unitTriggerBindingDic[unit.GetType()].type)
-            {
-                unitTriggerBindingDic[unit.GetType()].ActivateTrigger();
-            }
-        }
+        if (unitTriggerDic.ContainsKey(unit.GetType()) == true)
+            if (type == unitTriggerDic[unit.GetType()].type)
+                unitTriggerDic[unit.GetType()].ActivateTrigger();
     }
 
     //
-    public Type type;
+    public TriggerType type;
 
     public Unit target;
 
-    public enum Type
+    public enum TriggerType
     {
         NONE = 0,
         CREATE_UNIT,
         INIT_UNIT,
         DESTROY_UNIT,
-//        DELETE_UNIT,
     }
 
     public void Init(bool _isDisposableTrigger, bool _isDiposableAction, bool _isWork,
-        Type _type, Unit _target)
+        TriggerType _type, Unit _target)
     {
         Init(_isDisposableTrigger, _isDiposableAction, _isWork);
 
@@ -53,33 +51,29 @@ public class TriggerForUnits : Trigger
     public override void RefreshTriggerAttribute()
     {
         System.Type prevKey;
-        if (VEasyCalculator.TryGetKey<System.Type, TriggerForUnits>
-            (unitTriggerBindingDic, this, out prevKey) == false)
-        {
+        if (VEasyCalculator.TryGetKey(unitTriggerDic, this, out prevKey) == false)
             return;
-        }
 
         System.Type targetType = target.GetType();
 
-        VEasyCalculator.ChangeKey<System.Type, TriggerForUnits>(
-            unitTriggerBindingDic, prevKey, targetType);
+        VEasyCalculator.ChangeKey(unitTriggerDic, prevKey, targetType);
     }
 
     void Start()
     {
-        if(type == Type.NONE)
+        if(type == TriggerType.NONE)
         {
-            CustomLog.CompleteLogWarning(this.name + ": type is not set.");
+            Debug.LogWarning(this.ToString() + ": type is not set.");
             return;
         }
 
         if(target == null)
         {
-            CustomLog.CompleteLogWarning(this.name + ": target unit is not set.");
+            Debug.LogWarning(this.ToString() + ": target unit is not set.");
             return;
         }
 
-        unitTriggerBindingDic.Add(target.GetType(), this);
+        unitTriggerDic.Add(target.GetType(), this);
     }
 
 }

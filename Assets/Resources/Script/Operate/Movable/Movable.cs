@@ -102,7 +102,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_TARGET:
                 {
-                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
@@ -117,7 +117,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_REVERSE:
                 {
-                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
@@ -132,7 +132,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_TARGET:
                 {
-                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
@@ -147,7 +147,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_REVERSE:
                 {
-                    Collisionable col = (Collisionable)owner.GetOperable(typeof(Collisionable));
+                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;

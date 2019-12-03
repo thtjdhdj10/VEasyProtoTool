@@ -11,12 +11,12 @@ using CmdTypeObject = System.Collections.Generic.KeyValuePair<
 
 // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
 
-public class TriggerForKeyInput : Trigger
+public class TriggerKeyInput : Trigger
 {
-    static Dictionary<CmdTypeObject, TriggerForKeyInput> unitTriggerBindingDic
-        = new Dictionary<CmdTypeObject, TriggerForKeyInput>();
+    static Dictionary<CmdTypeObject, TriggerKeyInput> unitTriggerBindingDic
+        = new Dictionary<CmdTypeObject, TriggerKeyInput>();
 
-    // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
+    // Controlable 에서 호출하여 Trigger 를 작동시키는 방식.
     public static void UnitEventReceive(
         MyObject obj, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
     {
@@ -41,21 +41,6 @@ public class TriggerForKeyInput : Trigger
         target = _target;
         command = _command;
         pressType = _pressType;
-    }
-
-    public override void RefreshTriggerAttribute()
-    {
-        CmdTypeObject prevKey;
-        if(VEasyCalculator.TryGetKey<CmdTypeObject, TriggerForKeyInput>
-            (unitTriggerBindingDic, this, out prevKey) == false)
-        {
-            return;
-        }
-
-        CmdType ct = new CmdType(command, pressType);
-        CmdTypeObject cto = new CmdTypeObject(ct, target);
-
-        VEasyCalculator.ChangeKey<CmdTypeObject, TriggerForKeyInput>(unitTriggerBindingDic, prevKey, cto);
     }
 
     void Start()

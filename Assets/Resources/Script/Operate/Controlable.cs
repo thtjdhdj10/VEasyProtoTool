@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Controlable : Operable
 {
-    public MyObject owner;
+    private MyObject owner;
 
     public static List<Controlable> controlableList = new List<Controlable>();
 
@@ -21,8 +21,8 @@ public class Controlable : Operable
 
     public virtual void ReceiveCommand(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType)
     {
-        TriggerForKeyInput.UnitEventReceive(owner, command, pressType);
-        TriggerForKeyInputs.UnitEventReceive(owner, command, pressType);
+        TriggerKeyInput.UnitEventReceive(owner, command, pressType);
+        TriggerKeyInputs.UnitEventReceive(owner, command, pressType);
     }
 
     //

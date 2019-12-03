@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TriggerForTime : Trigger
+public class TriggerTime : Trigger
 {
     public float time;
 
-    public Type type;
+    public TriggerType type;
 
-    public enum Type
+    public enum TriggerType
     {
         NONE = 0,
         STATIC_TIMER,
@@ -16,7 +16,7 @@ public class TriggerForTime : Trigger
     }
 
     public void Init(bool _isDisposableTrigger, bool _isDiposableAction, bool _isWork,
-        Type _type, float _time)
+        TriggerType _type, float _time)
     {
         Init(_isDisposableTrigger, _isDiposableAction, _isWork);
 
@@ -26,26 +26,26 @@ public class TriggerForTime : Trigger
 
     void Start()
     {
-        if (type == Type.NONE)
+        if (type == TriggerType.NONE)
         {
-            CustomLog.CompleteLogWarning(this.name + ": type is not set.");
+            Debug.LogWarning(this.name + ": type is not set.");
             return;
         }
 
         if(time <= 0f)
         {
-            CustomLog.CompleteLogWarning(this.name + ": " + time + "f is invalid time set.");
+            Debug.LogWarning(this.name + ": " + time + "f is invalid time set.");
             return;
         }
 
         switch(type)
         {
-            case Type.STATIC_TIMER:
+            case TriggerType.STATIC_TIMER:
                 {
                     StartCoroutine(ActivateStaticTime());
                 }
                 break;
-            case Type.DYNAMIC_TIMER:
+            case TriggerType.DYNAMIC_TIMER:
                 {
                     StartCoroutine(ActivateDynamicTime());
                 }

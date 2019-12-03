@@ -66,7 +66,7 @@ public class CustomRandGen
             }
         }
 
-        CustomLog.CompleteLogError("Assert");
+        Debug.LogWarning("Assert");
 
         return 0;
     }

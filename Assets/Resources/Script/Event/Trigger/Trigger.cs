@@ -2,62 +2,47 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Trigger : MonoBehaviour
+public class Trigger
 {
     // 검사하기 쉬운 조건을 먼저 Add 할 것.
-    public List<Condition> conditionList;
-    public List<Action> actionList;
+    public List<Condition> conditionList = new List<Condition>();
+    public List<Action> actionList = new List<Action>();
 
-    // Trigger 가 작동할 때까지 존재.
-    public bool isDisposableTrigger;
+    public Unit owner;
 
-    // Action 이 한 번 실행될 때까지 존재.
-    public bool isDiposableAction;
+    // Option
+    public bool isDisposableTrigger = false; // Trigger 가 작동할 때까지 존재.
+    public bool isDisposableAction = false; // Action 이 한 번 실행될 때까지 존재.
 
-    // 트리거 동작 여부
-    public bool isWork;
-
-    void Awake()
+    public Trigger(Unit _owner)
     {
-        conditionList = new List<Condition>();
-        actionList = new List<Action>();
+        owner = _owner;
     }
 
-    public void Init(bool _isDisposableTrigger, bool _isDiposableAction, bool _isWork)
+    public virtual void Init()
     {
-        isDisposableTrigger = _isDisposableTrigger;
-        isDiposableAction = _isDiposableAction;
-        isWork = _isWork;
-    }
-
-    public virtual void RefreshTriggerAttribute()
-    {
-
+        for (int i = 0; i < actionList.Count; ++i)
+            actionList[i].Init();
+        for (int i = 0; i < conditionList.Count; ++i)
+            conditionList[i].Init();
     }
 
     public virtual void ActivateTrigger()
     {
-        if (isWork == false)
-            return;
-
-        for (int i = 0; i < conditionList.Count;++i )
-        {
-            if(conditionList[i].CheckCondition() == false)
-            {
+        for (int i = 0; i < conditionList.Count; ++i)
+            if (conditionList[i].CheckCondition() == false)
                 return;
-            }
-        }
 
         for (int i = 0; i < actionList.Count;++i )
         {
             actionList[i].Activate(this);
 
-            if (isDiposableAction == true)
-                Destroy(this);
+            if (isDisposableAction == true)
+                owner.triggerList.Remove(this);
         }
 
         if (isDisposableTrigger == true)
-            Destroy(this);
+            owner.triggerList.Remove(this);
     }
 
 }

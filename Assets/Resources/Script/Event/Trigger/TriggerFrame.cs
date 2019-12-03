@@ -2,14 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TriggerForFrame : Trigger
+public class TriggerFrame : Trigger
 {
-    public Type type;
+    public TriggerFrame(Unit _owner)
+        : base(_owner) { }
+
+    public TriggerType type;
 
     public int passCount;
     int counter;
 
-    public enum Type
+    public enum TriggerType
     {
         NONE = 0,
         ALWAYS,
@@ -17,7 +20,7 @@ public class TriggerForFrame : Trigger
     }
 
     public void Init(bool _isDisposableTrigger, bool _isDiposableAction, bool _isWork,
-        Type _type, int _passCount)
+        TriggerType _type, int _passCount)
     {
         Init(_isDisposableTrigger, _isDiposableAction, _isWork);
 
@@ -29,8 +32,7 @@ public class TriggerForFrame : Trigger
     {
         if(termSec < 0f)
         {
-            CustomLog.CompleteLogWarning(
-                "Trigger Activate() term set error. termSec must be greater than 0.");
+            Debug.LogWarning("Trigger Activate() term set error. termSec must be greater than 0.");
             return;
         }
 
@@ -39,16 +41,16 @@ public class TriggerForFrame : Trigger
 
     void Start()
     {
-        if(type == Type.NONE)
+        if(type == TriggerType.NONE)
         {
-            CustomLog.CompleteLogWarning(this.name + ": type is not set.");
+            Debug.LogWarning(this.ToString() + ": type is not set.");
             return;
         }
 
-        if(type == Type.SOMETIMES &&
+        if(type == TriggerType.SOMETIMES &&
             passCount < 0)
         {
-            CustomLog.CompleteLogWarning(this.name + ": " + passCount + " is invalid passCount.");
+            Debug.LogWarning(this.ToString() + ": " + passCount + " is invalid passCount.");
             return;
         }
 
@@ -59,12 +61,12 @@ public class TriggerForFrame : Trigger
     {
         switch(type)
         {
-            case Type.ALWAYS:
+            case TriggerType.ALWAYS:
                 {
                     ActivateTrigger();
                 }
                 break;
-            case Type.SOMETIMES:
+            case TriggerType.SOMETIMES:
                 {
                     if(counter < passCount)
                     {

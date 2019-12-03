@@ -13,6 +13,9 @@ public class CustomLog
 
     static Dictionary<string, int> skipCountDic = new Dictionary<string, int>();
 
+    // 더블클릭했을 때 호출부 이동이 CustomLog 여서 디버깅이 불편함.
+    // 해당 문제가 해결될 때 까지 사용하지 말 것
+
     // ProperLog
 
     /* 기능과 용도
@@ -20,14 +23,7 @@ public class CustomLog
      * Skip Count 를 지정하면, 그만큼 로그를 띄우지 않고 스킵.
      * Update 에서 Log 를 출력하고 싶을 때 사용하면 좋음.
      * 
-     * 사용 방법
-     * 두번째 인자인 key 에 식별할 수 있는 키워드를 넣어야 함.
-     * ex) log 가 p1 'pos: x, y'인 경우, key를 player1 position 으로 설정.
-     * 
-     * key 사용 이유
-     * ProperLog 를 호출하는 코드의 호출 횟수를 Count 해야 함.
-     * 하지만 string 만으론 각각의 호출을 식별할 수 없음.
-     * ( 로그에 변수가 들어가는 경우 때문에 )
+     * 두번째 인자인 key를 기준으로 같은 로그인지 확인
      */
 
     [System.Diagnostics.Conditional("DEBUG")]

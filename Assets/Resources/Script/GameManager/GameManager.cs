@@ -29,32 +29,32 @@ public class GameManager : MyObject
         
         //tu.actionList.Add()
 
-        TriggerForKeyInput tk = gameObject.AddComponent<TriggerForKeyInput>();
-        tk.Init(false, false, true,
-            this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        ActionLog al = new ActionLog();
-        al.text = "ATTACK!";
-        tk.actionList.Add(al);
+        //TriggerKeyInput tk = gameObject.AddComponent<TriggerKeyInput>();
+        //tk.Init(false, false, true,
+        //    this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
+        //ActionLog al = new ActionLog();
+        //al.text = "ATTACK!";
+        //tk.actionList.Add(al);
 
-        if(Controlable.controlableList.Count > 1)
-        {
-            TriggerForKeyInputs tks = gameObject.AddComponent<TriggerForKeyInputs>();
-            tks.Init(false, false, true,
-                Controlable.controlableList[1].owner);
+        //if(Controlable.controlableList.Count > 1)
+        //{
+        //    TriggerKeyInputs tks = gameObject.AddComponent<TriggerKeyInputs>();
+        //    tks.Init(false, false, true,
+        //        Controlable.controlableList[1].owner);
 
-            ActionVectorMoveUnit avmu = new ActionVectorMoveUnit();
-            avmu.speed = 2f;
-            tks.actionList.Add(avmu);
-        }
+        //    ActionVectorMoveUnit move = new ActionVectorMoveUnit();
+        //    move.speed = 2f;
+        //    tks.actionList.Add(move);
+        //}
 
-        for(int i = 0; i < 20; ++i)
-        {
-            int[] ii = new int[3];
-            ii[0] = 2;
-            ii[1] = 10;
-            ii[2] = 4;
-            Debug.Log(CustomRandGen.Rand(ii));
-        }
+        //for(int i = 0; i < 20; ++i)
+        //{
+        //    int[] ii = new int[3];
+        //    ii[0] = 2;
+        //    ii[1] = 10;
+        //    ii[2] = 4;
+        //    Debug.Log(CustomRandGen.Rand(ii));
+        //}
 
 
     }

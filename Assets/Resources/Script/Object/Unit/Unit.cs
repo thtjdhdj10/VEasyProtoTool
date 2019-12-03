@@ -15,11 +15,12 @@ public class Unit : MyObject
 
     public bool unitActive = true;
 
+    public List<Operable> operateList = new List<Operable>();
+    public List<Trigger> triggerList = new List<Trigger>();
+
     public static List<Unit> unitList = new List<Unit>();
 
-    public List<Operable> operateList = new List<Operable>();
-
-    public enum ColliderType
+    public enum ColliderType // Collidable 의 속성으로 이동
     {
         NONE = 0,
         CIRCLE,
@@ -37,9 +38,9 @@ public class Unit : MyObject
     public enum Force
     {
         NONE = 0,
-        RED,
-        BLUE,
-        GREEN,
+        A,
+        B,
+        C,
     }
 
     public enum Relation
@@ -65,7 +66,7 @@ public class Unit : MyObject
 
     protected virtual void Awake()
     {
-        TriggerForUnits.UnitEventReceive(this, TriggerForUnits.Type.CREATE_UNIT);
+        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.CREATE_UNIT);
 
         Init();
     }
@@ -77,7 +78,7 @@ public class Unit : MyObject
 
     protected virtual void OnDestroy()
     {
-        TriggerForUnits.UnitEventReceive(this, TriggerForUnits.Type.DESTROY_UNIT);
+        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.DESTROY_UNIT);
     }
 
     protected virtual void OnEnable()
@@ -92,7 +93,7 @@ public class Unit : MyObject
 
     public virtual void Init()
     {
-        TriggerForUnits.UnitEventReceive(this, TriggerForUnits.Type.INIT_UNIT);
+        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.INIT_UNIT);
     }
 
     public virtual void InitSprite()
@@ -105,12 +106,8 @@ public class Unit : MyObject
     public Operable GetOperable(System.Type type)
     {
         for (int i = 0; i < operateList.Count; ++i)
-        {
             if(operateList[i].GetType() == type)
-            {
                 return operateList[i];
-            }
-        }
 
         return null;
     }
