@@ -39,3 +39,95 @@ Unity 는 Unreal과 달리 퍼포먼스보단 생산성에 맞춰져 있기에, 
 ### CustomLog  
   주로 로그 출력 빈도를 줄여서, Update() 에서 호출해도 렉이 걸리지 않게 하는 용도로 사용.
   Unity의 디버그 창을 더블클릭하여 바로 해당 코드로 이동하는 기능을 사용할 수 없는 문제가 있다.
+  
+  
+  
+  
+  
+  
+  
+  Trigger
+키 입력, 시간 경과, 충돌 등 조건을 확인하고 만족하면 Action 수행
+- Option
+ isDisposableTrigger
+ isDisposableAction
+
+TriggerUnits
+모든 유닛은 생성/파괴/초기화 되면 이벤트 호출
+이 때 해당 유닛(object X, class O)을 대상으로 하는
+트리거가 존재하면 연결된 Action 수행
+
+
+
+
+
+Condition
+트리거가 걸렸을 때 Action의 수행 여부 결정
+
+Action
+유닛 이동, 생성 파괴 등 동작
+
+
+Timetable
+시간맞춰서 적유닛 생성하는 기능인데 미구현
+
+
+Game Manager
+
+
+
+LayerManager
+에디터로 유닛 레이어 설정하고 관리
+
+
+Unit
+- Force
+- Relation
+Force가 다르면 적대관계로 인식된다.
+복수의 Operate를 소유할 수 있다.
+
+
+Operable
+유닛에 적용시킬 수 있는 다양한 패시브 능력
+- Attackable
+- Movable
+- Collidable
+VEasyCalculator 이용해서 충돌여부 확인
+Relation 따져서 충돌했으면 Trigger 호출
+- Controlable
+해당 유닛을 주체로 키 입력을 인식할 수 있게된다.
+적을 클릭해서 죽이거나, 플레이어 캐릭터를 조작하는 방식으로 활용
+이게 있어야 TriggerKeyInput에 입력이 전달된다.
+- Selectable
+- Targetable
+
+
+KeyManager
+사전 설정된 다양한 조작 방식 지원
+롤, 스타크래프트, 던파 등 다양한 예시 활용
+
+
+UnitStatus
+체력이 존재하는 유닛에 부착해서 활용
+
+
+
+VEasyPooler
+오브젝트 생성 삭제 관리
+
+VEasyCalculator
+거리계산, 각도계산, 충돌여부 등 수학적인 기능 지원
+
+SpriteManager
+스프라이트 이름 파싱해서 프레임이나 애니메이션 속도 자동 처리
+
+
+당장 필요없는 것
+Skill
+Item
+HitType (공격방식에 따라 서로 다른 이펙트, 데미지 계산)
+StackManager (독뎀같은거 관리)
+GroupController
+KeyboardMove
+MouseMove
+CustomLog
