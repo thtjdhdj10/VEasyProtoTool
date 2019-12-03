@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class ActionVectorMoveUnit : Action
 {
     public float speed;
+    public bool isRotate;
 
     bool[] moveDir = new bool[4];
 
@@ -36,16 +37,17 @@ public class ActionVectorMoveUnit : Action
 
         UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
 
-        VectorMovable vm = triggerKeyInputs.target.GetComponent<VectorMovable>();
+        VectorMovable vm = triggerKeyInputs.owner.GetComponent<VectorMovable>();
 
         if (vm == null)
         {
-            vm = triggerKeyInputs.target.gameObject.AddComponent<VectorMovable>();
+            vm = triggerKeyInputs.owner.gameObject.AddComponent<VectorMovable>();
             vm.Init(speed, Movable.BounceType.NONE);
         }
 
         vm.speed = speed;
         vm.moveDir = moveDir;
+        vm.isRotate = isRotate;
     }
 
     void UpdateMoveState(KeyManager.KeyCommand command, KeyManager.KeyPressType type)

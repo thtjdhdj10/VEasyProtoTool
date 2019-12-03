@@ -16,7 +16,7 @@ public class RegularTurnMovable : Movable
     }
 
     // 균일한 선회
-    protected void MoveFrame()
+    protected override void MoveFrame()
     {
         float moveDistance = speed * Time.fixedDeltaTime;
 
@@ -29,12 +29,5 @@ public class RegularTurnMovable : Movable
 
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;
-    }
-
-    public void FixedUpdate()
-    {
-        MoveFrame();
-        CollisionProcessing();
-        SetSpriteAngle();
     }
 }

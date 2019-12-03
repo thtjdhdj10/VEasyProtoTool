@@ -66,7 +66,7 @@ public class Unit : MyObject
 
     protected virtual void Awake()
     {
-        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.CREATE_UNIT);
+        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.CREATE_UNIT);
 
         Init();
     }
@@ -78,7 +78,7 @@ public class Unit : MyObject
 
     protected virtual void OnDestroy()
     {
-        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.DESTROY_UNIT);
+        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.DESTROY_UNIT);
     }
 
     protected virtual void OnEnable()
@@ -91,9 +91,20 @@ public class Unit : MyObject
         unitList.Remove(this);
     }
 
+    protected virtual void FixedUpdate()
+    {
+        for(int i = 0; i <triggerList.Count;++i)
+        {
+            if (triggerList[i] is TriggerFrame)
+                (triggerList[i] as TriggerFrame).HandleFixedUpdate();
+            if (triggerList[i] is TriggerTimer)
+                (triggerList[i] as TriggerTimer).HandleFixedUpdate();
+        }
+    }
+
     public virtual void Init()
     {
-        TriggerUnits.UnitEventReceive(this, TriggerUnits.TriggerType.INIT_UNIT);
+        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.INIT_UNIT);
     }
 
     public virtual void InitSprite()

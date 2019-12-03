@@ -16,7 +16,7 @@ public class LerpTurnMovable : Movable
     }
 
     // 목적과의 방향차이에 비례해서 선회
-    protected void MoveFrame()
+    protected override void MoveFrame()
     {
         float moveDistance = speed * Time.fixedDeltaTime;
 
@@ -29,12 +29,5 @@ public class LerpTurnMovable : Movable
 
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;
-    }
-
-    public void FixedUpdate()
-    {
-        MoveFrame();
-        CollisionProcessing();
-        SetSpriteAngle();
     }
 }

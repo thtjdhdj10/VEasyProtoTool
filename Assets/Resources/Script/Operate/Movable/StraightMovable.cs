@@ -11,19 +11,12 @@ public class StraightMovable : Movable
     }
 
     // 직선 등속 이동
-    protected void MoveFrame()
+    protected override void MoveFrame()
     {
         float moveDistance = speed * Time.fixedDeltaTime;
 
         Vector2 moveVector = VEasyCalculator.GetRotatedPosition(direction, moveDistance);
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;
-    }
-
-    public void FixedUpdate()
-    {
-        MoveFrame();
-        CollisionProcessing();
-        SetSpriteAngle();
     }
 }

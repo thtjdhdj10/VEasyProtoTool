@@ -7,10 +7,13 @@ public class Player : Unit
     {
         base.Start();
 
-        TriggerKeyInputs keyTrigger = GetComponent<TriggerKeyInputs>();
-        if (keyTrigger != null)
+        TriggerKeyInputs inputsTrigger = new TriggerKeyInputs(this);
+        if (inputsTrigger != null)
         {
-            keyTrigger.actionList.Add(new ActionVectorMoveUnit());
+            ActionVectorMoveUnit move = new ActionVectorMoveUnit();
+            move.speed = 2f;
+            move.isRotate = false;
+            inputsTrigger.actionList.Add(move);
         }
     }
 

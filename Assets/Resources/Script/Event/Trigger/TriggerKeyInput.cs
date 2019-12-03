@@ -13,6 +13,24 @@ using CmdTypeObject = System.Collections.Generic.KeyValuePair<
 
 public class TriggerKeyInput : Trigger
 {
+    public TriggerKeyInput(Unit _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+        : base(_owner)
+    {
+        command = _command;
+        pressType = _pressType;
+
+        CmdType ct = new CmdType(command, pressType);
+        CmdTypeObject cto = new CmdTypeObject(ct, owner);
+        unitTriggerBindingDic.Add(cto, this);
+    }
+
+    ~TriggerKeyInput()
+    {
+        CmdType ct = new CmdType(command, pressType);
+        CmdTypeObject cto = new CmdTypeObject(ct, owner);
+        unitTriggerBindingDic.Remove(cto);
+    }
+
     static Dictionary<CmdTypeObject, TriggerKeyInput> unitTriggerBindingDic
         = new Dictionary<CmdTypeObject, TriggerKeyInput>();
 
@@ -20,51 +38,14 @@ public class TriggerKeyInput : Trigger
     public static void UnitEventReceive(
         MyObject obj, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
     {
-        CmdType kk = new CmdType(_command, _pressType);
+        CmdType cp = new CmdType(_command, _pressType);
 
-        CmdTypeObject kko = new CmdTypeObject(kk, obj);
+        CmdTypeObject cpo = new CmdTypeObject(cp, obj);
 
-        if (unitTriggerBindingDic.ContainsKey(kko) == true)
-            unitTriggerBindingDic[kko].ActivateTrigger();
+        if (unitTriggerBindingDic.ContainsKey(cpo) == true)
+            unitTriggerBindingDic[cpo].ActivateTrigger();
     }
-
-    public MyObject target;
 
     public KeyManager.KeyCommand command;
     public KeyManager.KeyPressType pressType;
-
-    public void Init(bool _isDisposableTrigger, bool _isDiposableAction, bool _isWork,
-        MyObject _target, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
-    {
-        Init(_isDisposableTrigger, _isDiposableAction, _isWork);
-
-        target = _target;
-        command = _command;
-        pressType = _pressType;
-    }
-
-    void Start()
-    {
-        if(target == null)
-        {
-            CustomLog.CompleteLogWarning(this.name + ": target is not set.");
-            return;
-        }
-        if (command == KeyManager.KeyCommand.NONE)
-        {
-            CustomLog.CompleteLogWarning(this.name + ": command is not set.");
-            return;
-        }
-        if (pressType == KeyManager.KeyPressType.NONE)
-        {
-            CustomLog.CompleteLogWarning(this.name + ": type is not set.");
-            return;
-        }
-
-        CmdType ct = new CmdType(command, pressType);
-
-        CmdTypeObject cto = new CmdTypeObject(ct, target);
-
-        unitTriggerBindingDic.Add(cto, this);
-    }
 }

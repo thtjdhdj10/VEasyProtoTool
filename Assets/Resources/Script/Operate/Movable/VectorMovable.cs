@@ -11,14 +11,7 @@ public class VectorMovable : Movable
         bounceType = _bounceType;
     }
 
-    public void FixedUpdate()
-    {
-        MoveFrame();
-        CollisionProcessing();
-        SetSpriteAngle();
-    }
-
-    void MoveFrame()
+    protected override void MoveFrame()
     {
         int dirCount = 0;
 
@@ -42,18 +35,22 @@ public class VectorMovable : Movable
         if (moveDir[(int)GameManager.Direction.LEFT] == true)
         {
             delta.x -= moveDelta;
+            direction = 180f;
         }
         else if (moveDir[(int)GameManager.Direction.RIGHT] == true)
         {
             delta.x += moveDelta;
+            direction = 0f;
         }
         if (moveDir[(int)GameManager.Direction.UP] == true)
         {
             delta.y += moveDelta;
+            direction = 90f;
         }
         else if (moveDir[(int)GameManager.Direction.DOWN] == true)
         {
             delta.y -= moveDelta;
+            direction = 270f;
         }
 
         Vector2 v2Pos = owner.transform.position;

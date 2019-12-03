@@ -5,6 +5,13 @@ public class Movable : Operable
 {
     public Unit owner;
 
+    public float speed = 1f;
+    public bool isRotate = true;
+    public BounceType bounceType;
+
+    public float direction;
+    public Unit target;
+
     public static List<Movable> movableList = new List<Movable>();
 
     protected virtual void Awake()
@@ -19,13 +26,19 @@ public class Movable : Operable
         movableList.Remove(this);
     }
 
-    public Unit target;
+    protected virtual void FixedUpdate()
+    {
+        MoveFrame();
 
-    public float speed;
+        if (bounceType != BounceType.NONE) BounceProcessing();
 
-    public float direction;
+        if (isRotate) SetSpriteAngle();
+    }
 
-    public BounceType bounceType;
+    protected virtual void MoveFrame()
+    {
+
+    }
 
     public enum BounceType
     {
@@ -39,14 +52,6 @@ public class Movable : Operable
         BOUNCE_ENEMY_REVERSE,
     }
 
-    //public enum Type
-    //{
-    //    NONE = 0,
-    //    STRAIGHT,
-    //    LERP_CURVE,
-    //    REGULAR_CURVE,
-    //}
-
     public virtual void SetSpriteAngle()
     {
         Vector3 rot = transform.eulerAngles;
@@ -54,7 +59,7 @@ public class Movable : Operable
         transform.eulerAngles = rot;
     }
 
-    protected virtual void CollisionProcessing()
+    protected virtual void BounceProcessing()
     {
         switch (bounceType)
         {
