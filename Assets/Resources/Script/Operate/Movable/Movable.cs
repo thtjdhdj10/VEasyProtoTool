@@ -55,7 +55,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_WALL_REVERSE:
                 {
-                    Collidable col = owner.GetOperable(typeof(Collidable)) as Collidable;
+                    Collidable col = owner.GetOperable<Collidable>();
 
                     VEasyCalculator.GetNormalizedDirection(ref direction);
                     if (VEasyCalculator.CheckTerritory(col) == GameManager.Direction.DOWN)
@@ -93,7 +93,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_TARGET:
                 {
-                    Collidable col = owner.GetOperable(typeof(Collidable)) as Collidable;
+                    Collidable col = owner.GetOperable<Collidable>();
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
@@ -108,7 +108,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_REVERSE:
                 {
-                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
+                    Collidable col = owner.GetOperable<Collidable>();
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;
@@ -123,7 +123,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_TARGET:
                 {
-                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
+                    Collidable col = owner.GetOperable<Collidable>();
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;
@@ -138,7 +138,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_ENEMY_REVERSE:
                 {
-                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
+                    Collidable col = owner.GetOperable<Collidable>();
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ENEMY).owner;

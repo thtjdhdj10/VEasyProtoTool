@@ -29,7 +29,7 @@ public class CollidableEditor : Editor
 
         EditorGUILayout.PropertyField(colTypeProp);
 
-        switch (selected.colType)
+        switch (selected.colType) // TODO type, 크기에 따라 에디터 화면에 충돌체 크기 보이게 하기
         {
             case Collidable.ColliderType.CIRCLE:
                 EditorGUILayout.PropertyField(radiusProp);

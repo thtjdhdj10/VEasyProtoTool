@@ -103,12 +103,13 @@ public class Unit : MyObject
     
     //
 
-    public Operable GetOperable(System.Type type)
+    public T GetOperable<T>() where T : Operable
     {
-        if (operableListDic.ContainsKey(type) == false) return null;
+        if (operableListDic.ContainsKey(typeof(T)) == false) return null;
 
-        if (operableListDic[type].Count > 0)
-            return operableListDic[type][0];
+        if (operableListDic[typeof(T)].Count > 0)
+            return operableListDic[typeof(T)][0] as T;
+
         return null;
     }
 }

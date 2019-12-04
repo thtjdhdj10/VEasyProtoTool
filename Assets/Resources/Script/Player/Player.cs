@@ -9,8 +9,6 @@ public class Player : Unit
 
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
         ActionVectorMoveUnit actKeyInput = new ActionVectorMoveUnit();
-        actKeyInput.speed = 2f;
-        actKeyInput.isRotate = true;
         trgKeyInput.actionList.Add(actKeyInput);
 
         TriggerFrame trgTrackingMouse = new TriggerFrame(this, 0);
@@ -23,28 +21,39 @@ public class Player : Unit
         trgMouseDown.actionList.Add(actActiveShootable);
 
         TriggerKeyInput trgMouseUp = new TriggerKeyInput(
-                    this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
+            this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
         ActionDeactiveShootable actDeactiveShootable = new ActionDeactiveShootable();
-        trgMouseUp.actionList.Add(actActiveShootable);
+        trgMouseUp.actionList.Add(actDeactiveShootable);
     }
-
+     
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
 
         SetDirectionToMouse();
 
-
+        SetShootableDirection();
     }
 
     private void SetDirectionToMouse()
     {
         Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
 
-        Movable move = GetOperable(typeof(Movable)) as Movable;
+        Movable move = GetOperable<Movable>();
         if (move != null)
         {
             move.direction = VEasyCalculator.GetDirection(transform.position, mouseWorldPos);
+        }
+    }
+
+    private void SetShootableDirection()
+    {
+        Shootable shoot = GetOperable<Shootable>();
+        Movable move = GetOperable<Movable>();
+        if(shoot != null &&
+            move != null)
+        {
+            shoot.fireDirection = move.direction;
         }
     }
 }

@@ -5,9 +5,6 @@ using System.Collections.Generic;
 // TriggerKeyInputs 로만 활용이 가능한 액션
 public class ActionVectorMoveUnit : Action
 {
-    public float speed;
-    public bool isRotate;
-
     bool[] moveDir = new bool[4];
 
     Dictionary<GameManager.Direction, KeyManager.KeyCommand> dirKeyDic =
@@ -37,17 +34,15 @@ public class ActionVectorMoveUnit : Action
 
         UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
 
-        MovableVector vm = triggerKeyInputs.owner.GetComponent<MovableVector>();
+        MovableVector vm = triggerKeyInputs.owner.GetOperable<Movable>() as MovableVector;
 
         if (vm == null)
         {
             vm = triggerKeyInputs.owner.gameObject.AddComponent<MovableVector>();
-            vm.Init(speed, Movable.BounceType.NONE);
+            vm.Init(2f, Movable.BounceType.NONE);
         }
 
-        vm.speed = speed;
         vm.moveDir = moveDir;
-        vm.isRotate = isRotate;
     }
 
     void UpdateMoveState(KeyManager.KeyCommand command, KeyManager.KeyPressType type)
