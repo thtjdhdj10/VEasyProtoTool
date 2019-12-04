@@ -6,11 +6,19 @@ using System.Collections.Generic;
 [CanEditMultipleObjects]
 public class CollidableEditor : Editor
 {
+    SerializedProperty colTypeProp;
+    SerializedProperty radiusProp;
+    SerializedProperty rectProp;
+
     Collidable selected = null;
 
     void OnEnable()
     {
         selected = target as Collidable;
+
+        colTypeProp = serializedObject.FindProperty("colType");
+        radiusProp = serializedObject.FindProperty("radius");
+        rectProp = serializedObject.FindProperty("rect");
     }
 
     public override void OnInspectorGUI()
@@ -19,15 +27,15 @@ public class CollidableEditor : Editor
 
         EditorGUILayout.Space();
 
-        selected.colType = (Collidable.ColliderType)EditorGUILayout.EnumPopup(selected.colType);
+        EditorGUILayout.PropertyField(colTypeProp);
 
         switch (selected.colType)
         {
             case Collidable.ColliderType.CIRCLE:
-                selected.radius = EditorGUILayout.FloatField("Radius", selected.radius);
+                EditorGUILayout.PropertyField(radiusProp);
                 break;
             case Collidable.ColliderType.RECT:
-                selected.rect = EditorGUILayout.Vector2Field("Rect", selected.rect);
+                EditorGUILayout.PropertyField(rectProp);
                 break;
         }
 

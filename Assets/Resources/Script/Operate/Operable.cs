@@ -13,21 +13,29 @@ public class Operable : MonoBehaviour
     {
         owner = GetComponent<Unit>();
 
-        if (owner.operableListDic[this.GetType()] == null)
-            owner.operableListDic[this.GetType()] = new List<Operable>();
+        System.Type operableType = this.GetType();
+        if (operableType.BaseType != typeof(Operable))
+            operableType = operableType.BaseType;
 
-        owner.operableListDic[this.GetType()].Add(this);
+        if (owner.operableListDic.ContainsKey(operableType) == false)
+            owner.operableListDic.Add(operableType, new List<Operable>());
 
-        if (allOperableListDic[this.GetType()] == null)
-            allOperableListDic[this.GetType()] = new List<Operable>();
+        owner.operableListDic[operableType].Add(this);
 
-        allOperableListDic[this.GetType()].Add(this);
+        if (allOperableListDic.ContainsKey(operableType) == false)
+            allOperableListDic.Add(operableType, new List<Operable>());
+
+        allOperableListDic[operableType].Add(this);
     }
 
     protected virtual void OnDestroy()
     {
-        owner.operableListDic[this.GetType()].Remove(this);
-        allOperableListDic[this.GetType()].Remove(this);
+        System.Type operableType = this.GetType();
+        if (operableType.BaseType != typeof(Operable))
+            operableType = operableType.BaseType;
+
+        owner.operableListDic[operableType].Remove(this);
+        allOperableListDic[operableType].Remove(this);
     }
 
     //protected bool ConfirmExistence()

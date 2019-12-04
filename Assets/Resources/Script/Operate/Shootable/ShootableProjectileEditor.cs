@@ -6,19 +6,24 @@ using System.Collections.Generic;
 [CanEditMultipleObjects]
 public class ShootableProjectileEditor : ShootableEditor
 {
-    ShootableProjectile obj = null;
+    SerializedProperty projectileProp;
+
+    ShootableProjectile subObj = null;
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        obj = target as ShootableProjectile;
+        subObj = target as ShootableProjectile;
+
+        projectileProp = serializedObject.FindProperty("projectile");
     }
 
     protected override void ContentsUpdate()
     {
         base.ContentsUpdate();
 
-        obj.projectile = EditorGUILayout.ObjectField(
-            "Projectile", obj.projectile, typeof(Unit), true) as Bullet;
+        EditorGUILayout.Space();
+
+        EditorGUILayout.PropertyField(projectileProp);
     }
 }

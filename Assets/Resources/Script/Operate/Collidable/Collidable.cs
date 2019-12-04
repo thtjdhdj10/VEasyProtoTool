@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+
 public class Collidable : Operable
 {
     // colType에 따라 rec 나 circle 하나만 입력하게 수정

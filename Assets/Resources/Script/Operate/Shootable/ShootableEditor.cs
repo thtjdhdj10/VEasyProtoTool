@@ -6,11 +6,35 @@ using System.Collections.Generic;
 [CanEditMultipleObjects]
 public class ShootableEditor : Editor
 {
+    SerializedProperty activeProp;
+    SerializedProperty isRangelessProp;
+    SerializedProperty rangeProp;
+    SerializedProperty damageProp;
+    SerializedProperty attackDelayProp;
+    SerializedProperty remainAttackDelayProp;
+    SerializedProperty loadOnDeactiveProp;
+    SerializedProperty fireToTargetProp;
+    SerializedProperty targetProp;
+    SerializedProperty targetingEachFireProp;
+    SerializedProperty fireDirectionProp;
+
     Shootable obj = null;
 
     protected virtual void OnEnable()
     {
         obj = target as Shootable;
+
+        activeProp = serializedObject.FindProperty("active");
+        isRangelessProp = serializedObject.FindProperty("isRangeless");
+        rangeProp = serializedObject.FindProperty("range");
+        damageProp = serializedObject.FindProperty("damage");
+        attackDelayProp = serializedObject.FindProperty("attackDelay");
+        remainAttackDelayProp = serializedObject.FindProperty("remainAttackDelay");
+        loadOnDeactiveProp = serializedObject.FindProperty("loadOnDeactive");
+        fireToTargetProp = serializedObject.FindProperty("fireToTarget");
+        targetProp = serializedObject.FindProperty("target");
+        targetingEachFireProp = serializedObject.FindProperty("targetingEachFire");
+        fireDirectionProp = serializedObject.FindProperty("fireDirection");
     }
 
     public override void OnInspectorGUI()
@@ -26,25 +50,40 @@ public class ShootableEditor : Editor
     {
         EditorGUILayout.Space();
 
-        obj.active = EditorGUILayout.Toggle("Activate", obj.active);
+        EditorGUILayout.PropertyField(activeProp);
+        EditorGUILayout.PropertyField(isRangelessProp);
 
-        if (!(obj.isRangeless = EditorGUILayout.Toggle("Is Rangeless", obj.isRangeless)))
+        if (!obj.isRangeless)
         {
-            obj.range = EditorGUILayout.FloatField("   Range", obj.range);
+            EditorGUI.indentLevel += 2;
+
+            EditorGUILayout.PropertyField(rangeProp);
+
+            EditorGUI.indentLevel -= 2;
         }
 
-        obj.damage = EditorGUILayout.IntField("Damage", obj.damage);
-        obj.attackDelay = EditorGUILayout.FloatField("Attack Delay", obj.attackDelay);
-        obj.loadOnDeactive = EditorGUILayout.Toggle("Load on Deactive", obj.loadOnDeactive);
+        EditorGUILayout.PropertyField(damageProp);
+        EditorGUILayout.PropertyField(attackDelayProp);
+        EditorGUILayout.PropertyField(remainAttackDelayProp);
+        EditorGUILayout.PropertyField(loadOnDeactiveProp);
+        EditorGUILayout.PropertyField(fireToTargetProp);
 
-        if (obj.fireToTarget = EditorGUILayout.Toggle("Fire To Target", obj.fireToTarget))
+        if (obj.fireToTarget)
         {
-            obj.target = EditorGUILayout.ObjectField("  Target", obj.target, typeof(Unit), true) as Unit;
-            obj.targetingEachFire = EditorGUILayout.Toggle("    Targeting Each Fire", obj.targetingEachFire);
+            EditorGUI.indentLevel += 2;
+
+            EditorGUILayout.PropertyField(targetProp);
+            EditorGUILayout.PropertyField(targetingEachFireProp);
+
+            EditorGUI.indentLevel -= 2;
         }
         else
         {
-            obj.fireDirection = EditorGUILayout.FloatField("    Fire Direction", obj.fireDirection);
+            EditorGUI.indentLevel += 2;
+
+            EditorGUILayout.PropertyField(fireDirectionProp);
+
+            EditorGUI.indentLevel -= 2;
         }
     }
 }

@@ -105,6 +105,8 @@ public class Unit : MyObject
 
     public Operable GetOperable(System.Type type)
     {
+        if (operableListDic.ContainsKey(type) == false) return null;
+
         if (operableListDic[type].Count > 0)
             return operableListDic[type][0];
         return null;

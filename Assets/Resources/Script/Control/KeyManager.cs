@@ -38,6 +38,14 @@ public class KeyManager : MonoBehaviour {
 
     //
 
+    void Start()
+    {
+        // 임시로 V_CODE 에 해당하는 KeySetting 사용
+
+        int number = CreateKeySettings(GetDefaultKeySetting2());
+        SetKeySetting(number);
+    }
+
     void Awake()
     {
         GetFunctionMatch();
@@ -93,14 +101,6 @@ public class KeyManager : MonoBehaviour {
             }  
         }
 
-    }
-
-    void Start()
-    {
-        // 임시로 V_CODE 에 해당하는 KeySetting 사용
-
-        int number = CreateKeySettings(GetDefaultKeySetting2());
-        SetKeySetting(number);
     }
 
     public enum KeyCommand

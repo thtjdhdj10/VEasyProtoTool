@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-// TODO: 동맹관계를 따져서 공격하도록 수정
-
 public class Shootable : Operable
 {
     public bool active;
@@ -13,7 +11,7 @@ public class Shootable : Operable
     public int damage;
 
     public float attackDelay;
-    private float remainAttackDelay;
+    public float remainAttackDelay;
     public bool loadOnDeactive; // 비활성 중 장전 여부
 
     public bool fireToTarget;
@@ -69,10 +67,10 @@ public class Shootable : Operable
         List<KeyValuePair<Targetable, float>> targetList
             = new List<KeyValuePair<Targetable, float>>();
 
-        for (int i = 0; i< allOperableListDic[typeof(Targetable)].Count; ++i)
+        foreach(var targetable in allOperableListDic[typeof(Targetable)])
         {
             targetList.Add(new KeyValuePair<Targetable, float>(
-                allOperableListDic[typeof(Targetable)][i] as Targetable, 0f));
+                targetable as Targetable, 0f));
         }
 
         TargetingByForce(targetList);
