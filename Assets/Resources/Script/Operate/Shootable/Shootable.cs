@@ -8,14 +8,16 @@ public class Shootable : Operable
     [System.NonSerialized]
     public Unit target;
 
-    // TODO 에디터 이용해서 userange 켰을때만 range 보이게
     public bool isRangeless;
     public float range;
 
-    public float damage;
+    public int damage;
 
     public float attackDelay;
     private float remainAttackDelay;
+
+    // 활성/비활성
+    // 비활성 중 재사용 대기시간 감소 여부
 
     void Start()
     {

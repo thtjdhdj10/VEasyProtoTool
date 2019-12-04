@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class ShootableProjectile : Shootable
 {
-    public GameObject projectile;
+    public Bullet projectile;
 
     protected override void Shoot()
     {
@@ -13,9 +13,9 @@ public class ShootableProjectile : Shootable
             return;
         }
 
-        GameObject bullet = VEasyPoolerManager.GetObjectRequest(projectile.name);
+        Bullet bulletScript = Instantiate(projectile);
 
-        Movable m = bullet.GetComponent<Movable>();
+//        Movable m = bullet.GetComponent<Movable>();
         //if(p == null ||
         //    m == null)
         //{

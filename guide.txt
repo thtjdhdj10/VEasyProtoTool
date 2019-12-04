@@ -64,8 +64,6 @@ UnitStatus
 
 
 
-VEasyPooler
-오브젝트 생성 삭제 관리
 
 VEasyCalculator
 거리계산, 각도계산, 충돌여부 등 수학적인 기능 지원
@@ -83,3 +81,4 @@ GroupController
 KeyboardMove
 MouseMove
 CustomLog
+VEasyPooler (오브젝트 생성 삭제 관리)(이거쓰면 instantiate 쓸때처럼 바로 스크립트 못가져옴)

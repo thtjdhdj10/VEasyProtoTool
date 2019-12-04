@@ -57,10 +57,10 @@ public class VEasyCalculator
         {
             case Collidable.ColliderType.CIRCLE:
                 {
-                    if (pos.x + a.colCircle < rect.xMin ||
-                        pos.x - a.colCircle > rect.xMax ||
-                        pos.y + a.colCircle < rect.yMin ||
-                        pos.y - a.colCircle > rect.yMax)
+                    if (pos.x + a.radius < rect.xMin ||
+                        pos.x - a.radius > rect.xMax ||
+                        pos.y + a.radius < rect.yMin ||
+                        pos.y - a.radius > rect.yMax)
                     {
                         return true;
                     }
@@ -68,10 +68,10 @@ public class VEasyCalculator
                 break;
             case Collidable.ColliderType.RECT:
                 {
-                    if (pos.x + a.colRect.x < rect.xMin ||
-                        pos.x - a.colRect.x > rect.xMax ||
-                        pos.y + a.colRect.y < rect.yMin ||
-                        pos.y - a.colRect.y > rect.yMax)
+                    if (pos.x + a.rect.x < rect.xMin ||
+                        pos.x - a.rect.x > rect.xMax ||
+                        pos.y + a.rect.y < rect.yMin ||
+                        pos.y - a.rect.y > rect.yMax)
                     {
                         return true;
                     }
@@ -91,22 +91,22 @@ public class VEasyCalculator
         {
             case Collidable.ColliderType.CIRCLE:
                 {
-                    if (pos.x - a.colCircle < rect.xMin)
+                    if (pos.x - a.radius < rect.xMin)
                     {
                         return GameManager.Direction.LEFT;
                     }
 
-                    if (pos.x + a.colCircle > rect.xMax)
+                    if (pos.x + a.radius > rect.xMax)
                     {
                         return GameManager.Direction.RIGHT;
                     }
 
-                    if (pos.y - a.colCircle < rect.yMin)
+                    if (pos.y - a.radius < rect.yMin)
                     {
                         return GameManager.Direction.DOWN;
                     }
 
-                    if (pos.y + a.colCircle > rect.yMax)
+                    if (pos.y + a.radius > rect.yMax)
                     {
                         return GameManager.Direction.UP;
                     }
@@ -114,22 +114,22 @@ public class VEasyCalculator
                 break;
             case Collidable.ColliderType.RECT:
                 {
-                    if (pos.x - a.colRect.x < rect.xMin)
+                    if (pos.x - a.rect.x < rect.xMin)
                     {
                         return GameManager.Direction.LEFT;
                     }
 
-                    if (pos.x + a.colRect.x > rect.xMax)
+                    if (pos.x + a.rect.x > rect.xMax)
                     {
                         return GameManager.Direction.RIGHT;
                     }
 
-                    if (pos.y - a.colRect.y < rect.yMin)
+                    if (pos.y - a.rect.y < rect.yMin)
                     {
                         return GameManager.Direction.DOWN;
                     }
 
-                    if (pos.y + a.colRect.y > rect.yMax)
+                    if (pos.y + a.rect.y > rect.yMax)
                     {
                         return GameManager.Direction.UP;
                     }
@@ -209,7 +209,7 @@ public class VEasyCalculator
         if (a.colType == Collidable.ColliderType.CIRCLE &&
             b.colType == Collidable.ColliderType.CIRCLE)
         {
-            return IntersectCircle(a.transform.position, b.transform.position, a.colCircle + b.colCircle);
+            return IntersectCircle(a.transform.position, b.transform.position, a.radius + b.radius);
         }
         //else if(a.colType == Unit.ColliderType.RECT &&
         //    b.colType == Unit.ColliderType.RECT)
@@ -219,12 +219,12 @@ public class VEasyCalculator
         else if (a.colType == Collidable.ColliderType.CIRCLE &&
             b.colType == Collidable.ColliderType.RECT)
         {
-            return IntersectCircleRect(a.transform.position, b.transform.position, a.colCircle, b.colRect, -b.transform.eulerAngles.z);
+            return IntersectCircleRect(a.transform.position, b.transform.position, a.radius, b.rect, -b.transform.eulerAngles.z);
         }
         else if (a.colType == Collidable.ColliderType.RECT &&
             b.colType == Collidable.ColliderType.CIRCLE)
         {
-            return IntersectCircleRect(b.transform.position, a.transform.position, b.colCircle, a.colRect, -a.transform.eulerAngles.z);
+            return IntersectCircleRect(b.transform.position, a.transform.position, b.radius, a.rect, -a.transform.eulerAngles.z);
         }
 
         return false;

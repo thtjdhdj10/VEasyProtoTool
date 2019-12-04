@@ -55,7 +55,7 @@ public class ObjectState : MonoBehaviour
             }
             else
             {
-                VEasyPoolerManager.ReleaseObjectRequest(gameObject);
+                Destroy(gameObject);
             }
         }
     }

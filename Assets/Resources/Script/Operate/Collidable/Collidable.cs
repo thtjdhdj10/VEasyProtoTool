@@ -6,18 +6,15 @@ public class Collidable : Operable
     // colType에 따라 rec 나 circle 하나만 입력하게 수정
     public enum ColliderType // Collidable 의 속성으로 이동
     {
-        NONE = 0,
         CIRCLE,
         RECT,
     }
 
     public ColliderType colType;
 
-    public float colCircle;
+    public float radius;
 
-    public Vector2 colRect;
-
-    public List<Unit.Relation> checkForce = new List<Unit.Relation>();
+    public Vector2 rect;
 
     protected virtual void Hit(Unit target)
     {

@@ -5,10 +5,10 @@ public class UnitStatus : MonoBehaviour
 {
     public Unit owner;
 
-    public float hp;
+    public int hp;
     [SerializeField]
-    float currentHp;
-    public float CurrentHp
+    int currentHp;
+    public int CurrentHp
     {
         get
         {
@@ -17,7 +17,7 @@ public class UnitStatus : MonoBehaviour
         set
         {
             currentHp = value;
-            if (currentHp <= 0f)
+            if (currentHp <= 0)
             {
                 Destroy(gameObject);
             }
