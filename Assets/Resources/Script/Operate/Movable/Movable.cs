@@ -3,28 +3,12 @@ using System.Collections.Generic;
 
 public class Movable : Operable
 {
-    public Unit owner;
-
     public float speed = 1f;
     public bool isRotate = true;
     public BounceType bounceType;
 
     public float direction;
     public Unit target;
-
-    public static List<Movable> movableList = new List<Movable>();
-
-    protected virtual void Awake()
-    {
-        owner = GetComponent<Unit>();
-
-        movableList.Add(this);
-    }
-
-    protected virtual void OnDestroy()
-    {
-        movableList.Remove(this);
-    }
 
     protected virtual void FixedUpdate()
     {
@@ -71,8 +55,10 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_WALL_REVERSE:
                 {
+                    Collidable col = owner.GetOperable(typeof(Collidable)) as Collidable;
+
                     VEasyCalculator.GetNormalizedDirection(ref direction);
-                    if (VEasyCalculator.CheckTerritory(owner) == GameManager.Direction.DOWN)
+                    if (VEasyCalculator.CheckTerritory(col) == GameManager.Direction.DOWN)
                     {
                         if (direction >= 90f &&
                             direction < 270f)
@@ -80,21 +66,21 @@ public class Movable : Operable
                             direction = 180f - direction;
                         }
                     }
-                    else if (VEasyCalculator.CheckTerritory(owner) == GameManager.Direction.LEFT)
+                    else if (VEasyCalculator.CheckTerritory(col) == GameManager.Direction.LEFT)
                     {
                         if (direction < 180f)
                         {
                             direction = 360f - direction;
                         }
                     }
-                    else if (VEasyCalculator.CheckTerritory(owner) == GameManager.Direction.RIGHT)
+                    else if (VEasyCalculator.CheckTerritory(col) == GameManager.Direction.RIGHT)
                     {
                         if (direction >= 180f)
                         {
                             direction = 360f - direction;
                         }
                     }
-                    else if (VEasyCalculator.CheckTerritory(owner) == GameManager.Direction.UP)
+                    else if (VEasyCalculator.CheckTerritory(col) == GameManager.Direction.UP)
                     {
                         if (direction < 90f ||
                             direction >= 270f)
@@ -107,7 +93,7 @@ public class Movable : Operable
                 break;
             case BounceType.BOUNCE_UNIT_TARGET:
                 {
-                    Collidable col = (Collidable)owner.GetOperable(typeof(Collidable));
+                    Collidable col = owner.GetOperable(typeof(Collidable)) as Collidable;
                     if (col != null)
                     {
                         Unit colUnit = col.FirstCollisionCheck(Unit.Relation.ALL).owner;

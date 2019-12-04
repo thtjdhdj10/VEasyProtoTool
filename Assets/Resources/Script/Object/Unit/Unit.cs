@@ -11,36 +11,25 @@ using System.Collections.Generic;
 
 public class Unit : MyObject
 {
+    [System.NonSerialized]
     public UnitStatus unitStatus;
 
     public bool unitActive = true;
 
-    public List<Operable> operateList = new List<Operable>();
+    public Dictionary<System.Type, List<Operable>> operableListDic
+        = new Dictionary<System.Type, List<Operable>>();
+
     public List<Trigger> triggerList = new List<Trigger>();
 
     public static List<Unit> unitList = new List<Unit>();
-
-    public enum ColliderType // Collidable 의 속성으로 이동
-    {
-        NONE = 0,
-        CIRCLE,
-        RECT,
-    }
-
-    public ColliderType colType;
-
-    public float colCircle;
-
-    public Vector2 colRect;
 
     public Force force = Force.NONE;
 
     public enum Force
     {
         NONE = 0,
-        A,
-        B,
-        C,
+        PLAYER,
+        ENEMY,
     }
 
     public enum Relation
@@ -73,7 +62,7 @@ public class Unit : MyObject
 
     protected virtual void Start()
     {
-        operateList = new List<Operable>(GetComponents<Operable>());
+
     }
 
     protected virtual void OnDestroy()
@@ -93,7 +82,7 @@ public class Unit : MyObject
 
     protected virtual void FixedUpdate()
     {
-        for(int i = 0; i <triggerList.Count;++i)
+        for (int i = 0; i < triggerList.Count; ++i)
         {
             if (triggerList[i] is TriggerFrame)
                 (triggerList[i] as TriggerFrame).HandleFixedUpdate();
@@ -116,10 +105,8 @@ public class Unit : MyObject
 
     public Operable GetOperable(System.Type type)
     {
-        for (int i = 0; i < operateList.Count; ++i)
-            if(operateList[i].GetType() == type)
-                return operateList[i];
-
+        if (operableListDic[type].Count > 0)
+            return operableListDic[type][0];
         return null;
     }
 }

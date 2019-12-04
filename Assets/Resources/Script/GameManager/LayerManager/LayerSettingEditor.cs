@@ -21,7 +21,7 @@ public class LayerSettingEditor : Editor
     {
         layerProp = serializedObject.FindProperty(layerListName);
         if(layerProp == null)
-            Debug.LogError(layerListName + " is unvalid property name");
+            Debug.LogError(layerListName + " is invalid property name");
 
         layerMaskProp = serializedObject.FindProperty(layerMaskName);
 

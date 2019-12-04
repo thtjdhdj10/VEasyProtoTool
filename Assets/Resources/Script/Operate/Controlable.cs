@@ -3,22 +3,6 @@ using System.Collections.Generic;
 
 public class Controlable : Operable
 {
-    private MyObject owner;
-
-    public static List<Controlable> controlableList = new List<Controlable>();
-
-    protected virtual void Awake()
-    {
-        owner = GetComponent<MyObject>();
-
-        controlableList.Add(this);
-    }
-
-    protected virtual void OnDestroy()
-    {
-        controlableList.Remove(this);
-    }
-
     public virtual void ReceiveCommand(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType)
     {
         TriggerKeyInput.UnitEventReceive(owner, command, pressType);

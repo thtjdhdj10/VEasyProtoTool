@@ -48,14 +48,14 @@ public class VEasyCalculator
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
 
-    public static bool CheckOutside(Unit a)
+    public static bool CheckOutside(Collidable a)
     {
         Vector2 pos = a.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
 
         switch (a.colType)
         {
-            case Unit.ColliderType.CIRCLE:
+            case Collidable.ColliderType.CIRCLE:
                 {
                     if (pos.x + a.colCircle < rect.xMin ||
                         pos.x - a.colCircle > rect.xMax ||
@@ -66,7 +66,7 @@ public class VEasyCalculator
                     }
                 }
                 break;
-            case Unit.ColliderType.RECT:
+            case Collidable.ColliderType.RECT:
                 {
                     if (pos.x + a.colRect.x < rect.xMin ||
                         pos.x - a.colRect.x > rect.xMax ||
@@ -82,14 +82,14 @@ public class VEasyCalculator
         return false;
     }
 
-    public static GameManager.Direction CheckTerritory(Unit a)
+    public static GameManager.Direction CheckTerritory(Collidable a)
     {
         Vector2 pos = a.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
 
         switch (a.colType)
         {
-            case Unit.ColliderType.CIRCLE:
+            case Collidable.ColliderType.CIRCLE:
                 {
                     if (pos.x - a.colCircle < rect.xMin)
                     {
@@ -112,7 +112,7 @@ public class VEasyCalculator
                     }
                 }
                 break;
-            case Unit.ColliderType.RECT:
+            case Collidable.ColliderType.RECT:
                 {
                     if (pos.x - a.colRect.x < rect.xMin)
                     {
@@ -138,6 +138,11 @@ public class VEasyCalculator
         }
 
         return GameManager.Direction.NONE;
+    }
+
+    public static Vector2 ScreenToWorldPos(Vector2 screenPos)
+    {
+        return Camera.main.ScreenToWorldPoint(screenPos);
     }
 
     // 움직이는 두 Unit 이 n frame 뒤에 충돌하는지 체크
@@ -199,10 +204,10 @@ public class VEasyCalculator
     //    return ret;
     //}
 
-    public static bool IntersectCheck(Unit a, Unit b)
+    public static bool IntersectCheck(Collidable a, Collidable b)
     {
-        if (a.colType == Unit.ColliderType.CIRCLE &&
-            b.colType == Unit.ColliderType.CIRCLE)
+        if (a.colType == Collidable.ColliderType.CIRCLE &&
+            b.colType == Collidable.ColliderType.CIRCLE)
         {
             return IntersectCircle(a.transform.position, b.transform.position, a.colCircle + b.colCircle);
         }
@@ -211,13 +216,13 @@ public class VEasyCalculator
         //{
         //    return IntersectRect(a.transform.position, b.transform.position, a.colRect, b.colRect);
         //}
-        else if (a.colType == Unit.ColliderType.CIRCLE &&
-            b.colType == Unit.ColliderType.RECT)
+        else if (a.colType == Collidable.ColliderType.CIRCLE &&
+            b.colType == Collidable.ColliderType.RECT)
         {
             return IntersectCircleRect(a.transform.position, b.transform.position, a.colCircle, b.colRect, -b.transform.eulerAngles.z);
         }
-        else if (a.colType == Unit.ColliderType.RECT &&
-            b.colType == Unit.ColliderType.CIRCLE)
+        else if (a.colType == Collidable.ColliderType.RECT &&
+            b.colType == Collidable.ColliderType.CIRCLE)
         {
             return IntersectCircleRect(b.transform.position, a.transform.position, b.colCircle, a.colRect, -a.transform.eulerAngles.z);
         }

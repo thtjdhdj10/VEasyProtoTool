@@ -7,14 +7,15 @@ public class Player : Unit
     {
         base.Start();
 
-        TriggerKeyInputs inputsTrigger = new TriggerKeyInputs(this);
-        if (inputsTrigger != null)
-        {
-            ActionVectorMoveUnit move = new ActionVectorMoveUnit();
-            move.speed = 2f;
-            move.isRotate = false;
-            inputsTrigger.actionList.Add(move);
-        }
+        TriggerKeyInputs trgInputs = new TriggerKeyInputs(this);
+        ActionVectorMoveUnit move = new ActionVectorMoveUnit();
+        move.speed = 2f;
+        move.isRotate = true;
+        trgInputs.actionList.Add(move);
+
+        TriggerFrame trgFrame = new TriggerFrame(this, 0);
+        ActionTrackingMouse tracking = new ActionTrackingMouse();
+        trgFrame.actionList.Add(tracking);
     }
 
 

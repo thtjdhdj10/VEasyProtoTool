@@ -37,11 +37,11 @@ public class ActionVectorMoveUnit : Action
 
         UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
 
-        VectorMovable vm = triggerKeyInputs.owner.GetComponent<VectorMovable>();
+        MovableVector vm = triggerKeyInputs.owner.GetComponent<MovableVector>();
 
         if (vm == null)
         {
-            vm = triggerKeyInputs.owner.gameObject.AddComponent<VectorMovable>();
+            vm = triggerKeyInputs.owner.gameObject.AddComponent<MovableVector>();
             vm.Init(speed, Movable.BounceType.NONE);
         }
 

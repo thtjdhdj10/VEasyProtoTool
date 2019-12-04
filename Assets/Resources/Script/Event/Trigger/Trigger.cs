@@ -17,6 +17,12 @@ public class Trigger
     public Trigger(Unit _owner)
     {
         owner = _owner;
+        owner.triggerList.Add(this);
+    }
+
+    ~Trigger()
+    {
+        owner.triggerList.Remove(this);
     }
 
     public virtual void Init()
