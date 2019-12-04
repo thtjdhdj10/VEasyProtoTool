@@ -19,6 +19,6 @@ public class ShootableProjectileEditor : ShootableEditor
         base.ContentsUpdate();
 
         obj.projectile = EditorGUILayout.ObjectField(
-            "Projectile", obj.projectile, typeof(Unit), true) as Unit;
+            "Projectile", obj.projectile, typeof(Unit), true) as Bullet;
     }
 }

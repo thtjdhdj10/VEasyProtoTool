@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 public class Shootable : Operable
 {
-    [System.NonSerialized]
-    public Unit target;
+    public bool active;
 
     public bool isRangeless;
     public float range;
@@ -15,18 +14,18 @@ public class Shootable : Operable
 
     public float attackDelay;
     private float remainAttackDelay;
+    public bool loadOnDeactive; // 비활성 중 장전 여부
 
-    // 활성/비활성
-    // 비활성 중 재사용 대기시간 감소 여부
+    public bool fireToTarget;
+    public Unit target;
+    public float fireDirection;
+
+    // TODO
+    // range 관련 구현 수정
 
     void Start()
     {
-        target = GetTarget();
-    }
-
-    public virtual void Die()
-    {
-        Destroy(gameObject);
+        if (fireToTarget) target = GetTarget();
     }
 
     void FixedUpdate()
@@ -44,6 +43,15 @@ public class Shootable : Operable
 
     bool AttackDelayCheck()
     {
+        if (active == false)
+        {
+            if(remainAttackDelay > 0f &&
+                loadOnDeactive == true)
+                remainAttackDelay -= Time.fixedDeltaTime;
+
+            return false;
+        }
+
         if (remainAttackDelay > 0f)
         {
             remainAttackDelay -= Time.fixedDeltaTime;
