@@ -18,20 +18,19 @@ public class Shootable : Operable
 
     public bool fireToTarget;
     public Unit target;
+    public bool targetingEachFire; // 공격 마다 타겟찾음
     public float fireDirection;
-
-    // TODO
-    // range 관련 구현 수정
-
-    void Start()
-    {
-        if (fireToTarget) target = GetTarget();
-    }
 
     void FixedUpdate()
     {
         if (AttackDelayCheck() == true)
         {
+            if(fireToTarget)
+            {
+                if (target == null) target = GetTarget();
+                else if (targetingEachFire == true) target = GetTarget();
+            }
+
             Shoot();
         }
     }
@@ -67,52 +66,63 @@ public class Shootable : Operable
 
     public Unit GetTarget()
     {
-        List<KeyValuePair<Targetable, float>> targetList;
+        List<KeyValuePair<Targetable, float>> targetList
+            = new List<KeyValuePair<Targetable, float>>();
 
-        targetList = SearchTargetInRange(range);
-        if(ChioceTargetByDistance(targetList) != null)
+        for (int i = 0; i< allOperableListDic[typeof(Targetable)].Count; ++i)
         {
-            return ChioceTargetByDistance(targetList).owner;
+            targetList.Add(new KeyValuePair<Targetable, float>(
+                allOperableListDic[typeof(Targetable)][i] as Targetable, 0f));
         }
 
-        return null;
+        TargetingByForce(targetList);
+
+        TargetingByRange(targetList, range);
+
+        return TargetingByDistance(targetList).owner;
     }
 
-    // 사정거리 내의 것을 대상으로.
-    public virtual List<KeyValuePair<Targetable, float>> SearchTargetInRange(float range)
+    // 적만 대상
+    public virtual void TargetingByForce(List<KeyValuePair<Targetable,float>> targetList)
     {
-        List<KeyValuePair<Targetable, float>> ret = new List<KeyValuePair<Targetable, float>>();
-
-        for (int i = 0; i < allOperableListDic[typeof(Targetable)].Count; ++i)
+        foreach(var target in targetList)
         {
-            Targetable target = allOperableListDic[typeof(Targetable)][i] as Targetable;
-
-            float sqrDistance = VEasyCalculator.GetSqrDistance(owner, target.owner);
-
-            if (sqrDistance <= range * range)
+            if (target.Key.owner.force == owner.force)
             {
-                ret.Add(new KeyValuePair<Targetable, float>(target, sqrDistance));
+                targetList.Remove(target);
             }
         }
-
-        return ret;
     }
 
-    // 가장 가까운 것을 target으로 지정.
-    public virtual Targetable ChioceTargetByDistance(List<KeyValuePair<Targetable, float>> targetList)
+    // 사정거리 내의 것만 대상
+    public virtual void TargetingByRange(List<KeyValuePair<Targetable, float>> targetList, float range)
+    {
+        if (isRangeless) return;
+
+        foreach (var target in targetList)
+        {
+            float sqrDistance = VEasyCalculator.GetSqrDistance(owner, target.Key.owner);
+
+            if (sqrDistance > range * range)
+            {
+                targetList.Remove(target);
+            }
+        }
+    }
+
+    // 가장 가까운거 리턴
+    public virtual Targetable TargetingByDistance(List<KeyValuePair<Targetable, float>> targetList)
     {
         Targetable ret = null;
         float minDistance = float.MaxValue;
 
-        for (int i = 0; i < targetList.Count; ++i)
+        foreach(var target in targetList)
         {
-            Targetable target = targetList[i].Key;
-            float distance = targetList[i].Value;
-            VEasyCalculator.GetSqrDistance(owner, target.owner);
-            if (distance < minDistance)
+            VEasyCalculator.GetSqrDistance(owner, target.Key.owner);
+            if (target.Value < minDistance)
             {
-                minDistance = distance;
-                ret = target;
+                minDistance = target.Value;
+                ret = target.Key;
             }
         }
         

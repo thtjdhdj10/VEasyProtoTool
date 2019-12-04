@@ -40,6 +40,7 @@ public class ShootableEditor : Editor
         if (obj.fireToTarget = EditorGUILayout.Toggle("Fire To Target", obj.fireToTarget))
         {
             obj.target = EditorGUILayout.ObjectField("  Target", obj.target, typeof(Unit), true) as Unit;
+            obj.targetingEachFire = EditorGUILayout.Toggle("    Targeting Each Fire", obj.targetingEachFire);
         }
         else
         {
