@@ -24,6 +24,8 @@ public class Player : Unit
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
         ActionDeactiveShootable actDeactiveShootable = new ActionDeactiveShootable();
         trgMouseUp.actionList.Add(actDeactiveShootable);
+
+
     }
      
     protected override void FixedUpdate()

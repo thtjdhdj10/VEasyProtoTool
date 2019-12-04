@@ -16,6 +16,7 @@ public class Operable : MonoBehaviour
         System.Type operableType = this.GetType();
         if (operableType.BaseType != typeof(Operable))
             operableType = operableType.BaseType;
+        // TODO base의 base 타입도 지원되게 수정
 
         if (owner.operableListDic.ContainsKey(operableType) == false)
             owner.operableListDic.Add(operableType, new List<Operable>());

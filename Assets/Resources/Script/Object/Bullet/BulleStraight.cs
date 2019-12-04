@@ -18,5 +18,14 @@ public class BulleStraight : Bullet
         triggerCollision.actionList.Add(actionDestroy);
     }
 
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if(VEasyCalculator.CheckOutside(GetOperable<Collidable>()))
+        {
+            Destroy(gameObject);
+        }
+    }
 
 }

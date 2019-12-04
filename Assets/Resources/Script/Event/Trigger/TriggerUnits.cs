@@ -1,35 +1,53 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-// 특정한 유닛의 생성/파괴/초기화 시 Activate
-public class TriggerUnit : Trigger
+// 특정 type의 유닛 생성/파괴/초기화 시 동작
+public class TriggerUnits : Trigger
 {
-    public TriggerUnit(Unit _owner, TriggerType _type)
+    public TriggerUnits(Unit _owner, System.Type _unitType, TriggerType _type)
         : base(_owner)
     {
+        unitType = _unitType;
         type = _type;
 
-        unitTriggerDic.Add(owner, this);
+        if (unitTypeTriggerListDic.ContainsKey(unitType))
+            unitTypeTriggerListDic[unitType].Add(this);
+        else unitTypeTriggerListDic.Add(unitType,
+            new List<TriggerUnits>(new TriggerUnits[] { this }));
     }
 
-    ~TriggerUnit()
+    ~TriggerUnits()
     {
-        unitTriggerDic.Remove(owner);
+        unitTypeTriggerListDic.Remove(unitType);
     }
 
-    static Dictionary<Unit, TriggerUnit> unitTriggerDic
-        = new Dictionary<Unit, TriggerUnit>();
+    public static Dictionary<System.Type, List<TriggerUnits>> unitTypeTriggerListDic
+        = new Dictionary<System.Type, List<TriggerUnits>>();
 
-    // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(Unit unit, TriggerType type)
+    public static void UnitEventReceive(System.Type _unitType, TriggerType _type)
     {
-        if (unitTriggerDic.ContainsKey(unit) == true)
-            if (type == unitTriggerDic[unit].type)
-                unitTriggerDic[unit].ActivateTrigger();
+        // TODO 이부분 성능 구릴 수 있음
+        // issubclass 부하 확인
+
+        if(unitTypeTriggerListDic.ContainsKey(_unitType))
+        {
+            foreach(var key in unitTypeTriggerListDic.Keys)
+            {
+                if(_unitType.IsSubclassOf(key))
+                {
+                    foreach(var trigger in unitTypeTriggerListDic[key])
+                    {
+                        if (trigger.type == _type) trigger.ActivateTrigger();
+                    }
+                }
+            }
+        }
+
     }
 
-    public TriggerType type;
+    private System.Type unitType;
+    private TriggerType type;
 
     public enum TriggerType
     {

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+// TODO
+// movable 에서도 target 쓸거고, 다른 패턴에서도 쓸거같으니까
+// target 찾는 알고리즘 여기 말고 딴데로 빼기
 public class Shootable : Operable
 {
     public bool active;

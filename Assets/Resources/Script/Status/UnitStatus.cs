@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UnitStatus : MonoBehaviour
 {
+    [System.NonSerialized]
     public Unit owner;
 
     public int hp;
@@ -26,11 +27,7 @@ public class UnitStatus : MonoBehaviour
 
     void Awake()
     {
-        if(owner == null)
-        {
-            owner = gameObject.GetComponent<Unit>();
-        }
-
+        owner = gameObject.GetComponent<Unit>();
         owner.unitStatus = this;
     }
 

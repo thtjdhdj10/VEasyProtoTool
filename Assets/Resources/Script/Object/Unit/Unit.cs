@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 /* Unit 구조 설명
  * 
- * Unit 은 GameObject 의 Operable 들을 멤버로 가짐.
+ * Unit 은 GameObject 의 Operable 들을 멤버로 가짐. (operableListDic)
  * ( GetComponent 사용을 줄이기 위하여 )
  * 각 Operable 은 static 으로 동종의 Operable List 를 가짐.
  * ( Operable 순회 작업을 쉽게 하기 위하여 )
@@ -55,9 +55,10 @@ public class Unit : MyObject
 
     protected virtual void Awake()
     {
-        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.CREATE_UNIT);
-
         Init();
+
+        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.CREATE_UNIT);
+        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.CREATE_UNIT);
     }
 
     protected virtual void Start()
@@ -68,6 +69,7 @@ public class Unit : MyObject
     protected virtual void OnDestroy()
     {
         TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.DESTROY_UNIT);
+        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.DESTROY_UNIT);
     }
 
     protected virtual void OnEnable()
@@ -94,6 +96,7 @@ public class Unit : MyObject
     public virtual void Init()
     {
         TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.INIT_UNIT);
+        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.INIT_UNIT);
     }
 
     public virtual void InitSprite()
