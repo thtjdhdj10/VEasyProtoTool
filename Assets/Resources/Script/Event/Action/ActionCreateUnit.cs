@@ -4,37 +4,41 @@ using System.Collections.Generic;
 
 public class ActionCreateUnit : Action
 {
-    public Unit target;
-    public Vector2 pos;
+    private Unit target;
+    private Vector2 pos;
+    private bool isMovingUnit;
+    private float direction;
+    private float speed;
 
-    public override void Activate(Trigger trigger)
-    {
-        VEasyPoolerManager.GetModifiedObjectRequest(target.name, pos);
-    }
-
-    public void SetUnit(Unit _target)
-    {
-        pos = new Vector2(0, 0);
-    }
-
-    public void SetLocatedUnit(Unit _target, Vector2 _pos)
+    public ActionCreateUnit(Unit _target, Vector2 _pos)
     {
         target = _target;
         pos = _pos;
+
+        isMovingUnit = false;
     }
 
-    public void SetMovingUnit(Unit _target, Vector2 _pos, float direction, float speed)
+    public ActionCreateUnit(Unit _target, Vector2 _pos, float _direction, float _speed)
     {
+        target = _target;
+        pos = _pos;
 
+        isMovingUnit = true;
+
+        direction = _direction;
+        speed = _speed;
     }
 
-    public void SetLerpTurningUnit(Unit _target, Vector2 _pos, float direction, float speed, float turnFactor)
+    public override void Activate(Trigger trigger)
     {
+        Unit unit = GameObject.Instantiate(target);
+        unit.transform.position = pos;
 
-    }
-
-    public void SetRegularTurningUnit(Unit _target, Vector2 _pos, float direction, float speed, float turnFactor)
-    {
-
+        if (isMovingUnit)
+        {
+            Movable move = unit.GetOperable<Movable>();
+            move.direction = direction;
+            move.speed = speed;
+        }
     }
 }
