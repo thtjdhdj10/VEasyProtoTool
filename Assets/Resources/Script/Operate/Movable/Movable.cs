@@ -55,6 +55,13 @@ public class Movable : Operable
     {
         if (enableBounce == false) return;
 
+        if (remainBounceCooldown > 0f)
+        {
+            remainBounceCooldown -= Time.fixedDeltaTime;
+            return;
+        }
+        else remainBounceCooldown = bounceCooldown;
+
         bool isBounced = false;
         float targetDir = 0f;
 

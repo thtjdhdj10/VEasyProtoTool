@@ -10,6 +10,7 @@ public class Collidable : Operable
     {
         base.Awake();
 
+        // TODO 에디터에서 getcomponent해서 연결되게 수정
         if(collider == null) collider = GetComponent<Collider2D>();
         else
         {

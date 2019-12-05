@@ -2,19 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Condition
+public abstract class Condition
 {
+    public abstract bool CheckCondition();
+
     public virtual void Init()
     {
 
     }
-
-    public bool CheckCondition()
-    {
-
-        return true;
-    }
-
-
 
 }

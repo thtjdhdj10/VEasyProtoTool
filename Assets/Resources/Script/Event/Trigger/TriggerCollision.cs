@@ -15,18 +15,14 @@ public class TriggerCollision : Trigger
     {
         for (int i = 0; i < hitter.triggerList.Count;++i)
         {
-            TriggerCollision tc = null;
-            if (hitter.triggerList[i] is TriggerCollision)
-            {
-                tc = hitter.triggerList[i] as TriggerCollision;
-            }
-            else continue;
+            if (hitter.triggerList[i] is TriggerCollision == false) continue;
+            TriggerCollision trgCol = hitter.triggerList[i] as TriggerCollision;
 
             // TODO 이부분 부하 있을 수 있음.
-            if (_target.GetType().IsSubclassOf(tc.targetType))
+            if (_target.GetType().IsSubclassOf(trgCol.targetType))
             {
-                tc.target = _target;
-                tc.ActivateTrigger();
+                trgCol.target = _target;
+                trgCol.ActivateTrigger();
             }
         }
     }

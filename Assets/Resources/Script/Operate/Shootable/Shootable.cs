@@ -11,8 +11,6 @@ public class Shootable : Operable
     public bool isRangeless;
     public float range;
 
-    public int damage;
-
     public float attackDelay;
     public float remainAttackDelay;
     public bool loadOnDeactive; // 비활성 중 장전 여부
