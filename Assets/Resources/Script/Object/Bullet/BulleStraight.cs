@@ -10,7 +10,7 @@ public class BulleStraight : Bullet
         base.Awake();
 
         System.Type targetType;
-        if (force == Force.PLAYER) targetType = typeof(Enemy);
+        if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         TriggerCollision triggerCollision = new TriggerCollision(this, targetType);
@@ -22,7 +22,7 @@ public class BulleStraight : Bullet
     {
         base.FixedUpdate();
 
-        if(VEasyCalculator.CheckOutside(GetOperable<Collidable>()))
+        if(VEasyCalculator.CheckOutside2D(GetOperable<Collidable>().collider))
         {
             Destroy(gameObject);
         }

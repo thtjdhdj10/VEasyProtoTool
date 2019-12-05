@@ -5,14 +5,13 @@ public class MovableTurnRegular : Movable
 {
     public float turnFactor;
 
-    public void Init(float spd, float dir, Unit tar, float turn, BounceType _bounceType)
+    public void Init(float spd, float dir, Unit tar, float turn)
     {
         target = tar;
 
         speed = spd;
         direction = dir;
         turnFactor = turn;
-        bounceType = _bounceType;
     }
 
     // 균일한 선회

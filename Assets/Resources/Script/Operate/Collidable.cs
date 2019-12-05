@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 public class Collidable : Operable
 {
-    // colType에 따라 rec 나 circle 하나만 입력하게 수정
-    public enum ColliderType // Collidable 의 속성으로 이동
+    public new Collider2D collider;
+
+    protected override void Awake()
     {
-        CIRCLE,
-        RECT,
+        base.Awake();
+
+        if(collider == null) collider = GetComponent<Collider2D>();
+        else
+        {
+            Debug.LogWarning(this.name + " has not collider.");
+        }
     }
-
-    public ColliderType colType;
-
-    public float radius;
-
-    public Vector2 rect;
 
     protected virtual void Hit(Unit target)
     {
@@ -89,6 +89,6 @@ public class Collidable : Operable
 
     public virtual bool CollisionCheck(Collidable target)
     {
-        return VEasyCalculator.IntersectCheck(this, target);
+        return collider.IsTouching(target.collider);
     }
 }

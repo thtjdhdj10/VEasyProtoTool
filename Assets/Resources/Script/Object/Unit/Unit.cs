@@ -28,8 +28,8 @@ public class Unit : MyObject
     public enum Force
     {
         NONE = 0,
-        PLAYER,
-        ENEMY,
+        A, // Player
+        B, // Enemy
     }
 
     public enum Relation
@@ -37,7 +37,8 @@ public class Unit : MyObject
         NONE = 0,
         ALLY,
         ENEMY,
-        ALL,
+
+        ALLY_OR_ENEMY,
     }
 
     public static Relation GetRelation(Force a, Force b)
@@ -46,8 +47,7 @@ public class Unit : MyObject
             b == Force.NONE)
             return Relation.NONE;
 
-        if (a == b)
-            return Relation.ALLY;
+        if (a == b) return Relation.ALLY;
         else return Relation.ENEMY;
     }
 

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 public class MovableStraight : Movable
 {
-    public void Init(float spd, float dir, BounceType _bounceType)
+    public void Init(float spd, float dir)
     {
         speed = spd;
         direction = dir;
-        bounceType = _bounceType;
     }
 
     // 직선 등속 이동

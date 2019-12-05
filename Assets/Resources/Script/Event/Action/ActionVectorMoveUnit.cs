@@ -39,7 +39,7 @@ public class ActionVectorMoveUnit : Action
         if (vm == null)
         {
             vm = triggerKeyInputs.owner.gameObject.AddComponent<MovableVector>();
-            vm.Init(2f, Movable.BounceType.NONE);
+            vm.Init(2f);
         }
 
         vm.moveDir = moveDir;

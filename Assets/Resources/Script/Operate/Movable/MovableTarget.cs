@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class MovableTarget : Movable
 {
-    public void Init(float spd, Unit _target, BounceType _bounceType)
+    public void Init(float spd, Unit _target)
     {
         speed = spd;
         target = _target;
-        bounceType = _bounceType;
     }
 
     protected override void MoveFrame()

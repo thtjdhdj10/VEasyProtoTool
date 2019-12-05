@@ -48,93 +48,69 @@ public class VEasyCalculator
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
 
-    public static bool CheckOutside(Collidable a)
+    public static bool CheckOutside2D(Collider2D col)
     {
-        Vector2 pos = a.transform.position;
+        Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
 
-        switch (a.colType)
+        if (col is CircleCollider2D)
         {
-            case Collidable.ColliderType.CIRCLE:
-                {
-                    if (pos.x + a.radius < rect.xMin ||
-                        pos.x - a.radius > rect.xMax ||
-                        pos.y + a.radius < rect.yMin ||
-                        pos.y - a.radius > rect.yMax)
-                    {
-                        return true;
-                    }
-                }
-                break;
-            case Collidable.ColliderType.RECT:
-                {
-                    if (pos.x + a.rect.x < rect.xMin ||
-                        pos.x - a.rect.x > rect.xMax ||
-                        pos.y + a.rect.y < rect.yMin ||
-                        pos.y - a.rect.y > rect.yMax)
-                    {
-                        return true;
-                    }
-                }
-                break;
+            CircleCollider2D cirCol = col as CircleCollider2D;
+
+            if (pos.x + cirCol.radius < rect.xMin ||
+                pos.x - cirCol.radius > rect.xMax ||
+                pos.y + cirCol.radius < rect.yMin ||
+                pos.y - cirCol.radius > rect.yMax)
+            {
+                return true;
+            }
+        }
+        else if(col is BoxCollider2D)
+        {
+            BoxCollider2D boxCol = col as BoxCollider2D;
+
+            if (pos.x + boxCol.size.x < rect.xMin ||
+                pos.x - boxCol.size.x > rect.xMax ||
+                pos.y + boxCol.size.y < rect.yMin ||
+                pos.y - boxCol.size.x > rect.yMax)
+            {
+                return true;
+            }
         }
 
         return false;
     }
 
-    public static GameManager.Direction CheckTerritory(Collidable a)
+    public static GameManager.Direction CheckTerritory2D(Collider2D col)
     {
-        Vector2 pos = a.transform.position;
+        Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
 
-        switch (a.colType)
+        if (col is CircleCollider2D)
         {
-            case Collidable.ColliderType.CIRCLE:
-                {
-                    if (pos.x - a.radius < rect.xMin)
-                    {
-                        return GameManager.Direction.LEFT;
-                    }
+            CircleCollider2D cirCol = col as CircleCollider2D;
 
-                    if (pos.x + a.radius > rect.xMax)
-                    {
-                        return GameManager.Direction.RIGHT;
-                    }
+            if (pos.x - cirCol.radius < rect.xMin)
+                return GameManager.Direction.LEFT;
+            if (pos.x + cirCol.radius > rect.xMax)
+                return GameManager.Direction.RIGHT;
+            if (pos.y - cirCol.radius < rect.yMin)
+                return GameManager.Direction.DOWN;
+            if (pos.y + cirCol.radius > rect.yMax)
+                return GameManager.Direction.UP;
+        }
+        else if (col is BoxCollider2D)
+        {
+            BoxCollider2D boxCol = col as BoxCollider2D;
 
-                    if (pos.y - a.radius < rect.yMin)
-                    {
-                        return GameManager.Direction.DOWN;
-                    }
-
-                    if (pos.y + a.radius > rect.yMax)
-                    {
-                        return GameManager.Direction.UP;
-                    }
-                }
-                break;
-            case Collidable.ColliderType.RECT:
-                {
-                    if (pos.x - a.rect.x < rect.xMin)
-                    {
-                        return GameManager.Direction.LEFT;
-                    }
-
-                    if (pos.x + a.rect.x > rect.xMax)
-                    {
-                        return GameManager.Direction.RIGHT;
-                    }
-
-                    if (pos.y - a.rect.y < rect.yMin)
-                    {
-                        return GameManager.Direction.DOWN;
-                    }
-
-                    if (pos.y + a.rect.y > rect.yMax)
-                    {
-                        return GameManager.Direction.UP;
-                    }
-                    break;
-                }
+            if (pos.x - boxCol.size.x < rect.xMin)
+                return GameManager.Direction.LEFT;
+            if (pos.x + boxCol.size.x > rect.xMax)
+                return GameManager.Direction.RIGHT;
+            if (pos.y - boxCol.size.y < rect.yMin)
+                return GameManager.Direction.DOWN;
+            if (pos.y + boxCol.size.y > rect.yMax)
+                return GameManager.Direction.UP;
         }
 
         return GameManager.Direction.NONE;
@@ -204,31 +180,31 @@ public class VEasyCalculator
     //    return ret;
     //}
 
-    public static bool IntersectCheck(Collidable a, Collidable b)
-    {
-        if (a.colType == Collidable.ColliderType.CIRCLE &&
-            b.colType == Collidable.ColliderType.CIRCLE)
-        {
-            return IntersectCircle(a.transform.position, b.transform.position, a.radius + b.radius);
-        }
-        //else if(a.colType == Unit.ColliderType.RECT &&
-        //    b.colType == Unit.ColliderType.RECT)
-        //{
-        //    return IntersectRect(a.transform.position, b.transform.position, a.colRect, b.colRect);
-        //}
-        else if (a.colType == Collidable.ColliderType.CIRCLE &&
-            b.colType == Collidable.ColliderType.RECT)
-        {
-            return IntersectCircleRect(a.transform.position, b.transform.position, a.radius, b.rect, -b.transform.eulerAngles.z);
-        }
-        else if (a.colType == Collidable.ColliderType.RECT &&
-            b.colType == Collidable.ColliderType.CIRCLE)
-        {
-            return IntersectCircleRect(b.transform.position, a.transform.position, b.radius, a.rect, -a.transform.eulerAngles.z);
-        }
+    //public static bool IntersectCheck(Collidable a, Collidable b)
+    //{
+    //    if (a.colType == Collidable.ColliderType.CIRCLE &&
+    //        b.colType == Collidable.ColliderType.CIRCLE)
+    //    {
+    //        return IntersectCircle(a.transform.position, b.transform.position, a.radius + b.radius);
+    //    }
+    //    //else if(a.colType == Unit.ColliderType.RECT &&
+    //    //    b.colType == Unit.ColliderType.RECT)
+    //    //{
+    //    //    return IntersectRect(a.transform.position, b.transform.position, a.colRect, b.colRect);
+    //    //}
+    //    else if (a.colType == Collidable.ColliderType.CIRCLE &&
+    //        b.colType == Collidable.ColliderType.RECT)
+    //    {
+    //        return IntersectCircleRect(a.transform.position, b.transform.position, a.radius, b.rect, -b.transform.eulerAngles.z);
+    //    }
+    //    else if (a.colType == Collidable.ColliderType.RECT &&
+    //        b.colType == Collidable.ColliderType.CIRCLE)
+    //    {
+    //        return IntersectCircleRect(b.transform.position, a.transform.position, b.radius, a.rect, -a.transform.eulerAngles.z);
+    //    }
 
-        return false;
-    }
+    //    return false;
+    //}
 
     //static bool IntersectRect(Vector2 pos1, Vector2 pos2, Vector2 scale1, Vector2 scale2)
     //{
@@ -294,6 +270,26 @@ public class VEasyCalculator
     {
         ratio *= (max - min);
         return ratio + min;
+    }
+
+    public static float GetReflectedDirection(float moveDir, float targetDir)
+    {
+        GetNormalizedDirection(ref moveDir);
+        GetNormalizedDirection(ref targetDir);
+
+        moveDir -= 180f; // -180~180
+        targetDir -= 180f;
+        float minDir = targetDir - 90f;
+        float maxDir = targetDir + 90f;
+        if(minDir < -180f) minDir += 360f;
+        if(maxDir > 180f) maxDir -= 360f;
+
+        if(minDir < moveDir && moveDir < maxDir)
+            moveDir = (targetDir + 90f) * 2f - moveDir + 180f;
+
+        GetNormalizedDirection(ref moveDir);
+
+        return moveDir;
     }
 
     public static float GetDirectionDelta(ref float from, ref float to)
@@ -382,7 +378,7 @@ public class VEasyCalculator
         return GetLerpDirection(from, to, factor + distanceFactor * distanceRatio);
     }
 
-    public static void GetNormalizedDirection(ref float degrees)
+    public static void GetNormalizedDirection(ref float degrees) // 0~360
     {
         if (degrees < 0f)
             degrees += 360f;

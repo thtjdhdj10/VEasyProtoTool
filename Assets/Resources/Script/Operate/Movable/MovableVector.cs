@@ -5,10 +5,9 @@ public class MovableVector : Movable
 {
     public bool[] moveDir = new bool[4];
 
-    public void Init(float spd, BounceType _bounceType)
+    public void Init(float spd)
     {
         speed = spd;
-        bounceType = _bounceType;
     }
 
     protected override void MoveFrame()
