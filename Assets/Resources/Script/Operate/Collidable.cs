@@ -11,11 +11,8 @@ public class Collidable : Operable
         base.Awake();
 
         // TODO 에디터에서 getcomponent해서 연결되게 수정
-        if(collider == null) collider = GetComponent<Collider2D>();
-        else
-        {
-            Debug.LogWarning(this.name + " has not collider.");
-        }
+        if (collider == null) collider = GetComponent<Collider2D>();
+        if (collider == null) Debug.LogWarning(this.name + " has not collider.");
     }
 
     protected virtual void Hit(Unit target)
@@ -25,7 +22,7 @@ public class Collidable : Operable
 
     protected virtual void FixedUpdate()
     {
-        CollisionCheckFrame();
+        if(active) CollisionCheckFrame();
     }
 
     protected virtual void CollisionCheckFrame()
@@ -47,8 +44,7 @@ public class Collidable : Operable
     {
         List<Collidable> colTargetList = CollisionCheck(targetRelation);
 
-        if (colTargetList == null)
-            return null;
+        if (colTargetList == null) return null;
 
         return colTargetList[0];
     }
@@ -85,7 +81,7 @@ public class Collidable : Operable
                 ret.Add(target);
         }
 
-        return null;
+        return ret;
     }
 
     public virtual bool CollisionCheck(Collidable target)

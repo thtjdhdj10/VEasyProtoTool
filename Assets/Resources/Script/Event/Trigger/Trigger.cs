@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Trigger
+public abstract class Trigger
 {
     // 검사하기 쉬운 조건을 먼저 Add 할 것.
     public List<Condition> conditionList = new List<Condition>();

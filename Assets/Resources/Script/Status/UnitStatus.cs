@@ -27,6 +27,7 @@ public class UnitStatus : MonoBehaviour
 
     void Awake()
     {
+        // TODO 에디터에서 찾게 수정
         owner = gameObject.GetComponent<Unit>();
         owner.unitStatus = this;
     }

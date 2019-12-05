@@ -6,8 +6,6 @@ using System.Collections.Generic;
 // target 찾는 알고리즘 여기 말고 딴데로 빼기
 public class Shootable : Operable
 {
-    public bool active;
-
     public bool isRangeless;
     public float range;
 

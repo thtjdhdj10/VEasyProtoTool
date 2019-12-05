@@ -17,12 +17,12 @@ public class Player : Unit
 
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        ActionActiveShootable actActiveShootable = new ActionActiveShootable();
+        ActionActiveOperable<Shootable> actActiveShootable = new ActionActiveOperable<Shootable>(true);
         trgMouseDown.actionList.Add(actActiveShootable);
 
         TriggerKeyInput trgMouseUp = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
-        ActionDeactiveShootable actDeactiveShootable = new ActionDeactiveShootable();
+        ActionActiveOperable<Shootable> actDeactiveShootable = new ActionActiveOperable<Shootable>(false);
         trgMouseUp.actionList.Add(actDeactiveShootable);
 
 

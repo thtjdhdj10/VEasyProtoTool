@@ -6,6 +6,11 @@ public class ActionDealDamage : Action
 {
     public int damage;
 
+    public ActionDealDamage(int _damage)
+    {
+        damage = _damage;
+    }
+
     public override void Activate(Trigger trigger)
     {
         if (trigger is TriggerCollision == false) return;

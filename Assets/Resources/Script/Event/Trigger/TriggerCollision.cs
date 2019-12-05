@@ -19,7 +19,8 @@ public class TriggerCollision : Trigger
             TriggerCollision trgCol = hitter.triggerList[i] as TriggerCollision;
 
             // TODO 이부분 부하 있을 수 있음.
-            if (_target.GetType().IsSubclassOf(trgCol.targetType))
+            if (_target.GetType() == trgCol.targetType ||
+                _target.GetType().IsSubclassOf(trgCol.targetType))
             {
                 trgCol.target = _target;
                 trgCol.ActivateTrigger();

@@ -5,6 +5,8 @@ using UnityEngine;
 // 맵 나가면 삭제
 public class BulleStraight : Bullet
 {
+    public int damage;
+
     protected override void Awake()
     {
         base.Awake();
@@ -13,9 +15,11 @@ public class BulleStraight : Bullet
         if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
-        TriggerCollision triggerCollision = new TriggerCollision(this, targetType);
-        ActionDestroyUnit actionDestroy = new ActionDestroyUnit();
-        triggerCollision.actionList.Add(actionDestroy);
+        TriggerCollision trgCol = new TriggerCollision(this, targetType);
+        ActionDestroyUnit actDestroy = new ActionDestroyUnit(this);
+        ActionDealDamage actDeal = new ActionDealDamage(damage);
+        trgCol.actionList.Add(actDestroy);
+        trgCol.actionList.Add(actDeal);
     }
 
     protected override void FixedUpdate()

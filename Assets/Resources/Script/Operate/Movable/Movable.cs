@@ -11,6 +11,8 @@ public class Movable : Operable
 
     protected virtual void FixedUpdate()
     {
+        if (active == false) return;
+
         MoveFrame();
 
         BounceProcessing();
@@ -71,7 +73,7 @@ public class Movable : Operable
                 {
                     Collidable col = owner.GetOperable<Collidable>();
                     GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
-                    Debug.Log(bounceByDir);
+
                     isBounced = true;
                     switch (bounceByDir)
                     {

@@ -115,4 +115,11 @@ public class Unit : MyObject
 
         return null;
     }
+
+    public List<T> GetOperableList<T>() where T : Operable
+    {
+        if (operableListDic.ContainsKey(typeof(T)) == false) return null;
+
+        return operableListDic[typeof(T)] as List<T>;
+    }
 }

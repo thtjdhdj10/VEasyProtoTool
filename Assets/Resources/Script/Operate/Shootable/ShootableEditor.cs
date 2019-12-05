@@ -9,7 +9,6 @@ public class ShootableEditor : Editor
     SerializedProperty activeProp;
     SerializedProperty isRangelessProp;
     SerializedProperty rangeProp;
-    SerializedProperty damageProp;
     SerializedProperty attackDelayProp;
     SerializedProperty remainAttackDelayProp;
     SerializedProperty loadOnDeactiveProp;
@@ -27,7 +26,6 @@ public class ShootableEditor : Editor
         activeProp = serializedObject.FindProperty("active");
         isRangelessProp = serializedObject.FindProperty("isRangeless");
         rangeProp = serializedObject.FindProperty("range");
-        damageProp = serializedObject.FindProperty("damage");
         attackDelayProp = serializedObject.FindProperty("attackDelay");
         remainAttackDelayProp = serializedObject.FindProperty("remainAttackDelay");
         loadOnDeactiveProp = serializedObject.FindProperty("loadOnDeactive");
@@ -62,7 +60,6 @@ public class ShootableEditor : Editor
             EditorGUI.indentLevel -= 2;
         }
 
-        EditorGUILayout.PropertyField(damageProp);
         EditorGUILayout.PropertyField(attackDelayProp);
         EditorGUILayout.PropertyField(remainAttackDelayProp);
         EditorGUILayout.PropertyField(loadOnDeactiveProp);
