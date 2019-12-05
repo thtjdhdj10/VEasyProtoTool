@@ -12,7 +12,8 @@ public class ActionVectorMoveUnit : Action
     Dictionary<GameManager.Direction, GameManager.Direction> dirRevdirDic =
         new Dictionary<GameManager.Direction, GameManager.Direction>();
 
-    public ActionVectorMoveUnit()
+    public ActionVectorMoveUnit(Trigger trigger)
+        :base(trigger)
     {
         dirKeyDic[GameManager.Direction.LEFT] = KeyManager.KeyCommand.MOVE_LEFT;
         dirKeyDic[GameManager.Direction.RIGHT] = KeyManager.KeyCommand.MOVE_RIGHT;

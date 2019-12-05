@@ -11,5 +11,8 @@ public abstract class Action
 
     public abstract void Activate(Trigger trigger);
 
-
+    public Action(Trigger trigger)
+    {
+        trigger.actionList.Add(this);
+    }
 }

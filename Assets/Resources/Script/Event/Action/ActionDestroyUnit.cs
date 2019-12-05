@@ -6,7 +6,8 @@ public class ActionDestroyUnit : Action
 {
     public Unit target;
 
-    public ActionDestroyUnit(Unit _target)
+    public ActionDestroyUnit(Trigger trigger, Unit _target)
+        :base(trigger)
     {
         target = _target;
     }

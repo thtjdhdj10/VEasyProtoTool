@@ -8,23 +8,20 @@ public class Player : Unit
         base.Start();
 
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
-        ActionVectorMoveUnit actKeyInput = new ActionVectorMoveUnit();
-        trgKeyInput.actionList.Add(actKeyInput);
+        ActionVectorMoveUnit actKeyInput = new ActionVectorMoveUnit(trgKeyInput);
 
         TriggerFrame trgTrackingMouse = new TriggerFrame(this, 0);
-        ActionTrackingMouse actTackingMouse = new ActionTrackingMouse();
-        trgTrackingMouse.actionList.Add(actTackingMouse);
+        ActionTrackingMouse actTackingMouse = new ActionTrackingMouse(trgTrackingMouse);
 
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        ActionActiveOperable<Shootable> actActiveShootable = new ActionActiveOperable<Shootable>(true);
-        trgMouseDown.actionList.Add(actActiveShootable);
+        ActionActiveOperable<Shootable> actActiveShootable =
+            new ActionActiveOperable<Shootable>(trgMouseDown, true);
 
         TriggerKeyInput trgMouseUp = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
-        ActionActiveOperable<Shootable> actDeactiveShootable = new ActionActiveOperable<Shootable>(false);
-        trgMouseUp.actionList.Add(actDeactiveShootable);
-
+        ActionActiveOperable<Shootable> actDeactiveShootable
+            = new ActionActiveOperable<Shootable>(trgMouseUp, false);
 
     }
      

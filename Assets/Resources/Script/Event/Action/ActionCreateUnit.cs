@@ -10,7 +10,8 @@ public class ActionCreateUnit : Action
     private float direction;
     private float speed;
 
-    public ActionCreateUnit(Unit _target, Vector2 _pos)
+    public ActionCreateUnit(Trigger trigger, Unit _target, Vector2 _pos)
+        :base(trigger)
     {
         target = _target;
         pos = _pos;
@@ -18,7 +19,8 @@ public class ActionCreateUnit : Action
         isMovingUnit = false;
     }
 
-    public ActionCreateUnit(Unit _target, Vector2 _pos, float _direction, float _speed)
+    public ActionCreateUnit(Trigger trigger, Unit _target, Vector2 _pos, float _direction, float _speed)
+        :base(trigger)
     {
         target = _target;
         pos = _pos;

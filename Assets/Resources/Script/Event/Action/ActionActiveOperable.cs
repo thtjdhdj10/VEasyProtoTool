@@ -6,7 +6,8 @@ public class ActionActiveOperable<T> : Action where T : Operable
 {
     public bool doActive;
 
-    public ActionActiveOperable(bool _doActive)
+    public ActionActiveOperable(Trigger trigger, bool _doActive)
+        :base(trigger)
     {
         doActive = _doActive;
     }

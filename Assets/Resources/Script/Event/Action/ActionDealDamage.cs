@@ -6,7 +6,8 @@ public class ActionDealDamage : Action
 {
     public int damage;
 
-    public ActionDealDamage(int _damage)
+    public ActionDealDamage(Trigger trigger, int _damage)
+        :base(trigger)
     {
         damage = _damage;
     }
