@@ -19,7 +19,7 @@ public class MovableTurnLerp : Movable
     {
         float moveDistance = speed * Time.fixedDeltaTime;
 
-        float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, target.transform.position);
+        float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, targetPos);
 
         direction = VEasyCalculator.GetLerpDirection(
             direction, dirToPlayer, turnFactor * Time.fixedDeltaTime);

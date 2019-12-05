@@ -8,11 +8,16 @@ public abstract class Movable : Operable
 
     public float direction;
     public Unit target;
+    protected Vector2 targetPos;
 
     protected virtual void FixedUpdate()
     {
         if (active == false) return;
 
+        if (target != null) targetPos = target.transform.position;
+
+        // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
+        // 그거땜에 다른 하나가 동작안할때가있음
         BounceProcessing();
 
         SetSpriteAngle();
@@ -114,7 +119,7 @@ public abstract class Movable : Operable
                 if (colTarget != null)
                 {
                     isBounced = true;
-                    targetDir = VEasyCalculator.GetDirection(owner, colTarget.owner);
+                    targetDir = VEasyCalculator.GetDirection(owner.transform.position, targetPos);
                 }
             }
         }
