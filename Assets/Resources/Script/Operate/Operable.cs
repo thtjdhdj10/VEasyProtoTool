@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Operable : MonoBehaviour
+public abstract class Operable : MonoBehaviour
 {
     [System.NonSerialized]
     public Unit owner;

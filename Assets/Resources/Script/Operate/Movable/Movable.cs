@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Movable : Operable
+public abstract class Movable : Operable
 {
     public float speed = 1f;
     public bool isRotate = true;
@@ -13,17 +13,14 @@ public class Movable : Operable
     {
         if (active == false) return;
 
-        MoveFrame();
-
         BounceProcessing();
 
-        if (isRotate) SetSpriteAngle();
+        SetSpriteAngle();
+
+        MoveFrame();
     }
 
-    protected virtual void MoveFrame()
-    {
-
-    }
+    protected abstract void MoveFrame();
 
     public bool enableBounce;
     public float bounceCooldown;
@@ -33,6 +30,7 @@ public class Movable : Operable
 
     public enum BounceBy
     {
+        ALL,
         WORLD_BOUNDARY,
         UNIT,
         ENEMY,
@@ -48,6 +46,8 @@ public class Movable : Operable
 
     public virtual void SetSpriteAngle()
     {
+        if (isRotate == false) return;
+
         Vector3 rot = transform.eulerAngles;
         rot.z = direction + SpriteManager.spriteDefaultRotation;
         transform.eulerAngles = rot;
@@ -67,59 +67,56 @@ public class Movable : Operable
         bool isBounced = false;
         float targetDir = 0f;
 
-        switch (bounceBy)
+        if (bounceBy == BounceBy.ALL ||
+            bounceBy == BounceBy.WORLD_BOUNDARY)
         {
-            case BounceBy.WORLD_BOUNDARY:
-                {
-                    Collidable col = owner.GetOperable<Collidable>();
-                    GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
+            Collidable col = owner.GetOperable<Collidable>();
+            GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
 
+            isBounced = true;
+            switch (bounceByDir)
+            {
+                case GameManager.Direction.NONE:
+                    isBounced = false;
+                    break;
+                case GameManager.Direction.UP:
+                    targetDir = 90f;
+                    break;
+                case GameManager.Direction.DOWN:
+                    targetDir = 270f;
+                    break;
+                case GameManager.Direction.LEFT:
+                    targetDir = 180f;
+                    break;
+                case GameManager.Direction.RIGHT:
+                    targetDir = 0f;
+                    break;
+            }
+        }
+        else if (bounceBy == BounceBy.ALL ||
+            bounceBy == BounceBy.UNIT ||
+            bounceBy == BounceBy.ALLY ||
+            bounceBy == BounceBy.ENEMY)
+        {
+            Collidable col = owner.GetOperable<Collidable>();
+            if (col != null)
+            {
+                Unit.Relation targetRelation = Unit.Relation.NONE;
+                if (bounceBy == BounceBy.UNIT)
+                    targetRelation = Unit.Relation.ALLY_OR_ENEMY;
+                else if (bounceBy == BounceBy.ALLY)
+                    targetRelation = Unit.Relation.ALLY;
+                else if (bounceBy == BounceBy.ENEMY)
+                    targetRelation = Unit.Relation.ENEMY;
+
+                Collidable colTarget = col.FirstCollisionCheck(targetRelation);
+
+                if (colTarget != null)
+                {
                     isBounced = true;
-                    switch (bounceByDir)
-                    {
-                        case GameManager.Direction.NONE:
-                            isBounced = false;
-                            break;
-                        case GameManager.Direction.UP:
-                            targetDir = 90f;
-                            break;
-                        case GameManager.Direction.DOWN:
-                            targetDir = 270f;
-                            break;
-                        case GameManager.Direction.LEFT:
-                            targetDir = 180f;
-                            break;
-                        case GameManager.Direction.RIGHT:
-                            targetDir = 0f;
-                            break;
-                    }
+                    targetDir = VEasyCalculator.GetDirection(owner, colTarget.owner);
                 }
-                break;
-            case BounceBy.UNIT:
-            case BounceBy.ALLY:
-            case BounceBy.ENEMY:
-                {
-                    Collidable col = owner.GetOperable<Collidable>();
-                    if (col != null)
-                    {
-                        Unit.Relation targetRelation = Unit.Relation.NONE;
-                        if (bounceBy == BounceBy.UNIT)
-                            targetRelation = Unit.Relation.ALLY_OR_ENEMY;
-                        else if (bounceBy == BounceBy.ALLY)
-                            targetRelation = Unit.Relation.ALLY;
-                        else if (bounceBy == BounceBy.ENEMY)
-                            targetRelation = Unit.Relation.ENEMY;
-
-                        Collidable colTarget = col.FirstCollisionCheck(targetRelation);
-
-                        if (colTarget != null)
-                        {
-                            isBounced = true;
-                            targetDir = VEasyCalculator.GetDirection(owner, colTarget.owner);
-                        }
-                    }
-                }
-                break;
+            }
         }
 
         if(isBounced)
