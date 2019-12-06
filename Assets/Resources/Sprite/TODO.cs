@@ -21,6 +21,9 @@ public class TODO : MonoBehaviour
 
 
 // 폭탄 구현
+// 폭발 쉐이더
+
+    //유도미사일
 
 
     // 레이저 구현
