@@ -23,6 +23,11 @@ public class Player : Unit
         ActionActiveOperable<Shootable> actDeactiveShootable
             = new ActionActiveOperable<Shootable>(trgMouseUp, false);
 
+        TriggerKeyInput trgRightClick = new TriggerKeyInput(
+            this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
+        //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1()
+        //ActionActivatePattern actActivatePattern =
+        //    new ActionActivatePattern(trgRightClick);
     }
      
     protected override void FixedUpdate()
@@ -37,22 +42,12 @@ public class Player : Unit
     private void SetDirectionToMouse()
     {
         Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
-
-        Movable move = GetOperable<Movable>();
-        if (move != null)
-        {
-            move.direction = VEasyCalculator.GetDirection(transform.position, mouseWorldPos);
-        }
+        direction = VEasyCalculator.GetDirection(transform.position, mouseWorldPos);
     }
 
     private void SetShootableDirection()
     {
         Shootable shoot = GetOperable<Shootable>();
-        Movable move = GetOperable<Movable>();
-        if(shoot != null &&
-            move != null)
-        {
-            shoot.fireDirection = move.direction;
-        }
+        if(shoot != null) shoot.fireDirection = direction;
     }
 }

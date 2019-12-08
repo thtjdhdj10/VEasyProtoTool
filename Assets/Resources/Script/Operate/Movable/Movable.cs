@@ -6,7 +6,6 @@ public abstract class Movable : Operable
     public float speed = 1f;
     public bool isRotate = true;
 
-    public float direction;
     public Unit target;
     protected Vector2 targetPos;
 
@@ -54,7 +53,7 @@ public abstract class Movable : Operable
         if (isRotate == false) return;
 
         Vector3 rot = transform.eulerAngles;
-        rot.z = direction + SpriteManager.spriteDefaultRotation;
+        rot.z = owner.direction + SpriteManager.spriteDefaultRotation;
         transform.eulerAngles = rot;
     }
 
@@ -129,13 +128,13 @@ public abstract class Movable : Operable
             switch (bounceTo)
             {
                 case BounceTo.TARGET:
-                    direction = targetDir;
+                    owner.direction = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    direction += 180f;
+                    owner.direction += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    direction = VEasyCalculator.GetReflectedDirection(direction, targetDir);
+                    owner.direction = VEasyCalculator.GetReflectedDirection(owner.direction, targetDir);
                     break;
             }
         }

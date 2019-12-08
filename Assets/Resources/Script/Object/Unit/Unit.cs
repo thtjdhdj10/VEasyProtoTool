@@ -16,6 +16,8 @@ public class Unit : MyObject
 
     public bool unitActive = true;
 
+    public float direction;
+
     public Dictionary<System.Type, List<Operable>> operableListDic
         = new Dictionary<System.Type, List<Operable>>();
 
