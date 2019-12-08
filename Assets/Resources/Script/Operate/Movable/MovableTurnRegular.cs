@@ -10,7 +10,7 @@ public class MovableTurnRegular : Movable
         target = tar;
 
         speed = spd;
-        direction = dir;
+        owner.direction = dir;
         turnFactor = turn;
     }
 
@@ -21,10 +21,10 @@ public class MovableTurnRegular : Movable
 
         float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, targetPos);
 
-        direction = VEasyCalculator.GetTurningDirection(
-            direction, dirToPlayer, turnFactor * Time.fixedDeltaTime);
+        owner.direction = VEasyCalculator.GetTurningDirection(
+            owner.direction, dirToPlayer, turnFactor * Time.fixedDeltaTime);
 
-        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(direction, moveDistance);
+        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(owner.direction, moveDistance);
 
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;

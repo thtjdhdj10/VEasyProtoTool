@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : Unit
 {
+    public int damage;
 
 
 }

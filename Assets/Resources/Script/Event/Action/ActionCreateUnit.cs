@@ -39,7 +39,7 @@ public class ActionCreateUnit : Action
         if (isMovingUnit)
         {
             Movable move = unit.GetOperable<Movable>();
-            move.direction = direction;
+            unit.direction = direction;
             move.speed = speed;
         }
     }

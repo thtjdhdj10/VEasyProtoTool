@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class VEasyCalculator
 {
-    public static void ChangeKey<TKey, TValue>(Dictionary<TKey, TValue> dic,
-                                      TKey fromKey, TKey toKey)
+    public static void ChangeKey<TKey, TValue>(
+        Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
     {
         TValue value = dic[fromKey];
         dic.Remove(fromKey);
@@ -27,6 +27,13 @@ public class VEasyCalculator
     }
 
     //
+
+    public static float Inner(Vector2 posA, Vector2 posB)
+    {
+        float leftExpression = posA.x * posB.x + posA.y + posB.y;
+        float theta = leftExpression / (posA.magnitude * posB.magnitude);
+        return Mathf.Acos(theta);
+    }
 
     public static float Square(float f)
     {

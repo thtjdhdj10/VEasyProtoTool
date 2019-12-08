@@ -6,10 +6,10 @@ public class ShootableProjectile : Shootable
     public Bullet projectile;
     protected override void Shoot()
     {
-        Bullet bulletScript = Instantiate(projectile);
-        Movable bulletMove = bulletScript.GetOperable<Movable>();
+        Bullet bullet = Instantiate(projectile);
+        Movable bulletMove = bullet.GetOperable<Movable>();
 
-        bulletScript.transform.position = transform.position;
+        bullet.transform.position = transform.position;
         if (fireToTarget &&
             target != null)
         {
@@ -17,7 +17,7 @@ public class ShootableProjectile : Shootable
         }
         else
         {
-            bulletMove.direction = fireDirection;
+            bullet.direction = fireDirection;
         }
     }
 }

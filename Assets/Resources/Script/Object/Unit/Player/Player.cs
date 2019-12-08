@@ -23,13 +23,13 @@ public class Player : Unit
         ActionActiveOperable<Shootable> actDeactiveShootable
             = new ActionActiveOperable<Shootable>(trgMouseUp, false);
 
-        TriggerKeyInput trgRightClick = new TriggerKeyInput(
-            this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
-        //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1()
+        //TriggerKeyInput trgRightClick = new TriggerKeyInput(
+        //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
+        //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
         //ActionActivatePattern actActivatePattern =
-        //    new ActionActivatePattern(trgRightClick);
+        //    new ActionActivatePattern(trgRightClick, pattern_S1);
     }
-     
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();

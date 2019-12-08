@@ -17,11 +17,12 @@ public abstract class Movable : Operable
 
         // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
         // 그거땜에 다른 하나가 동작안할때가있음
-        BounceProcessing();
 
         SetSpriteAngle();
 
         MoveFrame();
+
+        BounceProcessing();
     }
 
     protected abstract void MoveFrame();
@@ -46,6 +47,7 @@ public abstract class Movable : Operable
         TARGET,
         REVERSE, // dir +180
         REFLECT, // 거울반사
+        BLOCK, // 길막
     }
 
     public virtual void SetSpriteAngle()
@@ -135,6 +137,20 @@ public abstract class Movable : Operable
                     break;
                 case BounceTo.REFLECT:
                     owner.direction = VEasyCalculator.GetReflectedDirection(owner.direction, targetDir);
+                    break;
+                case BounceTo.BLOCK:
+                    Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
+                        owner.direction, 1f);
+                    Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
+                        targetDir, 1f);
+
+                    float inner = VEasyCalculator.Inner(moveVector, targetVector);
+
+                    Vector2 escapeVector = VEasyCalculator.GetRotatedPosition(
+                        targetDir + 180f, inner * speed * Time.fixedDeltaTime);
+
+                    owner.transform.position = (Vector2)owner.transform.position + escapeVector;
+                    // TODO
                     break;
             }
         }

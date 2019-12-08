@@ -11,8 +11,8 @@ public abstract class Pattern
 
     // priority 높을수록 패턴 발동확률 증가 0 = 0%
     // 패턴 발동 시 currentpriority 0으로 초기화
-    public float priority = 1f;
-    public float currentPriority;
+    public int priority = 1;
+    public int currentPriority = 1;
 
     public void Activate()
     {
@@ -33,35 +33,17 @@ public abstract class Pattern
     public abstract IEnumerator Fire();
 }
 
-public class PatternContinued : Pattern
-{
-    public List<Pattern> patternList = new List<Pattern>();
-
-    public float patternTerm;
-
-    public override IEnumerator Fire()
-    {
-        for (int i = 0; i < patternList.Count; ++i)
-        {
-            yield return GameManager.gm.StartCoroutine(patternList[i].Fire());
-
-            if (i > patternList.Count - 1)
-                yield return new WaitForSeconds(patternTerm);
-        }
-    }
-}
-
-public abstract class PatternFire : Pattern
+public class PatternFire : Pattern
 {
     public Unit firePrefab;
 
     public Unit posRootUnit;
     public Vector2 position;
-    protected Vector2 deltaPos;
+    public Vector2 deltaPos;
 
     public Unit dirRootUnit;
     public float direction;
-    protected float deltaDir;
+    public float deltaDir;
 
     public int count = 1;
     protected int firedCount = 0;
@@ -212,23 +194,52 @@ public class PatternFireRow : PatternFire
 
 //
 
-public class Pattern_Slayer_1 : PatternContinued
+public class Pattern_Slayer_1 : Pattern
 {
-    public Pattern_Slayer_1(Unit rootPos, Movable rootDir)
+    public List<Pattern> patternList = new List<Pattern>();
+
+    public Pattern_Slayer_1(Unit unit)
     {
-        PatternFireAngleRandom pt = new PatternFireAngleRandom();
-        pt.firePrefab = Resources.Load("Prefabs/Player Bullet A") as Unit;
+        PatternFireAngleRandom pattern1 = new PatternFireAngleRandom();
+        GameObject go = Resources.Load("Prefabs/Slayer Bullet A") as GameObject;
+        Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
+        bullet.owner = unit;
 
-        pt.preDelay = 1f;
-        pt.postDelay = 2f;
+        pattern1.firePrefab = bullet;
 
-        pt.count = 30;
-        pt.term = 0.1f;
-        pt.angle = 90f;
+        float duration = 5f;
 
-        //pt.direction = direction;
-        //pt.position = rootPos;
+        pattern1.count = 150;
+        pattern1.term = duration / pattern1.count;
+        pattern1.angle = 110f;
 
-        patternList.Add(pt);
+        pattern1.posRootUnit = unit;
+        pattern1.dirRootUnit = unit;
+
+        patternList.Add(pattern1);
+
+        PatternFire[] pattern2 = new PatternFire[2];
+        for(int i = 0; i < 2; ++i)
+        {
+            pattern2[i] = new PatternFire();
+            pattern2[i].firePrefab = bullet;
+
+            pattern2[i].count = 30;
+            pattern2[i].term = duration / pattern2[i].count;
+            if(i == 0) pattern2[i].deltaDir = -60f;
+            else pattern2[i].deltaDir = 60f;
+
+            pattern2[i].posRootUnit = unit;
+            pattern2[i].dirRootUnit = unit;
+
+            patternList.Add(pattern2[i]);
+        }
+    }
+
+    public override IEnumerator Fire()
+    {
+        GameManager.gm.StartCoroutine(patternList[0].Fire());
+        GameManager.gm.StartCoroutine(patternList[1].Fire());
+        yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
     }
 }
