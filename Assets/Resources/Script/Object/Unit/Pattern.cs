@@ -22,15 +22,29 @@ public abstract class Pattern
     private IEnumerator PatternProcess()
     {
         isPatternRunning = true;
+
+        yield return GameManager.gm.StartCoroutine(PreFire());
+
         yield return new WaitForSeconds(preDelay);
 
         yield return GameManager.gm.StartCoroutine(Fire());
 
         yield return new WaitForSeconds(postDelay);
+
+        yield return GameManager.gm.StartCoroutine(PostFire());
+
         isPatternRunning = false;
     }
 
     public abstract IEnumerator Fire();
+    public virtual IEnumerator PreFire()
+    {
+        yield break;
+    }
+    public virtual IEnumerator PostFire()
+    {
+        yield break;
+    }
 }
 
 public class PatternFire : Pattern
@@ -159,10 +173,24 @@ public class PatternFireRowRandom : PatternFire
     }
 }
 
-// 방사
+public class PatternFireCircle : PatternFire
+{
+    public bool isClockwise = false;
+
+    public override void PreFireProcess()
+    {
+        if (count == 1) return;
+
+        float fireIndex = (float)firedCount / count;
+        if (isClockwise) fireIndex = -fireIndex;
+        deltaDir = 360f * fireIndex;
+    }
+}
+
+// 샷건처럼 방사
 public class PatternFireAngle : PatternFire
 {
-    public float angle = 360f;
+    public float angle = 120f;
     public bool isClockwise = false;
 
     public override void PreFireProcess()
@@ -194,14 +222,22 @@ public class PatternFireRow : PatternFire
 
 //
 
+// 보고있는 방향 +-60도로 난사
 public class Pattern_Slayer_1 : Pattern
 {
     public List<Pattern> patternList = new List<Pattern>();
 
+    private Movable move;
+
     public Pattern_Slayer_1(Unit unit)
     {
+        postDelay = 5f;
+
+        move = unit.GetOperable<Movable>();
+        move.active = false;
+
         PatternFireAngleRandom pattern1 = new PatternFireAngleRandom();
-        GameObject go = Resources.Load("Prefabs/Slayer Bullet A") as GameObject;
+        GameObject go = null; // TODO
         Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
         bullet.owner = unit;
 
@@ -238,8 +274,69 @@ public class Pattern_Slayer_1 : Pattern
 
     public override IEnumerator Fire()
     {
+        move.active = false;
+
         GameManager.gm.StartCoroutine(patternList[0].Fire());
         GameManager.gm.StartCoroutine(patternList[1].Fire());
         yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
+    }
+
+    public override IEnumerator PostFire()
+    {
+        move.active = true;
+        yield break;
+    }
+}
+
+// 전방향 난사
+public class Pattern_Slayer_2 : Pattern
+{
+    public List<Pattern> patternList = new List<Pattern>();
+
+    private const int count = 20;
+    private const float duration = 5f;
+    private const float term = duration / count;
+    private PatternFireCircle[] patterns = new PatternFireCircle[count];
+    private Movable move;
+
+    public Pattern_Slayer_2(Unit unit)
+    {
+        postDelay = 5f;
+
+        move = unit.GetOperable<Movable>();
+
+        GameObject go = null; // TODO
+
+        for (int i = 0; i < count; ++i)
+        {
+            patterns[i] = new PatternFireCircle();
+
+            patterns[i].firePrefab = go.GetComponent<Bullet>();
+
+            patterns[i].count = 8;
+            patterns[i].term = 0f;
+
+            patterns[i].posRootUnit = unit;
+            patterns[i].dirRootUnit = null;
+            patterns[i].direction = i * 120f;
+        }
+    }
+
+    public override IEnumerator Fire()
+    {
+        move.active = false;
+
+        for (int i = 0; i < count; ++i)
+        {
+            GameManager.gm.StartCoroutine(patterns[i].Fire());
+            if (i < count - 1)
+                yield return new WaitForSeconds(term);
+        }
+    }
+
+    public override IEnumerator PostFire()
+    {
+        move.active = true;
+        yield break;
     }
 }

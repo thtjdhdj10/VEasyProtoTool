@@ -31,8 +31,7 @@ public class VEasyCalculator
     public static float Inner(Vector2 posA, Vector2 posB)
     {
         float leftExpression = posA.x * posB.x + posA.y + posB.y;
-        float theta = leftExpression / (posA.magnitude * posB.magnitude);
-        return Mathf.Acos(theta);
+        return leftExpression / (posA.magnitude * posB.magnitude);
     }
 
     public static float Square(float f)
@@ -55,7 +54,7 @@ public class VEasyCalculator
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
 
-    public static bool CheckOutside2D(Collider2D col)
+    public static GameManager.Direction CheckOutside2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
@@ -64,28 +63,30 @@ public class VEasyCalculator
         {
             CircleCollider2D cirCol = col as CircleCollider2D;
 
-            if (pos.x + cirCol.radius < rect.xMin ||
-                pos.x - cirCol.radius > rect.xMax ||
-                pos.y + cirCol.radius < rect.yMin ||
-                pos.y - cirCol.radius > rect.yMax)
-            {
-                return true;
-            }
+            if (pos.x + cirCol.radius < rect.xMin)
+                return GameManager.Direction.LEFT;
+            if (pos.x - cirCol.radius > rect.xMax)
+                return GameManager.Direction.RIGHT;
+            if (pos.y + cirCol.radius < rect.yMin)
+                return GameManager.Direction.DOWN;
+            if (pos.y - cirCol.radius > rect.yMax)
+                return GameManager.Direction.UP;
         }
-        else if(col is BoxCollider2D)
+        else if (col is BoxCollider2D)
         {
             BoxCollider2D boxCol = col as BoxCollider2D;
 
-            if (pos.x + boxCol.size.x < rect.xMin ||
-                pos.x - boxCol.size.x > rect.xMax ||
-                pos.y + boxCol.size.y < rect.yMin ||
-                pos.y - boxCol.size.x > rect.yMax)
-            {
-                return true;
-            }
+            if (pos.x + boxCol.size.x < rect.xMin)
+                return GameManager.Direction.LEFT;
+            if (pos.x - boxCol.size.x > rect.xMax)
+                return GameManager.Direction.RIGHT;
+            if (pos.y + boxCol.size.y < rect.yMin)
+                return GameManager.Direction.DOWN;
+            if (pos.y - boxCol.size.y > rect.yMax)
+                return GameManager.Direction.UP;
         }
 
-        return false;
+        return GameManager.Direction.NONE;
     }
 
     public static GameManager.Direction CheckTerritory2D(Collider2D col)

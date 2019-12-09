@@ -35,8 +35,10 @@ public abstract class Movable : Operable
 
     public enum BounceBy
     {
+        NONE = 0,
         ALL,
-        WORLD_BOUNDARY,
+        BOUNDARY_TOUCH,
+        BOUNDARY_OUT,
         UNIT,
         ENEMY,
         ALLY,
@@ -44,10 +46,12 @@ public abstract class Movable : Operable
     
     public enum BounceTo
     {
+        NONE = 0,
         TARGET,
         REVERSE, // dir +180
         REFLECT, // 거울반사
         BLOCK, // 길막
+        DESTROY,
     }
 
     public virtual void SetSpriteAngle()
@@ -74,10 +78,36 @@ public abstract class Movable : Operable
         float targetDir = 0f;
 
         if (bounceBy == BounceBy.ALL ||
-            bounceBy == BounceBy.WORLD_BOUNDARY)
+            bounceBy == BounceBy.BOUNDARY_TOUCH)
         {
             Collidable col = owner.GetOperable<Collidable>();
             GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
+
+            isBounced = true;
+            switch (bounceByDir)
+            {
+                case GameManager.Direction.NONE:
+                    isBounced = false;
+                    break;
+                case GameManager.Direction.UP:
+                    targetDir = 90f;
+                    break;
+                case GameManager.Direction.DOWN:
+                    targetDir = 270f;
+                    break;
+                case GameManager.Direction.LEFT:
+                    targetDir = 180f;
+                    break;
+                case GameManager.Direction.RIGHT:
+                    targetDir = 0f;
+                    break;
+            }
+        }
+        else if (bounceBy == BounceBy.ALL ||
+            bounceBy == BounceBy.BOUNDARY_OUT)
+        {
+            Collidable col = owner.GetOperable<Collidable>();
+            GameManager.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
             isBounced = true;
             switch (bounceByDir)
@@ -150,7 +180,10 @@ public abstract class Movable : Operable
                         targetDir + 180f, inner * speed * Time.fixedDeltaTime);
 
                     owner.transform.position = (Vector2)owner.transform.position + escapeVector;
-                    // TODO
+                    // TODO 최적화 및 벽에서 달달달 안하게
+                    break;
+                case BounceTo.DESTROY:
+                    Destroy(owner.gameObject);
                     break;
             }
         }

@@ -11,7 +11,6 @@ System.Collections.Generic.Dictionary<string, SpriteManager.SpriteAttribute>>>;
 
 public class SpriteManager : MonoBehaviour
 {
-
     public const bool PRINT_DEBUG = true;
 
     public int countLoadSprite;

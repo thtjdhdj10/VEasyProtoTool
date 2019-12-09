@@ -15,7 +15,7 @@ public class PatternFireable : Operable
         {
             if (currentPattern != null)
             {
-                if (currentPattern.isPatternRunning == false)
+                if (currentPattern.isPatternRunning == true)
                     return;
             }
 
@@ -26,7 +26,9 @@ public class PatternFireable : Operable
                 currentPattern = SelectNextPattern();
 
                 if (currentPattern != null)
+                {
                     currentPattern.Activate();
+                }
             }
         }
     }

@@ -22,7 +22,8 @@ public class BulleStraight : Bullet
     {
         base.FixedUpdate();
 
-        if(VEasyCalculator.CheckOutside2D(GetOperable<Collidable>().collider))
+        if(VEasyCalculator.CheckOutside2D(GetOperable<Collidable>().collider)
+            != GameManager.Direction.NONE)
         {
             Destroy(gameObject);
         }
