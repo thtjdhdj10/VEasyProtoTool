@@ -237,7 +237,7 @@ public class Pattern_Slayer_1 : Pattern
         move.active = false;
 
         PatternFireAngleRandom pattern1 = new PatternFireAngleRandom();
-        GameObject go = null; // TODO
+        GameObject go = ResourcesManager.LoadGameObject(ResourcesManager.PrefabName.Bullet_Slayer_1);
         Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
         bullet.owner = unit;
 
@@ -305,7 +305,7 @@ public class Pattern_Slayer_2 : Pattern
 
         move = unit.GetOperable<Movable>();
 
-        GameObject go = null; // TODO
+        GameObject go = ResourcesManager.LoadGameObject(ResourcesManager.PrefabName.Bullet_Slayer_2);
 
         for (int i = 0; i < count; ++i)
         {

@@ -6,22 +6,37 @@ using UnityEngine;
 public class ResourcesManager : MonoBehaviour
 {
     // resources load 로 프리팹 다 불러와서 dictionary에 넣음
-    public Dictionary<PrefabName, GameObject> prefabDic
+    public static Dictionary<PrefabName, GameObject> prefabDic
         = new Dictionary<PrefabName, GameObject>();
 
-    public int loadedPrefabCount;
     public List<GameObject> loadedPrefabList = new List<GameObject>();
 
     public const string RESOURCES = "Resources";
     public const string PREFABS = "Prefabs";
 
+    public static GameObject LoadGameObject(PrefabName name)
+    {
+        if (prefabDic.ContainsKey(name))
+            return prefabDic[name];
+        return null;
+    }
 
     // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
     public enum PrefabName
     {
         NONE = 0,
+        
         Enemy_Wing,
         EnemyBoss_Slayer,
+        
+        Bullet_Laser,
+        Bullet_Straight_1,
+        Bullet_Straight_2,
+        Bullet_Slayer_1,
+        Bullet_Slayer_2,
+
+        Effect_LaserRoot,
+        Effect_LaserBody,
     }
 
     public enum Option
@@ -33,80 +48,69 @@ public class ResourcesManager : MonoBehaviour
 
     private void Awake()
     {
-
-
-        
+        LoadPrefabs();
     }
-
-    //public static GameObject LoadGameObject<T>()
-    //{
-
-    //}
 
     private void LoadPrefabs()
     {
-        loadedPrefabCount = 0;
-
         loadedPrefabList.Clear();
 
         string fullPath = Application.dataPath + "/" +
             RESOURCES + "/" +
             PREFABS + "/";
 
-        // Sprite Directory 이하의 Directory 들을 가져옴
+        // Prefabs Directory 이하의 Directory 들을 가져옴
         string[] targetDirectoryWithPath = System.IO.Directory.GetDirectories(fullPath);
 
         for (int i = 0; i < targetDirectoryWithPath.Length; ++i)
         {
-            // directory 들 이하의 png file 들을 가져옴
-            string[] spriteNameWithPath = System.IO.Directory.GetFiles(targetDirectoryWithPath[i], "*.prefab");
+            // directory 들 이하의 prefab file 들을 가져옴
+            string[] resourceNameWithPath = System.IO.Directory.GetFiles(targetDirectoryWithPath[i], "*.prefab");
 
-            for (int j = 0; j < spriteNameWithPath.Length; ++j)
+            for (int j = 0; j < resourceNameWithPath.Length; ++j)
             {
-                for (int k = 0; k < splitName.Length; ++k)
-                {
-                    strType[k] = splitName[k];
-                }
-
-                SpriteAttribute sa = new SpriteAttribute();
-
                 // resource.load 를 위한 이름
-                string resourceLoadName = GetLoadingName(spriteNameWithPath[j]);
-                sa.sprite = Resources.Load<Sprite>(resourceLoadName);
+                string resourceName = GetResourceName(resourceNameWithPath[j]);
 
-                sa.frameCount = GetSpriteFrameCount(strType);
-                sa.speed = GetSpriteSpeed(strType, sa.frameCount);
-                sa.cycle = (1f / (float)spriteDefaultFramePerSec) / sa.speed * (float)(sa.frameCount - 1);
-
-                CutSpriteAttribute(ref strType);
-
-                //
-
-                if (sa.sprite == null)
+                PrefabName prefabName = (PrefabName)System.Enum.Parse(typeof(PrefabName), resourceName);
+                if (prefabName != PrefabName.NONE)
                 {
-                    CustomLog.CompleteLogWarning(
-                        "Invalid Sprite: " + resourceLoadName,
-                        PRINT_DEBUG);
-
-                    continue;
+                    string resourceLoadName = GetLoadingName(resourceNameWithPath[j]);
+                    GameObject go = Resources.Load<GameObject>(resourceLoadName);
+                    prefabDic.Add(prefabName, go);
+                    loadedPrefabList.Add(go);
                 }
-
-                loadingSpriteNameList.Add(strType[0] + " " + strType[1] + " " + strType[2]);
-
-                string category = strType[0];
-                string name = strType[1];
-                string status = strType[2];
-
-                if (typeSpriteDic.ContainsKey(category) == false)
-                    typeSpriteDic.Add(category, new Dictionary<string, Dictionary<string, SpriteAttribute>>());
-                if (typeSpriteDic[category].ContainsKey(name) == false)
-                    typeSpriteDic[category].Add(name, new Dictionary<string, SpriteAttribute>());
-                if (typeSpriteDic[category][name].ContainsKey(status) == false)
-                    typeSpriteDic[category][name].Add(status, sa);
-                ++countLoadSprite;
             }
         }
+    }
 
-        Debug.Log("Load Sprite Count: " + countLoadSprite);
+    private string GetResourceName(string fullName)
+    {
+        string[] resourceName = fullName.Split('/', '\\');
+        return resourceName[resourceName.Length - 1].Split('.')[0];
+    }
+
+    private string GetLoadingName(string fullName)
+    {
+        string[] resourceName = fullName.Split('/', '\\');
+
+        string loadingName = "";
+
+        // Resouces 하위의 상대경로 + 파일이름( 확장자명 제외 )
+
+        bool b = false;
+        for (int i = 0; i < resourceName.Length; ++i)
+        {
+            if (resourceName[i] == RESOURCES)
+            {
+                b = true;
+                continue;
+            }
+            if (b)
+            {
+                loadingName += resourceName[i] + "/";
+            }
+        }
+        return loadingName.Split('.')[0];
     }
 }

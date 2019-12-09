@@ -33,6 +33,7 @@ public class PatternFireable : Operable
         }
     }
 
+    // TODO 주석달기
     public Pattern SelectNextPattern()
     {
         int prioritySum = 0;

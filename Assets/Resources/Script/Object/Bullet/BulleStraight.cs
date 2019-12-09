@@ -18,15 +18,4 @@ public class BulleStraight : Bullet
         ActionDealDamage actDeal = new ActionDealDamage(trgCol, damage);
     }
 
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        if(VEasyCalculator.CheckOutside2D(GetOperable<Collidable>().collider)
-            != GameManager.Direction.NONE)
-        {
-            Destroy(gameObject);
-        }
-    }
-
 }
