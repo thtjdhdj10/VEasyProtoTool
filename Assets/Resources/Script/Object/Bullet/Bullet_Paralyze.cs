@@ -14,10 +14,9 @@ public class Bullet_Paralyze : BulleStraight
         {
             if(trg is TriggerCollision)
             {
-                ActionActiveTargetOperable<Movable> actParalyze
-                    = new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, true);
-                ActionActiveTargetOperable<Movable> actRestoreParalyze
-                    = new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, false, duration);
+                new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, true);
+                new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, false)
+                { delay = duration };
                 break;
             }
         }

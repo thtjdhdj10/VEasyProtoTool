@@ -25,8 +25,6 @@ public class Unit : MyObject
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public List<Operable> operableList = new List<Operable>();
-
     public Force force = Force.NONE;
 
     public enum Force
@@ -112,9 +110,12 @@ public class Unit : MyObject
 
     public void SetOperablesState(bool state)
     {
-        foreach(var o in operableList)
+        foreach(var type in operableListDic.Keys)
         {
-            o.active.SetStateForce(state);
+            foreach(var o in operableListDic[type])
+            {
+                o.active.SetStateForce(state);
+            }
         }
     }
 

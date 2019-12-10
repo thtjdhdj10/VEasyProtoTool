@@ -4,16 +4,49 @@ using System.Collections.Generic;
 
 public abstract class Action
 {
+    public float delay = 0f;
+
     public virtual void Init()
     {
 
     }
 
-    public abstract void Activate(Trigger trigger);
+    public void Activate(Trigger trigger)
+    {
+        if (delay == 0f) ActionProcess(trigger);
+        else GameManager.gm.StartCoroutine(DelayedActivate(trigger));
+    }
+
+    protected abstract void ActionProcess(Trigger trigger);
 
     public Action(Trigger trigger)
     {
         trigger.actionList.Add(this);
+    }
+
+    private IEnumerator DelayedActivate(Trigger trigger)
+    {
+        yield return new WaitForSeconds(delay);
+        ActionProcess(trigger);
+    }
+}
+
+public class ActionSetSpeed : Action
+{
+    public float speed;
+
+    public ActionSetSpeed(Trigger trigger, float _speed)
+        : base(trigger)
+    {
+        speed = _speed;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        Movable move = trigger.owner.GetOperable<Movable>();
+        if (move == null) return;
+
+        move.speed = speed;
     }
 }
 
@@ -27,7 +60,7 @@ public class ActionPrintLog : Action
         log = _log;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         Debug.Log(log);
     }
@@ -45,27 +78,32 @@ public class ActionKnockback : Action
         deceleration = _deceleration;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
-        float direction = trigger.owner.direction + 180f;
-        if(trigger is TriggerCollision)
+        if (trigger is TriggerCollision)
         {
             TriggerCollision triggerCol = trigger as TriggerCollision;
-            if(triggerCol.target != null)
+            if (triggerCol.target != null)
             {
-                direction = VEasyCalculator.GetDirection(trigger.owner, triggerCol.target) + 180f;
-                GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
+                trigger.owner.direction = VEasyCalculator.GetDirection(
+                    triggerCol.target, trigger.owner);
             }
         }
+        else
+        {
+            trigger.owner.direction = trigger.owner.direction + 180f;
+        }
+
+        GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
     }
 
     private IEnumerator DecelerationProcess(Trigger trigger)
     {
         List<Movable> moves = trigger.owner.GetOperables<Movable>();
-        foreach(var move in moves)
-        {
-            move.active.SetState(Multistat.StateType.KNOCKBACK, true);
-        }
+
+        if (moves != null)
+            foreach (var move in moves)
+                move.active.SetState(Multistat.StateType.KNOCKBACK, true);
 
         MovableStraight knockbackMove = trigger.owner.gameObject.AddComponent<MovableStraight>();
         knockbackMove.isRotate = false;
@@ -82,10 +120,9 @@ public class ActionKnockback : Action
 
         GameObject.Destroy(knockbackMove);
 
-        foreach (var move in moves)
-        {
-            move.active.SetState(Multistat.StateType.KNOCKBACK, false);
-        }
+        if (moves != null)
+            foreach (var move in moves)
+                move.active.SetState(Multistat.StateType.KNOCKBACK, false);
     }
 }
 
@@ -99,7 +136,7 @@ public class ActionActivatePattern : Action
         pattern = _pattern;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         pattern.Activate();
     }
@@ -108,7 +145,6 @@ public class ActionActivatePattern : Action
 public class ActionActiveOperable<T> : Action where T : Operable
 {
     protected bool doActive;
-    protected float delay = 0f;
     protected Multistat.StateType stateType;
 
     public ActionActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
@@ -118,27 +154,7 @@ public class ActionActiveOperable<T> : Action where T : Operable
         doActive = _doActive;
     }
 
-    public ActionActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive, float _delay)
-        : base(trigger)
-    {
-        stateType = _type;
-        doActive = _doActive;
-        delay = _delay;
-    }
-
-    public override void Activate(Trigger trigger)
-    {
-        if (delay == 0f) ApplyActive(trigger);
-        else GameManager.gm.StartCoroutine(DelayedActive(trigger));
-    }
-
-    IEnumerator DelayedActive(Trigger trigger)
-    {
-        yield return new WaitForSeconds(delay);
-        ApplyActive(trigger);
-    }
-
-    protected virtual void ApplyActive(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         Operable operable = trigger.owner.GetOperable<T>();
         operable.active.SetState(stateType, doActive);
@@ -153,13 +169,7 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
 
     }
 
-    public ActionActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive, float _delay)
-        : base(trigger, _type, _doActive, _delay)
-    {
-
-    }
-
-    protected override void ApplyActive(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         if (trigger == null) return;
 
@@ -172,7 +182,6 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
         Operable operable = target.GetOperable<T>();
         operable.active.SetState(stateType, doActive);
     }
-
 }
 
 public class ActionAddOperable : Action
@@ -183,12 +192,11 @@ public class ActionAddOperable : Action
 
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
-
+        // TODO
 
     }
-
 }
 
 public class ActionCreateUnit : Action
@@ -220,7 +228,7 @@ public class ActionCreateUnit : Action
         speed = _speed;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         Unit unit = GameObject.Instantiate(target);
         unit.transform.position = pos;
@@ -244,7 +252,7 @@ public class ActionDealDamage : Action
         damage = _damage;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         if (trigger is TriggerCollision == false) return;
 
@@ -267,7 +275,7 @@ public class ActionGetDamage : Action
         damage = _damage;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         if (trigger is TriggerCollision == false) return;
 
@@ -289,25 +297,10 @@ public class ActionDestroyUnit : Action
         target = _target;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         GameObject.Destroy(target.gameObject);
     }
-}
-
-public class ActionTrackingMouse : Action
-{
-    public ActionTrackingMouse(Trigger trigger)
-        : base(trigger)
-    {
-
-    }
-
-    public override void Activate(Trigger trigger)
-    {
-
-    }
-
 }
 
 // TriggerKeyInputs 로만 활용이 가능한 액션
@@ -334,7 +327,7 @@ public class ActionVectorMoveUnit : Action
         dirRevdirDic[GameManager.Direction.DOWN] = GameManager.Direction.UP;
     }
 
-    public override void Activate(Trigger trigger)
+    protected override void ActionProcess(Trigger trigger)
     {
         if (trigger.GetType() != typeof(TriggerKeyInputs))
             return;

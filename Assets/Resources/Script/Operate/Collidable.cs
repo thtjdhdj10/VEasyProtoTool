@@ -18,6 +18,7 @@ public class Collidable : Operable
     protected virtual void Hit(Unit target)
     {
         TriggerCollision.UnitEventReceive(owner, target);
+        TriggerCollision.UnitEventReceive(target, owner);
     }
 
     protected virtual void FixedUpdate()

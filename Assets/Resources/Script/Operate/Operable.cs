@@ -14,7 +14,6 @@ public abstract class Operable : MonoBehaviour
     protected virtual void Awake()
     {
         if(owner == null) owner = GetComponent<Unit>();
-        owner.operableList.Add(this);
 
         System.Type operableType = this.GetType();
         if (operableType.BaseType != typeof(Operable))
@@ -34,8 +33,6 @@ public abstract class Operable : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        owner.operableList.Remove(this);
-
         System.Type operableType = this.GetType();
         if (operableType.BaseType != typeof(Operable))
             operableType = operableType.BaseType;

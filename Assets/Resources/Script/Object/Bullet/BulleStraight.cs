@@ -14,8 +14,8 @@ public class BulleStraight : Bullet
         else targetType = typeof(Player);
 
         TriggerCollision trgCol = new TriggerCollision(this, targetType);
-        ActionDestroyUnit actDestroy = new ActionDestroyUnit(trgCol, this);
-        ActionDealDamage actDeal = new ActionDealDamage(trgCol, damage);
+        new ActionDestroyUnit(trgCol, this);
+        new ActionDealDamage(trgCol, damage);
     }
 
 }

@@ -10,9 +10,6 @@ public class Player : Unit
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
         new ActionVectorMoveUnit(trgKeyInput);
 
-        TriggerFrame trgTrackingMouse = new TriggerFrame(this, 0);
-        new ActionTrackingMouse(trgTrackingMouse);
-
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
         new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.StateType.CLICK, true);
@@ -21,16 +18,13 @@ public class Player : Unit
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
         new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.StateType.CLICK, false);
 
-        float knockSpeed = 1f;
-        float knockDecel = 1.5f;
-        float knockTime = knockSpeed / knockDecel;
-
         TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
-        new ActionDealDamage(trgCol, 1);
-        new ActionKnockback(trgCol, knockSpeed, knockDecel);
+        new ActionGetDamage(trgCol, 3);
+        new ActionKnockback(trgCol, 1f, 1.5f);
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
-        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false, knockTime);
-        new ActionPrintLog(trgCol, "dd");
+        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)
+        { delay = 2f };
+        new ActionPrintLog(trgCol, "Player Hitted!");
 
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);

@@ -1,70 +1,70 @@
 fileFormatVersion: 2
-guid: d5ec8158f2b9f8546a51bcafb8aa8d44
+guid: b2e736d09c32da240aad569ecde8a202
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4114475273974083895
-    second: Boss_LandSlayer_strip21_0
+      213: -2113421379343834203
+    second: Enemy_Slayer_strip21_0
   - first:
-      213: 109236694678754300
-    second: Boss_LandSlayer_strip21_1
+      213: -6661657213958892978
+    second: Enemy_Slayer_strip21_1
   - first:
-      213: -6616313933019133935
-    second: Boss_LandSlayer_strip21_2
+      213: -1174388416973155785
+    second: Enemy_Slayer_strip21_2
   - first:
-      213: -3065734214355836007
-    second: Boss_LandSlayer_strip21_3
+      213: 7552286341174059846
+    second: Enemy_Slayer_strip21_3
   - first:
-      213: -6008795151441737678
-    second: Boss_LandSlayer_strip21_4
+      213: -1092754260881232067
+    second: Enemy_Slayer_strip21_4
   - first:
-      213: -2846425650452992403
-    second: Boss_LandSlayer_strip21_5
+      213: 3090355346626061350
+    second: Enemy_Slayer_strip21_5
   - first:
-      213: -7138133702597999688
-    second: Boss_LandSlayer_strip21_6
+      213: 2199595550110566744
+    second: Enemy_Slayer_strip21_6
   - first:
-      213: 5879836811601614787
-    second: Boss_LandSlayer_strip21_7
+      213: 6721867929065377565
+    second: Enemy_Slayer_strip21_7
   - first:
-      213: -6520287112830903201
-    second: Boss_LandSlayer_strip21_8
+      213: 7251010750301341840
+    second: Enemy_Slayer_strip21_8
   - first:
-      213: -1161363722801565643
-    second: Boss_LandSlayer_strip21_9
+      213: 6694910677638418769
+    second: Enemy_Slayer_strip21_9
   - first:
-      213: 6193817259048062792
-    second: Boss_LandSlayer_strip21_10
+      213: 3646336212436972946
+    second: Enemy_Slayer_strip21_10
   - first:
-      213: 6009233789262669931
-    second: Boss_LandSlayer_strip21_11
+      213: -7915280297117193976
+    second: Enemy_Slayer_strip21_11
   - first:
-      213: -3125618125684741705
-    second: Boss_LandSlayer_strip21_12
+      213: 8915208648996106002
+    second: Enemy_Slayer_strip21_12
   - first:
-      213: -4939726419369397222
-    second: Boss_LandSlayer_strip21_13
+      213: 2410221692261284707
+    second: Enemy_Slayer_strip21_13
   - first:
-      213: -1970046949177338867
-    second: Boss_LandSlayer_strip21_14
+      213: 958453146418899207
+    second: Enemy_Slayer_strip21_14
   - first:
-      213: 4177994114372298765
-    second: Boss_LandSlayer_strip21_15
+      213: -7212062478544923923
+    second: Enemy_Slayer_strip21_15
   - first:
-      213: 4918806770940921978
-    second: Boss_LandSlayer_strip21_16
+      213: 6630549502315613707
+    second: Enemy_Slayer_strip21_16
   - first:
-      213: 4015232628566755490
-    second: Boss_LandSlayer_strip21_17
+      213: -4257793013447941368
+    second: Enemy_Slayer_strip21_17
   - first:
-      213: 6334971154907399667
-    second: Boss_LandSlayer_strip21_18
+      213: -1596492251789301428
+    second: Enemy_Slayer_strip21_18
   - first:
-      213: -4013119100470311465
-    second: Boss_LandSlayer_strip21_19
+      213: 5517524944778568423
+    second: Enemy_Slayer_strip21_19
   - first:
-      213: 5642197570913927796
-    second: Boss_LandSlayer_strip21_20
+      213: -1468022136303144559
+    second: Enemy_Slayer_strip21_20
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -149,7 +149,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_0
+      name: Enemy_Slayer_strip21_0
       rect:
         serializedVersion: 2
         x: 0
@@ -157,20 +157,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b17aa15e07622e244a1cb15df0c6e392
-      internalID: -4114475273974083895
+      spriteID: b14a1121de35ffb418d71d7e3021e623
+      internalID: -2113421379343834203
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_1
+      name: Enemy_Slayer_strip21_1
       rect:
         serializedVersion: 2
         x: 132
@@ -178,20 +178,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbd9a71f32d0f2f4ea3ce69aa36e5e51
-      internalID: 109236694678754300
+      spriteID: 73584a9f454d0ae4d82a76bfc4291301
+      internalID: -6661657213958892978
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_2
+      name: Enemy_Slayer_strip21_2
       rect:
         serializedVersion: 2
         x: 264
@@ -199,20 +199,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46557502f5c9e9a488a1140c70744048
-      internalID: -6616313933019133935
+      spriteID: f1025cd506ec6df45af403d23c2dc03d
+      internalID: -1174388416973155785
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_3
+      name: Enemy_Slayer_strip21_3
       rect:
         serializedVersion: 2
         x: 396
@@ -220,20 +220,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ead83a9725769943b93481648449fb1
-      internalID: -3065734214355836007
+      spriteID: 659974ec174779e4880c597db241e891
+      internalID: 7552286341174059846
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_4
+      name: Enemy_Slayer_strip21_4
       rect:
         serializedVersion: 2
         x: 528
@@ -241,20 +241,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3330b0c78190c31449a78a182abb9cbc
-      internalID: -6008795151441737678
+      spriteID: 9a820284be1225d45944908990b54293
+      internalID: -1092754260881232067
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_5
+      name: Enemy_Slayer_strip21_5
       rect:
         serializedVersion: 2
         x: 660
@@ -262,20 +262,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d82f9262365e2394cb40a0de16df997c
-      internalID: -2846425650452992403
+      spriteID: b1006ac1ad291ea41aa185ea9ee29207
+      internalID: 3090355346626061350
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_6
+      name: Enemy_Slayer_strip21_6
       rect:
         serializedVersion: 2
         x: 792
@@ -283,20 +283,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 50777e2032f5825408b377ea2550c30d
-      internalID: -7138133702597999688
+      spriteID: 0d6e85475a394e047961301f3a4c6366
+      internalID: 2199595550110566744
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_7
+      name: Enemy_Slayer_strip21_7
       rect:
         serializedVersion: 2
         x: 924
@@ -304,20 +304,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd37ba810351ea04db1380d75651f9f2
-      internalID: 5879836811601614787
+      spriteID: 612481c6473665a4ca954a450cb2759c
+      internalID: 6721867929065377565
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_8
+      name: Enemy_Slayer_strip21_8
       rect:
         serializedVersion: 2
         x: 1056
@@ -325,20 +325,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 798d726a82e6b964e9c5d3fedec45074
-      internalID: -6520287112830903201
+      spriteID: d00d0fac6bbbf3d4bbe8507f560f6279
+      internalID: 7251010750301341840
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_9
+      name: Enemy_Slayer_strip21_9
       rect:
         serializedVersion: 2
         x: 1188
@@ -346,20 +346,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 773e0e4a7b3880f4ab5df8abc0fc2c90
-      internalID: -1161363722801565643
+      spriteID: 353607ae132eb58469ab96ecc7374dcd
+      internalID: 6694910677638418769
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_10
+      name: Enemy_Slayer_strip21_10
       rect:
         serializedVersion: 2
         x: 1320
@@ -367,20 +367,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6f359134c694e844871ecc328fc988e
-      internalID: 6193817259048062792
+      spriteID: 1c36b822026769e409564b94bf62646a
+      internalID: 3646336212436972946
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_11
+      name: Enemy_Slayer_strip21_11
       rect:
         serializedVersion: 2
         x: 1452
@@ -388,20 +388,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6e5bad23ca269004780c2ccb253085e3
-      internalID: 6009233789262669931
+      spriteID: aff6318f51b52ca46b1c9e57209266be
+      internalID: -7915280297117193976
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_12
+      name: Enemy_Slayer_strip21_12
       rect:
         serializedVersion: 2
         x: 1584
@@ -409,20 +409,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03f7695d3957fd9488163a3e0a492646
-      internalID: -3125618125684741705
+      spriteID: b33e0beea63fbb546b0dda3a2329a9cc
+      internalID: 8915208648996106002
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_13
+      name: Enemy_Slayer_strip21_13
       rect:
         serializedVersion: 2
         x: 1716
@@ -430,20 +430,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ebc89f8c512dca439a50d18bd5cb832
-      internalID: -4939726419369397222
+      spriteID: 7a77151af5a0072488e2fa9341b25289
+      internalID: 2410221692261284707
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_14
+      name: Enemy_Slayer_strip21_14
       rect:
         serializedVersion: 2
         x: 1848
@@ -451,20 +451,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d0ced3433c5d85489d97004a5c6d036
-      internalID: -1970046949177338867
+      spriteID: 37f870c624562904295afac82d8a0c33
+      internalID: 958453146418899207
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_15
+      name: Enemy_Slayer_strip21_15
       rect:
         serializedVersion: 2
         x: 1980
@@ -472,20 +472,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 268a28beed567a1409c71e83cd0887ce
-      internalID: 4177994114372298765
+      spriteID: 9029f2c0ae59453409101006b1eba0df
+      internalID: -7212062478544923923
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_16
+      name: Enemy_Slayer_strip21_16
       rect:
         serializedVersion: 2
         x: 2112
@@ -493,20 +493,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03b42bdcf5668324586bf98d33146e79
-      internalID: 4918806770940921978
+      spriteID: c2f4accbd1beec24f87cdba4b830830e
+      internalID: 6630549502315613707
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_17
+      name: Enemy_Slayer_strip21_17
       rect:
         serializedVersion: 2
         x: 2244
@@ -514,20 +514,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0eef170427be58c45bfb5fdce3f28b7a
-      internalID: 4015232628566755490
+      spriteID: 0712d9f449367c84984918deabd73a18
+      internalID: -4257793013447941368
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_18
+      name: Enemy_Slayer_strip21_18
       rect:
         serializedVersion: 2
         x: 2376
@@ -535,20 +535,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 063fc62fd25e1d440982a1c271a27012
-      internalID: 6334971154907399667
+      spriteID: 8089807f1ff6dee46aea6b164c51b575
+      internalID: -1596492251789301428
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_19
+      name: Enemy_Slayer_strip21_19
       rect:
         serializedVersion: 2
         x: 2508
@@ -556,20 +556,20 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2520b95ee2bff8748b02a7b7f4b0f5bf
-      internalID: -4013119100470311465
+      spriteID: a60f1777734aeb34eaee54b1061e8a36
+      internalID: 5517524944778568423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_LandSlayer_strip21_20
+      name: Enemy_Slayer_strip21_20
       rect:
         serializedVersion: 2
         x: 2640
@@ -577,14 +577,14 @@ TextureImporter:
         width: 132
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2ce0c7659b811e145b799d21db129064
-      internalID: 5642197570913927796
+      spriteID: 534e62c9918181b42ab23f673fdee87f
+      internalID: -1468022136303144559
       vertices: []
       indices: 
       edges: []
