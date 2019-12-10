@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [CanEditMultipleObjects]
 public class ShootableEditor : Editor
 {
+    SerializedProperty scriptProp;
     SerializedProperty activeProp;
     SerializedProperty isRangelessProp;
     SerializedProperty rangeProp;
@@ -23,6 +24,7 @@ public class ShootableEditor : Editor
     {
         obj = target as Shootable;
 
+        scriptProp = serializedObject.FindProperty("m_Script");
         activeProp = serializedObject.FindProperty("active");
         isRangelessProp = serializedObject.FindProperty("isRangeless");
         rangeProp = serializedObject.FindProperty("range");
@@ -46,8 +48,7 @@ public class ShootableEditor : Editor
 
     protected virtual void ContentsUpdate()
     {
-        EditorGUILayout.Space();
-
+        EditorGUILayout.PropertyField(scriptProp);
         EditorGUILayout.PropertyField(activeProp);
         EditorGUILayout.PropertyField(isRangelessProp);
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [CanEditMultipleObjects]
 public class UnitStatusEditor : Editor
 {
+    SerializedProperty scriptProp;
     SerializedProperty ownerProp;
     SerializedProperty hpProp;
     SerializedProperty currentHpProp;
@@ -19,6 +20,7 @@ public class UnitStatusEditor : Editor
     {
         obj = target as UnitStatus;
 
+        scriptProp = serializedObject.FindProperty("m_Script");
         ownerProp = serializedObject.FindProperty("owner");
         hpProp = serializedObject.FindProperty("hp");
         currentHpProp = serializedObject.FindProperty("currentHp");
@@ -38,8 +40,7 @@ public class UnitStatusEditor : Editor
 
     protected virtual void ContentsUpdate()
     {
-        EditorGUILayout.Space();
-
+        EditorGUILayout.PropertyField(scriptProp);
         EditorGUILayout.PropertyField(ownerProp);
         EditorGUILayout.PropertyField(hpProp);
         EditorGUILayout.PropertyField(currentHpProp);
