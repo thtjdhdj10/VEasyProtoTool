@@ -74,6 +74,9 @@ public class Collidable : Operable
             if (target.owner.unitActive == false)
                 continue;
 
+            if (target.state == false)
+                continue;
+
             Unit.Relation relation = Unit.GetRelation(owner.force, target.owner.force);
             if (targetRelation != relation)
                 continue;

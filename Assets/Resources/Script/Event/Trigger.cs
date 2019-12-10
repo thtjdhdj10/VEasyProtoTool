@@ -97,7 +97,6 @@ public class TriggerCollision : Trigger
     public override void Init()
     {
         base.Init();
-
         target = null;
     }
 }
@@ -162,6 +161,13 @@ public class TriggerKeyInput : Trigger
         unitTriggerBindingDic.Remove(cto);
     }
 
+    public override void Init()
+    {
+        base.Init();
+        command = KeyManager.KeyCommand.NONE;
+        pressType = KeyManager.KeyPressType.NONE;
+    }
+
     static Dictionary<CmdTypeObject, TriggerKeyInput> unitTriggerBindingDic
         = new Dictionary<CmdTypeObject, TriggerKeyInput>();
 
@@ -195,6 +201,13 @@ public class TriggerKeyInputs : Trigger
     ~TriggerKeyInputs()
     {
         unitTriggerDic.Remove(owner);
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        command = KeyManager.KeyCommand.NONE;
+        pressType = KeyManager.KeyPressType.NONE;
     }
 
     static Dictionary<MyObject, TriggerKeyInputs> unitTriggerDic

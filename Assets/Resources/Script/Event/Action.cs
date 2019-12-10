@@ -31,6 +31,22 @@ public abstract class Action
     }
 }
 
+public class ActionInitTrigger : Action
+{
+    public Trigger target;
+
+    public ActionInitTrigger(Trigger trigger, Trigger _target)
+        : base(trigger)
+    {
+        target = _target;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        target.Init();
+    }
+}
+
 public class ActionSetSpeed : Action
 {
     public float speed;
@@ -308,6 +324,11 @@ public class ActionDestroyUnit : Action
 // TriggerKeyInputs 로만 활용이 가능한 액션
 public class ActionVectorMoveUnit : Action
 {
+    public override void Init()
+    {
+        base.Init();
+        moveDir = new bool[4];
+    }
     public float speed;
 
     bool[] moveDir = new bool[4];

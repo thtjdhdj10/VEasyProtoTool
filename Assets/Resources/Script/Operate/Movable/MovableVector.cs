@@ -8,7 +8,6 @@ public class MovableVector : Movable
     public override void Init()
     {
         base.Init();
-
         moveDir = new bool[4];
     }
 

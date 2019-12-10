@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 public class Player : Unit
 {
-    private float speed = 3f;
+    private float speed = 2.5f;
     private float hitSpeed = 5f;
 
     protected override void Start()
     {
         base.Start();
+
+        GetOperable<Movable>().speed = speed;
 
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
         new ActionVectorMoveUnit(trgKeyInput, 2f);
@@ -23,15 +25,18 @@ public class Player : Unit
 
         TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
         new ActionGetDamage(trgCol, 1);
-        new ActionKnockback(trgCol, 3f, 2f);
+        new ActionKnockback(trgCol, 8f, 15f);
         new ActionSetSpeed(trgCol, hitSpeed);
-        new ActionSetSpeed(trgCol, speed) { delay = 1f };
+        new ActionSetSpeed(trgCol, speed) { delay = 1.8f };
         new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, true);
         new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, false)
-        { delay = 1f };
+        { delay = 0.8f };
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)
-        { delay = 2f };
+        { delay = 1.8f };
+        new ActionInitTrigger(trgCol, trgKeyInput);
+        // sprite 깜빡깜빡
+        // sprite 딤드
         new ActionPrintLog(trgCol, "Player Hitted!");
 
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
