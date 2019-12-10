@@ -7,7 +7,8 @@ using System.Collections.Generic;
 public class ShootableEditor : Editor
 {
     SerializedProperty scriptProp;
-    SerializedProperty activeProp;
+    SerializedProperty stateProp;
+    SerializedProperty conditionProp;
     SerializedProperty isRangelessProp;
     SerializedProperty rangeProp;
     SerializedProperty attackDelayProp;
@@ -25,7 +26,8 @@ public class ShootableEditor : Editor
         obj = target as Shootable;
 
         scriptProp = serializedObject.FindProperty("m_Script");
-        activeProp = serializedObject.FindProperty("active");
+        stateProp = serializedObject.FindProperty("active.state");
+        conditionProp = serializedObject.FindProperty("active.conditionForTrue");
         isRangelessProp = serializedObject.FindProperty("isRangeless");
         rangeProp = serializedObject.FindProperty("range");
         attackDelayProp = serializedObject.FindProperty("attackDelay");
@@ -46,19 +48,28 @@ public class ShootableEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
+    private bool fold;
     protected virtual void ContentsUpdate()
     {
         EditorGUILayout.PropertyField(scriptProp);
-        EditorGUILayout.PropertyField(activeProp);
+
+        fold = EditorGUILayout.BeginFoldoutHeaderGroup(fold, "Active");
+        if (fold)
+        {
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(stateProp);
+            EditorGUILayout.PropertyField(conditionProp);
+            EditorGUI.indentLevel -= 1;
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
         EditorGUILayout.PropertyField(isRangelessProp);
 
         if (!obj.isRangeless)
         {
-            EditorGUI.indentLevel += 2;
-
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(rangeProp);
-
-            EditorGUI.indentLevel -= 2;
+            EditorGUI.indentLevel -= 1;
         }
 
         EditorGUILayout.PropertyField(attackDelayProp);
@@ -68,20 +79,16 @@ public class ShootableEditor : Editor
 
         if (obj.fireToTarget)
         {
-            EditorGUI.indentLevel += 2;
-
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(targetProp);
             EditorGUILayout.PropertyField(targetingEachFireProp);
-
-            EditorGUI.indentLevel -= 2;
+            EditorGUI.indentLevel -= 1;
         }
         else
         {
-            EditorGUI.indentLevel += 2;
-
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(fireDirectionProp);
-
-            EditorGUI.indentLevel -= 2;
+            EditorGUI.indentLevel -= 1;
         }
     }
 }

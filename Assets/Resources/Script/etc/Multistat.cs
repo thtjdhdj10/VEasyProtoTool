@@ -12,13 +12,13 @@ public class Multistat
     [SerializeField]
     private bool state = true;
 
-    public StateConditionForTrue conditionForTrue = StateConditionForTrue.ALL_FALSE;
+    public ConditionForTrue conditionForTrue = ConditionForTrue.ALL_FALSE;
 
-    public enum StateConditionForTrue
+    public enum ConditionForTrue
     {
         ALL_TRUE,
-        ONE_OR_MORE_TRUE,
         ALL_FALSE,
+        ONE_OR_MORE_TRUE,
         ONE_OR_MORE_FALSE,
     }
 
@@ -57,7 +57,7 @@ public class Multistat
     {
         switch (conditionForTrue)
         {
-            case StateConditionForTrue.ALL_TRUE:
+            case ConditionForTrue.ALL_TRUE:
                 {
                     foreach(var v in stateDic.Values)
                     {
@@ -71,7 +71,7 @@ public class Multistat
                     state = true;
                 }
                 break;
-            case StateConditionForTrue.ONE_OR_MORE_TRUE:
+            case ConditionForTrue.ONE_OR_MORE_TRUE:
                 {
                     foreach(var v in stateDic.Values)
                     {
@@ -85,7 +85,7 @@ public class Multistat
                     state = false;
                 }
                 break;
-            case StateConditionForTrue.ALL_FALSE:
+            case ConditionForTrue.ALL_FALSE:
                 {
                     foreach(var v in stateDic.Values)
                     {
@@ -99,7 +99,7 @@ public class Multistat
                     state = true;
                 }
                 break;
-            case StateConditionForTrue.ONE_OR_MORE_FALSE:
+            case ConditionForTrue.ONE_OR_MORE_FALSE:
                 {
                     foreach(var v in stateDic.Values)
                     {
