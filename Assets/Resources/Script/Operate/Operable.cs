@@ -6,7 +6,7 @@ public abstract class Operable : MonoBehaviour
     [System.NonSerialized]
     public Unit owner;
 
-    public bool active = true;
+    public Multistat active;
 
     public static Dictionary<System.Type, List<Operable>> allOperableListDic
         = new Dictionary<System.Type, List<Operable>>();

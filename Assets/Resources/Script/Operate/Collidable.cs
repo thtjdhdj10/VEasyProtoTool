@@ -22,7 +22,7 @@ public class Collidable : Operable
 
     protected virtual void FixedUpdate()
     {
-        if(active) CollisionCheckFrame();
+        if(active.State) CollisionCheckFrame();
     }
 
     protected virtual void CollisionCheckFrame()

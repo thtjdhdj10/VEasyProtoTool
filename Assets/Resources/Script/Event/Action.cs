@@ -17,6 +17,48 @@ public abstract class Action
     }
 }
 
+public class ActionPushed : Action
+{
+    public float speed = 1f;
+    public float deceleration = 1f; // 초당 속도 감소
+
+    public ActionPushed(Trigger trigger, float _speed, float _deceleration)
+        : base(trigger)
+    {
+        speed = _speed;
+        deceleration = _deceleration;
+    }
+
+    public override void Activate(Trigger trigger)
+    {
+        float direction = trigger.owner.direction + 180f;
+        if(trigger is TriggerCollision)
+        {
+            TriggerCollision triggerCol = trigger as TriggerCollision;
+            if(triggerCol.target != null)
+            {
+                direction = VEasyCalculator.GetDirection(trigger.owner, triggerCol.target) + 180f;
+            }
+        }
+
+
+    }
+
+    private IEnumerator Decelerate(Trigger trigger)
+    {
+        Movable move = new MovableStraight();
+        move.speed = speed;
+
+
+        while(speed > 0f && deceleration > 0f)
+        {
+
+
+            yield return new WaitForFixedUpdate();
+        }
+    }
+}
+
 public class ActionActivatePattern : Action
 {
     public Pattern pattern;
@@ -31,23 +73,25 @@ public class ActionActivatePattern : Action
     {
         pattern.Activate();
     }
-
 }
 
 public class ActionActiveOperable<T> : Action where T : Operable
 {
     protected bool doActive;
     protected float delay = 0f;
+    protected Multistat.type stateType;
 
-    public ActionActiveOperable(Trigger trigger, bool _doActive)
+    public ActionActiveOperable(Trigger trigger, Multistat.type _type, bool _doActive)
         : base(trigger)
     {
+        stateType = _type;
         doActive = _doActive;
     }
 
-    public ActionActiveOperable(Trigger trigger, bool _doActive, float _delay)
+    public ActionActiveOperable(Trigger trigger, Multistat.type _type, bool _doActive, float _delay)
         : base(trigger)
     {
+        stateType = _type;
         doActive = _doActive;
         delay = _delay;
     }
@@ -67,21 +111,21 @@ public class ActionActiveOperable<T> : Action where T : Operable
     protected virtual void ApplyActive(Trigger trigger)
     {
         Operable operable = trigger.owner.GetOperable<T>();
-        operable.active = doActive;
+        operable.active.SetState(stateType, doActive);
     }
 
 }
 
 public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : Operable
 {
-    public ActionActiveTargetOperable(Trigger trigger, bool _doActive)
-        : base(trigger, _doActive)
+    public ActionActiveTargetOperable(Trigger trigger, Multistat.type _type, bool _doActive)
+        : base(trigger, _type, _doActive)
     {
 
     }
 
-    public ActionActiveTargetOperable(Trigger trigger, bool _doActive, float _delay)
-        : base(trigger, _doActive, _delay)
+    public ActionActiveTargetOperable(Trigger trigger, Multistat.type _type, bool _doActive, float _delay)
+        : base(trigger, _type, _doActive, _delay)
     {
 
     }
@@ -97,7 +141,7 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
         if (target == null) return;
 
         Operable operable = target.GetOperable<T>();
-        operable.active = doActive;
+        operable.active.SetState(stateType, doActive);
     }
 
 }
