@@ -48,7 +48,7 @@ public class ShootableEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private bool fold;
+    private bool fold = true;
     protected virtual void ContentsUpdate()
     {
         EditorGUILayout.PropertyField(scriptProp);

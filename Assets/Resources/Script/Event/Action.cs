@@ -17,10 +17,26 @@ public abstract class Action
     }
 }
 
+public class ActionPrintLog : Action
+{
+    public string log;
+
+    public ActionPrintLog(Trigger trigger, string _log)
+        : base(trigger)
+    {
+        log = _log;
+    }
+
+    public override void Activate(Trigger trigger)
+    {
+        Debug.Log(log);
+    }
+}
+
 public class ActionKnockback : Action
 {
-    public float speed = 1f;
-    public float deceleration = 1f; // 초당 속도 감소
+    public float speed;
+    public float deceleration; // 초당 속도 감소
 
     public ActionKnockback(Trigger trigger, float _speed, float _deceleration)
         : base(trigger)
@@ -48,29 +64,27 @@ public class ActionKnockback : Action
         List<Movable> moves = trigger.owner.GetOperables<Movable>();
         foreach(var move in moves)
         {
-            move.active.SetState(Multistat.type.KNOCKBACK, true);
+            move.active.SetState(Multistat.StateType.KNOCKBACK, true);
         }
 
-        Movable knockbackMove = new MovableStraight();
-        // owner에 무브 부착
+        MovableStraight knockbackMove = trigger.owner.gameObject.AddComponent<MovableStraight>();
         knockbackMove.isRotate = false;
 
         float currentSpeed = speed;
 
         while (currentSpeed > 0f && deceleration > 0f)
         {
-            // TODO 넉백구현
             currentSpeed -= deceleration * Time.fixedDeltaTime;
             knockbackMove.speed = currentSpeed;
 
             yield return new WaitForFixedUpdate();
         }
 
-        // owner에서 무브 제거
+        GameObject.Destroy(knockbackMove);
 
         foreach (var move in moves)
         {
-            move.active.SetState(Multistat.type.KNOCKBACK, false);
+            move.active.SetState(Multistat.StateType.KNOCKBACK, false);
         }
     }
 }
@@ -95,16 +109,16 @@ public class ActionActiveOperable<T> : Action where T : Operable
 {
     protected bool doActive;
     protected float delay = 0f;
-    protected Multistat.type stateType;
+    protected Multistat.StateType stateType;
 
-    public ActionActiveOperable(Trigger trigger, Multistat.type _type, bool _doActive)
+    public ActionActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
         : base(trigger)
     {
         stateType = _type;
         doActive = _doActive;
     }
 
-    public ActionActiveOperable(Trigger trigger, Multistat.type _type, bool _doActive, float _delay)
+    public ActionActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive, float _delay)
         : base(trigger)
     {
         stateType = _type;
@@ -129,18 +143,17 @@ public class ActionActiveOperable<T> : Action where T : Operable
         Operable operable = trigger.owner.GetOperable<T>();
         operable.active.SetState(stateType, doActive);
     }
-
 }
 
 public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : Operable
 {
-    public ActionActiveTargetOperable(Trigger trigger, Multistat.type _type, bool _doActive)
+    public ActionActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
         : base(trigger, _type, _doActive)
     {
 
     }
 
-    public ActionActiveTargetOperable(Trigger trigger, Multistat.type _type, bool _doActive, float _delay)
+    public ActionActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive, float _delay)
         : base(trigger, _type, _doActive, _delay)
     {
 

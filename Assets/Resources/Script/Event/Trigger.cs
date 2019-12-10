@@ -62,10 +62,10 @@ public abstract class Trigger
 
 public class TriggerCollision : Trigger
 {
-    public TriggerCollision(Unit _owner, System.Type _targetType)
+    public TriggerCollision(Unit _owner, params System.Type[] _targetTypes)
         : base(_owner)
     {
-        targetType = _targetType;
+        targetTypes = _targetTypes;
     }
 
     // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
@@ -76,17 +76,21 @@ public class TriggerCollision : Trigger
             if (hitter.triggerList[i] is TriggerCollision == false) continue;
             TriggerCollision trgCol = hitter.triggerList[i] as TriggerCollision;
 
-            // TODO 이부분 부하 있을 수 있음.
-            if (_target.GetType() == trgCol.targetType ||
-                _target.GetType().IsSubclassOf(trgCol.targetType))
+            // TODO 이부분 부하 있을 수 있음
+            foreach(var targetType in trgCol.targetTypes)
             {
-                trgCol.target = _target;
-                trgCol.ActivateTrigger();
+                if (_target.GetType() == targetType ||
+                    _target.GetType().IsSubclassOf(targetType))
+                {
+                    trgCol.target = _target;
+                    trgCol.ActivateTrigger();
+                    return;
+                }
             }
         }
     }
 
-    public System.Type targetType;
+    public System.Type[] targetTypes;
 
     public Unit target;
 

@@ -11,6 +11,8 @@ using System.Collections.Generic;
 
 public class Unit : MyObject
 {
+    public static List<Unit> unitList = new List<Unit>();
+
     [System.NonSerialized]
     public UnitStatus unitStatus;
 
@@ -23,7 +25,7 @@ public class Unit : MyObject
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public static List<Unit> unitList = new List<Unit>();
+    public List<Operable> operableList = new List<Operable>();
 
     public Force force = Force.NONE;
 
@@ -107,6 +109,14 @@ public class Unit : MyObject
     }
     
     //
+
+    public void SetOperablesState(bool state)
+    {
+        foreach(var o in operableList)
+        {
+            o.active.SetStateForce(state);
+        }
+    }
 
     public T GetOperable<T>() where T : Operable
     {

@@ -7,7 +7,10 @@ public class Multistat
 {
     public bool State
     {
-        get;
+        get
+        {
+            return state;
+        }
     }
     [SerializeField]
     private bool state = true;
@@ -22,16 +25,16 @@ public class Multistat
         ONE_OR_MORE_FALSE,
     }
 
-    public enum type
+    public enum StateType
     {
         NONE = 0,
         ACTIVATING_PATTERN,
         STURN,
         KNOCKBACK,
-        NON_CLICK,
+        CLICK,
     }
 
-    private Dictionary<type, bool> stateDic = new Dictionary<type, bool>();
+    private Dictionary<StateType, bool> stateDic = new Dictionary<StateType, bool>();
 
     public static bool operator ==(Multistat stateA, bool stateB)
     {
@@ -40,7 +43,7 @@ public class Multistat
 
     public static bool operator !=(Multistat stateA, bool stateB)
     {
-        return stateA.state == stateB;
+        return stateA.state != stateB;
     }
 
     public static bool operator ==(bool stateA, Multistat stateB)
@@ -50,7 +53,7 @@ public class Multistat
 
     public static bool operator !=(bool stateA, Multistat stateB)
     {
-        return stateA == stateB.state;
+        return stateA != stateB.state;
     }
 
     public void UpdateState()
@@ -64,7 +67,7 @@ public class Multistat
                         if (v == false)
                         {
                             state = false;
-                            break;
+                            return;
                         }
                     }
 
@@ -78,7 +81,7 @@ public class Multistat
                         if(v == true)
                         {
                             state = true;
-                            break;
+                            return;
                         }
                     }
 
@@ -92,7 +95,7 @@ public class Multistat
                         if(v == true)
                         {
                             state = false;
-                            break;
+                            return;
                         }
                     }
 
@@ -106,7 +109,7 @@ public class Multistat
                         if(v == false)
                         {
                             state = true;
-                            break;
+                            return;
                         }
                     }
 
@@ -118,20 +121,18 @@ public class Multistat
 
     public void SetStateForce(bool _state)
     {
-        foreach(var k in stateDic.Keys)
-        {
-            stateDic[k] = _state;
-        }
+        stateDic.Clear();
+        state = _state;
     }
 
-    public void SetState(type type, bool _state)
+    public void SetState(StateType type, bool _state)
     {
         if (stateDic.ContainsKey(type))
         {
             if(stateDic[type] != _state)
             {
-                UpdateState();
                 stateDic[type] = _state;
+                UpdateState();
             }
         }
         else
@@ -141,7 +142,7 @@ public class Multistat
         }
     }
 
-    public bool GetState(type type, ref bool _state) // return is success
+    public bool GetState(StateType type, ref bool _state) // return is success
     {
         if (stateDic.ContainsKey(type))
         {
@@ -160,7 +161,7 @@ public class Multistat
         return @bool != null &&
                state == @bool.state &&
                conditionForTrue == @bool.conditionForTrue &&
-               EqualityComparer<Dictionary<type, bool>>.Default.Equals(stateDic, @bool.stateDic);
+               EqualityComparer<Dictionary<StateType, bool>>.Default.Equals(stateDic, @bool.stateDic);
     }
 
     public override int GetHashCode()
@@ -168,7 +169,7 @@ public class Multistat
         var hashCode = -325116050;
         hashCode = hashCode * -1521134295 + state.GetHashCode();
         hashCode = hashCode * -1521134295 + conditionForTrue.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<type, bool>>.Default.GetHashCode(stateDic);
+        hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<StateType, bool>>.Default.GetHashCode(stateDic);
         return hashCode;
     }
 }

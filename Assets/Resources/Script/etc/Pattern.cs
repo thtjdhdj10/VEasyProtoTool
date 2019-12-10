@@ -273,7 +273,7 @@ public class Pattern_Slayer_1 : Pattern
 
     public override IEnumerator Fire()
     {
-        move.active.SetState(Multistat.type.ACTIVATING_PATTERN, true);
+        move.active.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
         GameManager.gm.StartCoroutine(patternList[0].Fire());
         GameManager.gm.StartCoroutine(patternList[1].Fire());
@@ -282,7 +282,7 @@ public class Pattern_Slayer_1 : Pattern
 
     public override IEnumerator PostFire()
     {
-        move.active.SetState(Multistat.type.ACTIVATING_PATTERN, false);
+        move.active.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 }
@@ -323,7 +323,7 @@ public class Pattern_Slayer_2 : Pattern
 
     public override IEnumerator Fire()
     {
-        move.active.SetState(Multistat.type.ACTIVATING_PATTERN, true);
+        move.active.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
         for (int i = 0; i < count; ++i)
         {
@@ -335,7 +335,7 @@ public class Pattern_Slayer_2 : Pattern
 
     public override IEnumerator PostFire()
     {
-        move.active.SetState(Multistat.type.ACTIVATING_PATTERN, false);
+        move.active.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 }

@@ -8,23 +8,29 @@ public class Player : Unit
         base.Start();
 
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
-        ActionVectorMoveUnit actKeyInput = new ActionVectorMoveUnit(trgKeyInput);
+        new ActionVectorMoveUnit(trgKeyInput);
 
         TriggerFrame trgTrackingMouse = new TriggerFrame(this, 0);
-        ActionTrackingMouse actTackingMouse = new ActionTrackingMouse(trgTrackingMouse);
+        new ActionTrackingMouse(trgTrackingMouse);
 
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        ActionActiveOperable<Shootable> actActiveShootable =
-            new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.type.NON_CLICK, false);
+        new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.StateType.CLICK, true);
 
         TriggerKeyInput trgMouseUp = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
-        ActionActiveOperable<Shootable> actDeactiveShootable
-            = new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.type.NON_CLICK, true);
+        new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.StateType.CLICK, false);
 
-        TriggerCollision trgCol = new TriggerCollision(this, typeof(Player));
-        ActionDealDamage actDeal = new ActionDealDamage(trgCol, 1);
+        float knockSpeed = 1f;
+        float knockDecel = 1.5f;
+        float knockTime = knockSpeed / knockDecel;
+
+        TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
+        new ActionDealDamage(trgCol, 1);
+        new ActionKnockback(trgCol, knockSpeed, knockDecel);
+        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
+        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false, knockTime);
+        new ActionPrintLog(trgCol, "dd");
 
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
