@@ -3,12 +3,6 @@ using System.Collections.Generic;
 
 public class MovableStraight : Movable
 {
-    public void Init(float spd, float dir)
-    {
-        speed = spd;
-        owner.direction = dir;
-    }
-
     // 직선 등속 이동
     protected override void MoveFrame()
     {

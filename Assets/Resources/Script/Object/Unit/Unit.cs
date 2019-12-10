@@ -114,7 +114,7 @@ public class Unit : MyObject
         {
             foreach(var o in operableListDic[type])
             {
-                o.active.SetStateForce(state);
+                o.state.SetStateForce(state);
             }
         }
     }
@@ -129,10 +129,10 @@ public class Unit : MyObject
         return null;
     }
 
-    public List<T> GetOperables<T>() where T : Operable
+    public List<Operable> GetOperables<T>() where T : Operable
     {
         if (operableListDic.ContainsKey(typeof(T)) == false) return null;
 
-        return operableListDic[typeof(T)] as List<T>;
+        return operableListDic[typeof(T)];
     }
 }

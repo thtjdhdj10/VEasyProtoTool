@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 public class Player : Unit
 {
+    private float speed = 3f;
+    private float hitSpeed = 5f;
+
     protected override void Start()
     {
         base.Start();
 
         TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
-        new ActionVectorMoveUnit(trgKeyInput);
+        new ActionVectorMoveUnit(trgKeyInput, 2f);
 
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
@@ -19,8 +22,13 @@ public class Player : Unit
         new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.StateType.CLICK, false);
 
         TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
-        new ActionGetDamage(trgCol, 3);
-        new ActionKnockback(trgCol, 1f, 1.5f);
+        new ActionGetDamage(trgCol, 1);
+        new ActionKnockback(trgCol, 3f, 2f);
+        new ActionSetSpeed(trgCol, hitSpeed);
+        new ActionSetSpeed(trgCol, speed) { delay = 1f };
+        new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, true);
+        new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, false)
+        { delay = 1f };
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)
         { delay = 2f };

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TODO : MonoBehaviour
 {
+    // receivecommand 로 trigger랑 operable 묶여있는거 delegate callback 이용해서 분리하기
+
     //    movable 에디터
 
     // sprite manager 간편화해서 구현?

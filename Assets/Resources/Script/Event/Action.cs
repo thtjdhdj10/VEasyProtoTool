@@ -91,7 +91,7 @@ public class ActionKnockback : Action
         }
         else
         {
-            trigger.owner.direction = trigger.owner.direction + 180f;
+            trigger.owner.direction += 180f;
         }
 
         GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
@@ -99,11 +99,11 @@ public class ActionKnockback : Action
 
     private IEnumerator DecelerationProcess(Trigger trigger)
     {
-        List<Movable> moves = trigger.owner.GetOperables<Movable>();
+        List<Operable> moves = trigger.owner.GetOperables<Movable>();
 
         if (moves != null)
             foreach (var move in moves)
-                move.active.SetState(Multistat.StateType.KNOCKBACK, true);
+                move.state.SetState(Multistat.StateType.KNOCKBACK, true);
 
         MovableStraight knockbackMove = trigger.owner.gameObject.AddComponent<MovableStraight>();
         knockbackMove.isRotate = false;
@@ -118,11 +118,13 @@ public class ActionKnockback : Action
             yield return new WaitForFixedUpdate();
         }
 
+        knockbackMove.speed = 0f;
+
         GameObject.Destroy(knockbackMove);
 
         if (moves != null)
             foreach (var move in moves)
-                move.active.SetState(Multistat.StateType.KNOCKBACK, false);
+                move.state.SetState(Multistat.StateType.KNOCKBACK, false);
     }
 }
 
@@ -157,7 +159,7 @@ public class ActionActiveOperable<T> : Action where T : Operable
     protected override void ActionProcess(Trigger trigger)
     {
         Operable operable = trigger.owner.GetOperable<T>();
-        operable.active.SetState(stateType, doActive);
+        operable.state.SetState(stateType, doActive);
     }
 }
 
@@ -180,7 +182,7 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
         if (target == null) return;
 
         Operable operable = target.GetOperable<T>();
-        operable.active.SetState(stateType, doActive);
+        operable.state.SetState(stateType, doActive);
     }
 }
 
@@ -306,6 +308,8 @@ public class ActionDestroyUnit : Action
 // TriggerKeyInputs 로만 활용이 가능한 액션
 public class ActionVectorMoveUnit : Action
 {
+    public float speed;
+
     bool[] moveDir = new bool[4];
 
     Dictionary<GameManager.Direction, KeyManager.KeyCommand> dirKeyDic =
@@ -313,9 +317,11 @@ public class ActionVectorMoveUnit : Action
     Dictionary<GameManager.Direction, GameManager.Direction> dirRevdirDic =
         new Dictionary<GameManager.Direction, GameManager.Direction>();
 
-    public ActionVectorMoveUnit(Trigger trigger)
+    public ActionVectorMoveUnit(Trigger trigger, float _speed)
         : base(trigger)
     {
+        speed = _speed;
+
         dirKeyDic[GameManager.Direction.LEFT] = KeyManager.KeyCommand.MOVE_LEFT;
         dirKeyDic[GameManager.Direction.RIGHT] = KeyManager.KeyCommand.MOVE_RIGHT;
         dirKeyDic[GameManager.Direction.UP] = KeyManager.KeyCommand.MOVE_UP;
@@ -341,7 +347,7 @@ public class ActionVectorMoveUnit : Action
         if (vm == null)
         {
             vm = triggerKeyInputs.owner.gameObject.AddComponent<MovableVector>();
-            vm.Init(2f);
+            vm.speed = speed;
         }
 
         vm.moveDir = moveDir;

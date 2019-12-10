@@ -11,7 +11,7 @@ public class PatternFireable : Operable
 
     private void FixedUpdate()
     {
-        if (active.State)
+        if (state.State)
         {
             if (currentPattern != null)
             {

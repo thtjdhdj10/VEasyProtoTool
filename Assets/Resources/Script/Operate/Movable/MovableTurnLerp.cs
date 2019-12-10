@@ -5,15 +5,6 @@ public class MovableTurnLerp : Movable
 {
     public float turnFactor;
 
-    public void Init(float spd, float dir, Unit tar, float turn)
-    {
-        target = tar;
-
-        speed = spd;
-        owner.direction = dir;
-        turnFactor = turn;
-    }
-
     // 목적과의 방향차이에 비례해서 선회
     protected override void MoveFrame()
     {

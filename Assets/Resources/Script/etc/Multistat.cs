@@ -36,6 +36,10 @@ public class Multistat
 
     private Dictionary<StateType, bool> stateDic = new Dictionary<StateType, bool>();
 
+    public delegate void UpdateDelegate(bool _state);
+    public UpdateDelegate updateDelegate = new UpdateDelegate(UpdateStateCallback);
+    public static void UpdateStateCallback(bool _state) { }
+
     public static bool operator ==(Multistat stateA, bool stateB)
     {
         return stateA.state == stateB;
@@ -58,65 +62,64 @@ public class Multistat
 
     public void UpdateState()
     {
+        bool preState = state;
         switch (conditionForTrue)
         {
             case ConditionForTrue.ALL_TRUE:
                 {
-                    foreach(var v in stateDic.Values)
+                    state = true;
+                    foreach (var v in stateDic.Values)
                     {
                         if (v == false)
                         {
                             state = false;
-                            return;
+                            break;
                         }
                     }
-
-                    state = true;
                 }
                 break;
             case ConditionForTrue.ONE_OR_MORE_TRUE:
                 {
-                    foreach(var v in stateDic.Values)
+                    state = false;
+                    foreach (var v in stateDic.Values)
                     {
                         if(v == true)
                         {
                             state = true;
-                            return;
+                            break;
                         }
                     }
-
-                    state = false;
                 }
                 break;
             case ConditionForTrue.ALL_FALSE:
                 {
-                    foreach(var v in stateDic.Values)
+                    state = true;
+                    foreach (var v in stateDic.Values)
                     {
                         if(v == true)
                         {
                             state = false;
-                            return;
+                            break;
                         }
                     }
-
-                    state = true;
                 }
                 break;
             case ConditionForTrue.ONE_OR_MORE_FALSE:
                 {
-                    foreach(var v in stateDic.Values)
+                    state = false;
+                    foreach (var v in stateDic.Values)
                     {
                         if(v == false)
                         {
                             state = true;
-                            return;
+                            break;
                         }
                     }
-
-                    state = false;
                 }
                 break;
         }
+
+        if(state != preState) updateDelegate(state);
     }
 
     public void SetStateForce(bool _state)

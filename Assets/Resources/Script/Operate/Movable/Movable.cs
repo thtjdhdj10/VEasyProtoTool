@@ -9,14 +9,20 @@ public abstract class Movable : Operable
     public Unit target;
     protected Vector2 targetPos;
 
+    public override void Init()
+    {
+        target = null;
+    }
+
     protected virtual void FixedUpdate()
     {
-        if (active == false) return;
+        if (state == false) return;
 
         if (target != null) targetPos = target.transform.position;
 
         // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
         // 그거땜에 다른 하나가 동작안할때가있음
+        // hit 충돌처리할때 다른 하나가 이미 destroy됐을수도 있음
 
         SetSpriteAngle();
 

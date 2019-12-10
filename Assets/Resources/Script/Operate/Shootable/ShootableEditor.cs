@@ -26,8 +26,8 @@ public class ShootableEditor : Editor
         obj = target as Shootable;
 
         scriptProp = serializedObject.FindProperty("m_Script");
-        stateProp = serializedObject.FindProperty("active.state");
-        conditionProp = serializedObject.FindProperty("active.conditionForTrue");
+        stateProp = serializedObject.FindProperty("state.state");
+        conditionProp = serializedObject.FindProperty("state.conditionForTrue");
         isRangelessProp = serializedObject.FindProperty("isRangeless");
         rangeProp = serializedObject.FindProperty("range");
         attackDelayProp = serializedObject.FindProperty("attackDelay");

@@ -6,10 +6,15 @@ public abstract class Operable : MonoBehaviour
     [System.NonSerialized]
     public Unit owner;
 
-    public Multistat active;
+    public Multistat state = new Multistat();
 
     public static Dictionary<System.Type, List<Operable>> allOperableListDic
         = new Dictionary<System.Type, List<Operable>>();
+
+    public virtual void Init()
+    {
+
+    }
 
     protected virtual void Awake()
     {
@@ -29,6 +34,8 @@ public abstract class Operable : MonoBehaviour
             allOperableListDic.Add(operableType, new List<Operable>());
 
         allOperableListDic[operableType].Add(this);
+
+        state.updateDelegate += UpdateStateCallback;
     }
 
     protected virtual void OnDestroy()
@@ -39,6 +46,11 @@ public abstract class Operable : MonoBehaviour
 
         owner.operableListDic[operableType].Remove(this);
         allOperableListDic[operableType].Remove(this);
+    }
+
+    protected virtual void UpdateStateCallback(bool _state)
+    {
+        Init();
     }
 
     //protected bool ConfirmExistence()

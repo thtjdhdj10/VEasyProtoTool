@@ -5,15 +5,6 @@ public class MovableTurnRegular : Movable
 {
     public float turnFactor;
 
-    public void Init(float spd, float dir, Unit tar, float turn)
-    {
-        target = tar;
-
-        speed = spd;
-        owner.direction = dir;
-        turnFactor = turn;
-    }
-
     // 균일한 선회
     protected override void MoveFrame()
     {

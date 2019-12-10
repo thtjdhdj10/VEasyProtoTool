@@ -18,6 +18,11 @@ public class Shootable : Operable
     public bool targetingEachFire; // 공격 마다 타겟찾음
     public float fireDirection;
 
+    public override void Init()
+    {
+        target = null;
+    }
+
     void FixedUpdate()
     {
         if (AttackDelayCheck() == true)
@@ -39,7 +44,7 @@ public class Shootable : Operable
 
     bool AttackDelayCheck()
     {
-        if (active == false)
+        if (state == false)
         {
             if(remainAttackDelay > 0f &&
                 loadOnDeactive == true)

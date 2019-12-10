@@ -5,9 +5,11 @@ public class MovableVector : Movable
 {
     public bool[] moveDir = new bool[4];
 
-    public void Init(float spd)
+    public override void Init()
     {
-        speed = spd;
+        base.Init();
+
+        moveDir = new bool[4];
     }
 
     protected override void MoveFrame()
