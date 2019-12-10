@@ -16,12 +16,12 @@ public class Player : Unit
         TriggerKeyInput trgMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
         ActionActiveOperable<Shootable> actActiveShootable =
-            new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.type.NON_CLICKED, false);
+            new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.type.NON_CLICK, false);
 
         TriggerKeyInput trgMouseUp = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
         ActionActiveOperable<Shootable> actDeactiveShootable
-            = new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.type.NON_CLICKED, true);
+            = new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.type.NON_CLICK, true);
 
         TriggerCollision trgCol = new TriggerCollision(this, typeof(Player));
         ActionDealDamage actDeal = new ActionDealDamage(trgCol, 1);

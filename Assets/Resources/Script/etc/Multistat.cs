@@ -26,9 +26,9 @@ public class Multistat
     {
         NONE = 0,
         ACTIVATING_PATTERN,
-        STURNED,
-        PUSHED,
-        NON_CLICKED,
+        STURN,
+        KNOCKBACK,
+        NON_CLICK,
     }
 
     private Dictionary<type, bool> stateDic = new Dictionary<type, bool>();

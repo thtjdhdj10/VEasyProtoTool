@@ -17,12 +17,12 @@ public abstract class Action
     }
 }
 
-public class ActionPushed : Action
+public class ActionKnockback : Action
 {
     public float speed = 1f;
     public float deceleration = 1f; // 초당 속도 감소
 
-    public ActionPushed(Trigger trigger, float _speed, float _deceleration)
+    public ActionKnockback(Trigger trigger, float _speed, float _deceleration)
         : base(trigger)
     {
         speed = _speed;
@@ -38,23 +38,39 @@ public class ActionPushed : Action
             if(triggerCol.target != null)
             {
                 direction = VEasyCalculator.GetDirection(trigger.owner, triggerCol.target) + 180f;
+                GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
             }
         }
-
-
     }
 
-    private IEnumerator Decelerate(Trigger trigger)
+    private IEnumerator DecelerationProcess(Trigger trigger)
     {
-        Movable move = new MovableStraight();
-        move.speed = speed;
-
-
-        while(speed > 0f && deceleration > 0f)
+        List<Movable> moves = trigger.owner.GetOperables<Movable>();
+        foreach(var move in moves)
         {
+            move.active.SetState(Multistat.type.KNOCKBACK, true);
+        }
 
+        Movable knockbackMove = new MovableStraight();
+        // owner에 무브 부착
+        knockbackMove.isRotate = false;
+
+        float currentSpeed = speed;
+
+        while (currentSpeed > 0f && deceleration > 0f)
+        {
+            // TODO 넉백구현
+            currentSpeed -= deceleration * Time.fixedDeltaTime;
+            knockbackMove.speed = currentSpeed;
 
             yield return new WaitForFixedUpdate();
+        }
+
+        // owner에서 무브 제거
+
+        foreach (var move in moves)
+        {
+            move.active.SetState(Multistat.type.KNOCKBACK, false);
         }
     }
 }
