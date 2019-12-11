@@ -62,10 +62,15 @@ public abstract class Trigger
 
 public class TriggerCollision : Trigger
 {
+    public System.Type[] targetTypes;
+    public Unit target;
+
     public TriggerCollision(Unit _owner, params System.Type[] _targetTypes)
         : base(_owner)
     {
         targetTypes = _targetTypes;
+
+
     }
 
     // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
@@ -89,10 +94,6 @@ public class TriggerCollision : Trigger
             }
         }
     }
-
-    public System.Type[] targetTypes;
-
-    public Unit target;
 
     public override void Init()
     {
@@ -145,6 +146,9 @@ public class TriggerFrame : Trigger
 // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
 public class TriggerKeyInput : Trigger
 {
+    private KeyManager.KeyCommand command;
+    private KeyManager.KeyPressType pressType;
+
     public TriggerKeyInput(Unit _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
         : base(_owner)
     {
@@ -172,9 +176,6 @@ public class TriggerKeyInput : Trigger
         if (command == _command && pressType == _pressType)
             ActivateTrigger();
     }
-
-    public KeyManager.KeyCommand command;
-    public KeyManager.KeyPressType pressType;
 }
 
 // TriggerKeyInput 과 달리 정해진 Object 에의 모든 키 입력에서 Activate() 호출
@@ -182,6 +183,9 @@ public class TriggerKeyInput : Trigger
 // 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
 public class TriggerKeyInputs : Trigger
 {
+    public KeyManager.KeyCommand command;
+    public KeyManager.KeyPressType pressType;
+
     public TriggerKeyInputs(Unit _owner)
         : base(_owner)
     {
@@ -214,9 +218,6 @@ public class TriggerKeyInputs : Trigger
         pressType = _pressType;
         ActivateTrigger();
     }
-
-    public KeyManager.KeyCommand command;
-    public KeyManager.KeyPressType pressType;
 }
 
 public class TriggerTimer : Trigger
@@ -264,6 +265,9 @@ public class TriggerTimer : Trigger
 // 특정한 유닛의 생성/파괴/초기화 시 Activate
 public class TriggerUnit : Trigger
 {
+    private Unit target;
+    private TriggerType type;
+
     public TriggerUnit(Unit _owner, Unit _target, TriggerType _type)
         : base(_owner)
     {
@@ -300,9 +304,6 @@ public class TriggerUnit : Trigger
         }
     }
 
-    private Unit target;
-    private TriggerType type;
-
     public enum TriggerType
     {
         AWAKE,
@@ -314,6 +315,9 @@ public class TriggerUnit : Trigger
 // 특정 type의 유닛 생성/파괴/초기화 시 동작
 public class TriggerUnits : Trigger
 {
+    private System.Type unitType;
+    private TriggerType type;
+
     public TriggerUnits(Unit _owner, System.Type _unitType, TriggerType _type)
         : base(_owner)
     {
@@ -362,9 +366,6 @@ public class TriggerUnits : Trigger
             LinkEventHandle(unit, true);
         }
     }
-
-    private System.Type unitType;
-    private TriggerType type;
 
     public enum TriggerType
     {

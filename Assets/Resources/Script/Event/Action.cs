@@ -31,6 +31,42 @@ public abstract class Action
     }
 }
 
+public class ActionSetSprite : Action
+{
+    public SpriteRenderer spriteRenderer;
+    public Sprite sprite;
+
+    public ActionSetSprite(Trigger trigger, SpriteRenderer _spriteRenderer, Sprite _sprite)
+        :base(trigger)
+    {
+        spriteRenderer = _spriteRenderer;
+        sprite = _sprite;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        spriteRenderer.sprite = sprite;
+    }
+}
+
+public class ActionSetSpriteColor : Action
+{
+    public SpriteRenderer sprite;
+    public Color color;
+
+    public ActionSetSpriteColor(Trigger trigger, SpriteRenderer _sprite, Color _color)
+        : base(trigger)
+    {
+        sprite = _sprite;
+        color = _color;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        sprite.color = color;
+    }
+}
+
 public class ActionInitTrigger : Action
 {
     public Trigger target;
@@ -219,11 +255,11 @@ public class ActionAddOperable : Action
 
 public class ActionCreateUnit : Action
 {
-    private Unit target;
-    private Vector2 pos;
-    private bool isMovingUnit;
-    private float direction;
-    private float speed;
+    public Unit target;
+    public Vector2 pos;
+    public bool isMovingUnit;
+    public float direction;
+    public float speed;
 
     public ActionCreateUnit(Trigger trigger, Unit _target, Vector2 _pos)
         : base(trigger)
@@ -317,7 +353,7 @@ public class ActionDestroyUnit : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        GameObject.Destroy(target.gameObject);
+        target.willDestroy = true;
     }
 }
 

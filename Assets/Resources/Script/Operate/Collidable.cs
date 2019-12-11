@@ -6,6 +6,10 @@ public class Collidable : Operable
 {
     public new Collider2D collider;
 
+    public delegate void OnHitDelegate(Unit from, Unit to);
+    public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
+    public static void OnHitCallback(Unit from, Unit to) { }
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,8 +21,7 @@ public class Collidable : Operable
 
     protected virtual void Hit(Unit target)
     {
-        TriggerCollision.UnitEventReceive(owner, target);
-        TriggerCollision.UnitEventReceive(target, owner);
+        onHitDelegate(owner, target);
     }
 
     protected virtual void FixedUpdate()

@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class TODO : MonoBehaviour
 {
-    // receivecommand 로 trigger랑 operable 묶여있는거 delegate callback 이용해서 분리하기
-
     //    movable 에디터
-
-    // sprite manager 간편화해서 구현?
 
     //보스 패턴 구현
     // 랜드슬레이어: 돌격모드, 난사모드 전환
@@ -26,6 +22,7 @@ public class TODO : MonoBehaviour
     //매트릭스 배경 구현
 
 
+
     // 폭탄 구현
     // 폭발 쉐이더
 
@@ -36,8 +33,6 @@ public class TODO : MonoBehaviour
 
 
     // 판넬 구현
-
-    //플레이어 피격처리
 
     //실드구현
 

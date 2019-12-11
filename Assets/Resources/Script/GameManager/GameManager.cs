@@ -4,6 +4,10 @@ using System.Collections;
 public class GameManager : MyObject
 {
     public static GameManager gm;
+    private ResourcesManager<GameObject> prefabmanager = new ResourcesManager<GameObject>();
+    private ResourcesManager<Sprite> prefabManager = new ResourcesManager<Sprite>();
+    private ResourcesManager<RuntimeAnimatorController> controllerManager
+        = new ResourcesManager<RuntimeAnimatorController>();
 
     // 순서를 바꾸지 말 것.
     // index 로 사용할 수 있도록 NONE 을 맨 뒤로 했음

@@ -17,6 +17,7 @@ public class Unit : MyObject
     public UnitStatus unitStatus;
 
     public bool unitActive = true;
+    public bool willDestroy = false;
 
     public float direction;
 
@@ -98,6 +99,11 @@ public class Unit : MyObject
     protected virtual void FixedUpdate()
     {
         fixedUpdateDelegate();
+    }
+
+    protected virtual void LateUpdate()
+    {
+        if (willDestroy) Destroy(gameObject);
     }
 
     public virtual void Init()

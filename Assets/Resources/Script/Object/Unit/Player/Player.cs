@@ -6,6 +6,8 @@ public class Player : Unit
     private float speed = 2.5f;
     private float hitSpeed = 5f;
 
+    private SpriteRenderer sprite;
+
     protected override void Start()
     {
         base.Start();
@@ -24,7 +26,7 @@ public class Player : Unit
         new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.StateType.CLICK, false);
 
         TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
-        new ActionGetDamage(trgCol, 1);
+//        new ActionGetDamage(trgCol, 1); bullet에서 처리함
         new ActionKnockback(trgCol, 8f, 15f);
         new ActionSetSpeed(trgCol, hitSpeed);
         new ActionSetSpeed(trgCol, speed) { delay = 1.8f };
@@ -35,10 +37,12 @@ public class Player : Unit
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)
         { delay = 1.8f };
         new ActionInitTrigger(trgCol, trgKeyInput);
-        // sprite 깜빡깜빡
+        new ActionSetSpriteColor(trgCol, GetComponent<SpriteRenderer>(), new Color());
+//        new action
+        // sprite 깜빡깜빡 TODO
         // sprite 딤드
         new ActionPrintLog(trgCol, "Player Hitted!");
-
+        
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
         //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
