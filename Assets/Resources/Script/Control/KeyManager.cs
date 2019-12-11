@@ -63,16 +63,13 @@ public class KeyManager : MonoBehaviour {
     // KeyCode 와 매칭되는 KeyCommand 가 전달된다.
     void GiveCommand()
     {
-
         List<GameObject> controlableList = new List<GameObject>();
 
-        Controlable[] unitArr = FindObjectsOfType<Controlable>();
+        Controllable[] unitArr = FindObjectsOfType<Controllable>();
         for (int i = 0; i < unitArr.Length; ++i)
         {
             controlableList.Add(unitArr[i].gameObject);
         }
-
-//               VEasyPoolerManager.RefObjectListAtLayer(LayerManager.StringToMask("Controlable"));
 
         if (controlableList == null)
             return;
@@ -90,17 +87,16 @@ public class KeyManager : MonoBehaviour {
 
                 for (int j = 0; j < controlableList.Count; ++j)
                 {
-                    var controler = controlableList[j].GetComponent<Controlable>();
+                    var controler = controlableList[j].GetComponent<Controllable>();
                     if (controler == null)
                         continue;
 
                     KeyCommand command = keySettings[keySetNumber][keyCode];
 
-                    controler.ReceiveCommand(command, type);
+                    controler.KeyInput(command, type);
                 }
             }  
         }
-
     }
 
     public enum KeyCommand

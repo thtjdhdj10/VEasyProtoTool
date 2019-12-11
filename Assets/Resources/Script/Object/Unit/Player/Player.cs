@@ -28,8 +28,8 @@ public class Player : Unit
         new ActionKnockback(trgCol, 8f, 15f);
         new ActionSetSpeed(trgCol, hitSpeed);
         new ActionSetSpeed(trgCol, speed) { delay = 1.8f };
-        new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, true);
-        new ActionActiveOperable<Controlable>(trgCol, Multistat.StateType.KNOCKBACK, false)
+        new ActionActiveOperable<Controllable>(trgCol, Multistat.StateType.KNOCKBACK, true);
+        new ActionActiveOperable<Controllable>(trgCol, Multistat.StateType.KNOCKBACK, false)
         { delay = 0.8f };
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
         new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)

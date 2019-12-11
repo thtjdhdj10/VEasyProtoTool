@@ -151,38 +151,26 @@ public class TriggerKeyInput : Trigger
         command = _command;
         pressType = _pressType;
 
-        CmdType ct = new CmdType(command, pressType);
-        CmdTypeObject cto = new CmdTypeObject(ct, owner);
-        unitTriggerBindingDic.Add(cto, this);
+        Controllable control = owner.GetOperable<Controllable>();
+        if (control != null)
+        {
+            control.keyInputDelegate += HandleKeyInput;
+        }
     }
 
     ~TriggerKeyInput()
     {
-        CmdType ct = new CmdType(command, pressType);
-        CmdTypeObject cto = new CmdTypeObject(ct, owner);
-        unitTriggerBindingDic.Remove(cto);
+        Controllable control = owner.GetOperable<Controllable>();
+        if (control != null)
+        {
+            control.keyInputDelegate -= HandleKeyInput;
+        }
     }
 
-    public override void Init()
+    private void HandleKeyInput(KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
     {
-        base.Init();
-        command = KeyManager.KeyCommand.NONE;
-        pressType = KeyManager.KeyPressType.NONE;
-    }
-
-    static Dictionary<CmdTypeObject, TriggerKeyInput> unitTriggerBindingDic
-        = new Dictionary<CmdTypeObject, TriggerKeyInput>();
-
-    // Controlable 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(
-        MyObject obj, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
-    {
-        CmdType cp = new CmdType(_command, _pressType);
-
-        CmdTypeObject cpo = new CmdTypeObject(cp, obj);
-
-        if (unitTriggerBindingDic.ContainsKey(cpo) == true)
-            unitTriggerBindingDic[cpo].ActivateTrigger();
+        if (command == _command && pressType == _pressType)
+            ActivateTrigger();
     }
 
     public KeyManager.KeyCommand command;
@@ -197,12 +185,20 @@ public class TriggerKeyInputs : Trigger
     public TriggerKeyInputs(Unit _owner)
         : base(_owner)
     {
-        unitTriggerDic.Add(owner, this);
+        Controllable control = owner.GetOperable<Controllable>();
+        if (control != null)
+        {
+            control.keyInputDelegate += HandleKeyInput;
+        }
     }
 
     ~TriggerKeyInputs()
     {
-        unitTriggerDic.Remove(owner);
+        Controllable control = owner.GetOperable<Controllable>();
+        if (control != null)
+        {
+            control.keyInputDelegate -= HandleKeyInput;
+        }
     }
 
     public override void Init()
@@ -212,19 +208,11 @@ public class TriggerKeyInputs : Trigger
         pressType = KeyManager.KeyPressType.NONE;
     }
 
-    static Dictionary<MyObject, TriggerKeyInputs> unitTriggerDic
-        = new Dictionary<MyObject, TriggerKeyInputs>();
-
-    // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(
-        MyObject obj, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    private void HandleKeyInput(KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
     {
-        if (unitTriggerDic.ContainsKey(obj) == true)
-        {
-            unitTriggerDic[obj].command = _command;
-            unitTriggerDic[obj].pressType = _pressType;
-            unitTriggerDic[obj].ActivateTrigger();
-        }
+        command = _command;
+        pressType = _pressType;
+        ActivateTrigger();
     }
 
     public KeyManager.KeyCommand command;
