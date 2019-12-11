@@ -35,7 +35,7 @@ public abstract class Operable : MonoBehaviour
 
         allOperableListDic[operableType].Add(this);
 
-        state.updateDelegate += UpdateStateCallback;
+        state.updateDelegate += HandleUpdateState;
     }
 
     protected virtual void OnDestroy()
@@ -48,7 +48,7 @@ public abstract class Operable : MonoBehaviour
         allOperableListDic[operableType].Remove(this);
     }
 
-    protected virtual void UpdateStateCallback(bool _state)
+    protected virtual void HandleUpdateState(bool _state)
     {
         Init();
     }

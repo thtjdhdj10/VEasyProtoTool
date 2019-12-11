@@ -55,55 +55,54 @@ public class Unit : MyObject
 
     //
 
+    public delegate void AwakeDelegate();
+    public AwakeDelegate awakeDelegate = new AwakeDelegate(AwakeCallback);
+    public static void AwakeCallback() { }
+
+    public delegate void OnDestroyDelegate();
+    public OnDestroyDelegate onDestroyDelegate = new OnDestroyDelegate(OnDestroyCallback);
+    public static void OnDestroyCallback() { }
+
+    public delegate void InitDelegate();
+    public InitDelegate initDelegate = new InitDelegate(InitCallback);
+    public static void InitCallback() { }
+
+    public delegate void FixedUpdateDelegate();
+    public FixedUpdateDelegate fixedUpdateDelegate = new FixedUpdateDelegate(fixedUpdateCallback);
+    public static void fixedUpdateCallback() { }
+
+    public delegate void OnUnitAddedDelegate(Unit unit);
+    public static OnUnitAddedDelegate onUnitAddedDelegate = new OnUnitAddedDelegate(OnUnitAdded);
+    public static void OnUnitAdded(Unit unit) { }
+
+    //
+
     protected virtual void Awake()
     {
-        Init();
-
-        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.CREATE_UNIT);
-        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.CREATE_UNIT);
+        unitList.Add(this);
+        onUnitAddedDelegate(this);
+        awakeDelegate();
     }
 
     protected virtual void Start()
     {
-
+        Init();
     }
 
     protected virtual void OnDestroy()
     {
-        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.DESTROY_UNIT);
-        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.DESTROY_UNIT);
-    }
-
-    protected virtual void OnEnable()
-    {
-        unitList.Add(this);
-    }
-
-    protected virtual void OnDisable()
-    {
+        onDestroyDelegate();
         unitList.Remove(this);
     }
 
     protected virtual void FixedUpdate()
     {
-        for (int i = 0; i < triggerList.Count; ++i)
-        {
-            if (triggerList[i] is TriggerFrame)
-                (triggerList[i] as TriggerFrame).HandleFixedUpdate();
-            if (triggerList[i] is TriggerTimer)
-                (triggerList[i] as TriggerTimer).HandleFixedUpdate();
-        }
+        fixedUpdateDelegate();
     }
 
     public virtual void Init()
     {
-        TriggerUnit.UnitEventReceive(this, TriggerUnit.TriggerType.INIT_UNIT);
-        TriggerUnits.UnitEventReceive(this.GetType(), TriggerUnits.TriggerType.INIT_UNIT);
-    }
-
-    public virtual void InitSprite()
-    {
-
+        initDelegate();
     }
     
     //

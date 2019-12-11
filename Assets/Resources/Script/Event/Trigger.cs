@@ -107,6 +107,8 @@ public class TriggerFrame : Trigger
         : base(_owner)
     {
         passCount = _passCount;
+
+        _owner.fixedUpdateDelegate += HandleFixedUpdate;
     }
 
     public int passCount = 0;
@@ -119,7 +121,7 @@ public class TriggerFrame : Trigger
         counter = 0;
     }
 
-    public void HandleFixedUpdate()
+    private void HandleFixedUpdate()
     {
         if (passCount == 0)
         {
@@ -237,6 +239,8 @@ public class TriggerTimer : Trigger
         delay = _delay;
         isActivateOnStart = _isActivateOnStart;
 
+        _owner.fixedUpdateDelegate += HandleFixedUpdate;
+
         if (isActivateOnStart == true)
             remainDelay = delay;
         else remainDelay = 0f;
@@ -255,7 +259,7 @@ public class TriggerTimer : Trigger
         else remainDelay = 0f;
     }
 
-    public void HandleFixedUpdate()
+    private void HandleFixedUpdate()
     {
         if (remainDelay >= delay)
         {
@@ -278,29 +282,33 @@ public class TriggerUnit : Trigger
         target = _target;
         type = _type;
 
-        if (unitTriggerListDic.ContainsKey(target))
-            unitTriggerListDic[target].Add(this);
-        else unitTriggerListDic.Add(target,
-            new List<TriggerUnit>(new TriggerUnit[] { this }));
+        switch (type)
+        {
+            case TriggerType.AWAKE:
+                target.awakeDelegate += ActivateTrigger;
+                break;
+            case TriggerType.INIT:
+                target.initDelegate += ActivateTrigger;
+                break;
+            case TriggerType.ON_DESTROY:
+                target.onDestroyDelegate += ActivateTrigger;
+                break;
+        }
     }
 
     ~TriggerUnit()
     {
-        unitTriggerListDic.Remove(target);
-    }
-
-    static Dictionary<Unit, List<TriggerUnit>> unitTriggerListDic
-        = new Dictionary<Unit, List<TriggerUnit>>();
-
-    // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(Unit target, TriggerType type)
-    {
-        if (unitTriggerListDic.ContainsKey(target))
+        switch (type)
         {
-            foreach (var trigger in unitTriggerListDic[target])
-            {
-                if (trigger.type == type) trigger.ActivateTrigger();
-            }
+            case TriggerType.AWAKE:
+                target.awakeDelegate -= ActivateTrigger;
+                break;
+            case TriggerType.INIT:
+                target.initDelegate -= ActivateTrigger;
+                break;
+            case TriggerType.ON_DESTROY:
+                target.onDestroyDelegate -= ActivateTrigger;
+                break;
         }
     }
 
@@ -309,10 +317,9 @@ public class TriggerUnit : Trigger
 
     public enum TriggerType
     {
-        NONE = 0,
-        CREATE_UNIT,
-        INIT_UNIT,
-        DESTROY_UNIT,
+        AWAKE,
+        INIT,
+        ON_DESTROY,
     }
 }
 
@@ -325,39 +332,47 @@ public class TriggerUnits : Trigger
         unitType = _unitType;
         type = _type;
 
-        if (unitTypeTriggerListDic.ContainsKey(unitType))
-            unitTypeTriggerListDic[unitType].Add(this);
-        else unitTypeTriggerListDic.Add(unitType,
-            new List<TriggerUnits>(new TriggerUnits[] { this }));
+        foreach (var unit in Unit.unitList)
+        {
+            LinkEventHandle(unit, true);
+        }
+
+        Unit.onUnitAddedDelegate += HandleAddedUnit;
     }
 
     ~TriggerUnits()
     {
-        unitTypeTriggerListDic.Remove(unitType);
+        foreach(var unit in Unit.unitList)
+        {
+            LinkEventHandle(unit, false);
+        }
     }
 
-    public static Dictionary<System.Type, List<TriggerUnits>> unitTypeTriggerListDic
-        = new Dictionary<System.Type, List<TriggerUnits>>();
-
-    public static void UnitEventReceive(System.Type _unitType, TriggerType _type)
+    private void LinkEventHandle(Unit unit, bool isAdd)
     {
-        // TODO 이부분 성능 구릴 수 있음
-        // issubclass 부하 확인
-
-        if (unitTypeTriggerListDic.ContainsKey(_unitType))
+        switch (type)
         {
-            foreach (var key in unitTypeTriggerListDic.Keys)
-            {
-                if (_unitType.IsSubclassOf(key))
-                {
-                    foreach (var trigger in unitTypeTriggerListDic[key])
-                    {
-                        if (trigger.type == _type) trigger.ActivateTrigger();
-                    }
-                }
-            }
+            case TriggerType.AWAKE:
+                if(isAdd) unit.awakeDelegate += ActivateTrigger;
+                else unit.awakeDelegate -= ActivateTrigger;
+                break;
+            case TriggerType.INIT:
+                if(isAdd) unit.initDelegate += ActivateTrigger;
+                else unit.initDelegate -= ActivateTrigger;
+                break;
+            case TriggerType.ON_DESTROY:
+                if(isAdd) unit.onDestroyDelegate += ActivateTrigger;
+                else unit.onDestroyDelegate -= ActivateTrigger;
+                break;
         }
+    }
 
+    private void HandleAddedUnit(Unit unit)
+    {
+        if (unit.GetType().IsSubclassOf(unitType))
+        {
+            LinkEventHandle(unit, true);
+        }
     }
 
     private System.Type unitType;
@@ -365,9 +380,8 @@ public class TriggerUnits : Trigger
 
     public enum TriggerType
     {
-        NONE = 0,
-        CREATE_UNIT,
-        INIT_UNIT,
-        DESTROY_UNIT,
+        AWAKE,
+        INIT,
+        ON_DESTROY,
     }
 }
