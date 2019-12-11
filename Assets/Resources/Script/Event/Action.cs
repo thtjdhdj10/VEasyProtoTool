@@ -6,10 +6,12 @@ public abstract class Action
 {
     public float delay = 0f;
 
-    public virtual void Init()
+    public Action(Trigger trigger)
     {
-
+        trigger.actionList.Add(this);
     }
+
+    protected abstract void ActionProcess(Trigger trigger);
 
     public void Activate(Trigger trigger)
     {
@@ -17,17 +19,135 @@ public abstract class Action
         else GameManager.gm.StartCoroutine(DelayedActivate(trigger));
     }
 
-    protected abstract void ActionProcess(Trigger trigger);
-
-    public Action(Trigger trigger)
+    public virtual void Init()
     {
-        trigger.actionList.Add(this);
+
     }
 
     private IEnumerator DelayedActivate(Trigger trigger)
     {
         yield return new WaitForSeconds(delay);
         ActionProcess(trigger);
+    }
+}
+
+public class ActionSetConditionBool : Action
+{
+    public ConditionBool target;
+    public bool state;
+
+    public ActionSetConditionBool(Trigger trigger, ConditionBool _target, bool _state)
+        : base(trigger)
+    {
+        state = _state;
+        target = _target;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        target.state = state;
+    }
+}
+
+public class ActionDirectionToMouse : Action
+{
+    public Unit target;
+    
+    public ActionDirectionToMouse(Trigger trigger, Unit _target)
+        : base(trigger)
+    {
+        target = _target;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
+        target.direction = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
+    }
+}
+
+public class ActionDirectionToTarget : Action
+{
+    public Unit from;
+    public Unit to;
+
+    public ActionDirectionToTarget(Trigger trigger, Unit _from, Unit _to)
+        :base(trigger)
+    {
+        from = _from;
+        to = _to;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        from.direction = VEasyCalculator.GetDirection(from, to);
+    }
+}
+
+public class ActionSetAnimatorSpeed : Action
+{
+    public GameObject target;
+    public float speed;
+
+    public ActionSetAnimatorSpeed(Trigger trigger, GameObject _target, float _speed)
+        :base(trigger)
+    {
+        target = _target;
+        speed = _speed;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        if(target.TryGetComponent(out Animator anim))
+        {
+            anim.speed = speed;
+        }
+    }
+}
+
+public class ActionSetComponent<T> : Action where T : Component
+{
+    public GameObject target;
+    public bool isAdd;
+
+    public ActionSetComponent(Trigger trigger, GameObject _target, bool _isAdd)
+        : base(trigger)
+    {
+        target = _target;
+        isAdd = _isAdd;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        if (isAdd) target.AddComponent<T>();
+        else
+        {
+            if (target.TryGetComponent<T>(out T component))
+            {
+                GameObject.Destroy(component);
+            }
+        } 
+    }
+}
+
+public class ActionSetController : Action
+{
+    public GameObject target;
+    public RuntimeAnimatorController controller;
+
+    public ActionSetController(Trigger trigger, GameObject _target, RuntimeAnimatorController _controller)
+        :base(trigger)
+    {
+        target = _target;
+        controller = _controller;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        if(target.TryGetComponent(out Animator anim))
+        {
+            anim.runtimeAnimatorController = controller;
+        }
     }
 }
 
@@ -120,12 +240,14 @@ public class ActionPrintLog : Action
 
 public class ActionKnockback : Action
 {
+    public Unit target;
     public float speed;
     public float deceleration; // 초당 속도 감소
 
-    public ActionKnockback(Trigger trigger, float _speed, float _deceleration)
+    public ActionKnockback(Trigger trigger, Unit _target, float _speed, float _deceleration)
         : base(trigger)
     {
+        target = _target;
         speed = _speed;
         deceleration = _deceleration;
     }
@@ -137,13 +259,14 @@ public class ActionKnockback : Action
             TriggerCollision triggerCol = trigger as TriggerCollision;
             if (triggerCol.target != null)
             {
-                trigger.owner.direction = VEasyCalculator.GetDirection(
-                    triggerCol.target, trigger.owner);
+                target.direction = VEasyCalculator.GetDirection(
+                    triggerCol.target, target);
+                Debug.Log(target.direction);
             }
         }
         else
         {
-            trigger.owner.direction += 180f;
+            target.direction += 180f;
         }
 
         GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
@@ -151,13 +274,13 @@ public class ActionKnockback : Action
 
     private IEnumerator DecelerationProcess(Trigger trigger)
     {
-        List<Operable> moves = trigger.owner.GetOperables<Movable>();
+        List<Operable> moves = target.GetOperables<Movable>();
 
         if (moves != null)
             foreach (var move in moves)
                 move.state.SetState(Multistat.StateType.KNOCKBACK, true);
 
-        MovableStraight knockbackMove = trigger.owner.gameObject.AddComponent<MovableStraight>();
+        MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
         knockbackMove.isRotate = false;
 
         float currentSpeed = speed;

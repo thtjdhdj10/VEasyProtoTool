@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ResourcesManager<T> where T : Object
 {
     public static Dictionary<ResourceName, T> resourceDic
@@ -11,8 +10,8 @@ public class ResourcesManager<T> where T : Object
     public List<T> loadedResourceList = new List<T>();
 
     public const string RESOURCES = "Resources";
-    public static string MIDDLE_PATH;
-    public static string EXTENSION;
+    public static string MIDDLE_PATH = "";
+    public static string EXTENSION = "";
 
     public static T LoadResource(ResourceName name)
     {

@@ -2,13 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using CmdType = System.Collections.Generic.KeyValuePair<KeyManager.KeyCommand,
-    KeyManager.KeyPressType>;
-
-using CmdTypeObject = System.Collections.Generic.KeyValuePair<
-    System.Collections.Generic.KeyValuePair<KeyManager.KeyCommand,
-    KeyManager.KeyPressType>, MyObject>;
-
 public abstract class Trigger
 {
     // 검사하기 쉬운 조건을 먼저 Add 할 것.
@@ -70,27 +63,28 @@ public class TriggerCollision : Trigger
     {
         targetTypes = _targetTypes;
 
+        List<Operable> operableList = Operable.GetOperableList<Collidable>();
+        if (operableList != null)
+        {
+            foreach (var o in operableList)
+            {
+                Collidable col = o as Collidable;
+                if (col != null) LinkEventHandle(col, true);
+            }
+        }
 
+        Collidable.onCollidableAddedDelegate += HandleAddedCollidable;
     }
 
-    // Unit 에서 호출하여 Trigger 를 작동시키는 방식.
-    public static void UnitEventReceive(Unit hitter, Unit _target)
+    ~TriggerCollision()
     {
-        for (int i = 0; i < hitter.triggerList.Count; ++i)
+        List<Operable> operableList = Operable.GetOperableList<Collidable>();
+        if (operableList != null)
         {
-            if (hitter.triggerList[i] is TriggerCollision == false) continue;
-            TriggerCollision trgCol = hitter.triggerList[i] as TriggerCollision;
-
-            // TODO 이부분 부하 있을 수 있음
-            foreach(var targetType in trgCol.targetTypes)
+            foreach (var o in operableList)
             {
-                if (_target.GetType() == targetType ||
-                    _target.GetType().IsSubclassOf(targetType))
-                {
-                    trgCol.target = _target;
-                    trgCol.ActivateTrigger();
-                    return;
-                }
+                Collidable col = o as Collidable;
+                if (col != null) LinkEventHandle(col, false);
             }
         }
     }
@@ -99,6 +93,33 @@ public class TriggerCollision : Trigger
     {
         base.Init();
         target = null;
+    }
+
+    private void LinkEventHandle(Collidable col, bool isAdd)
+    {
+        if (isAdd) col.onHitDelegate += HandleOnHit;
+        else col.onHitDelegate -= HandleOnHit;
+    }
+
+    private void HandleAddedCollidable(Collidable col)
+    {
+        // 나와 대상이 충돌할 때만 호출해야되는데
+        // 대상이 아무나랑 충돌하면 activate됨
+        // TODO 1
+        foreach(var targetType in targetTypes)
+        {
+            if (col.owner.GetType().IsSubclassOf(targetType))
+            {
+                LinkEventHandle(col, true);
+            }
+        }
+    }
+
+    private void HandleOnHit(Unit from, Unit to)
+    {
+        Debug.Log(from);
+        target = to;
+        ActivateTrigger();
     }
 }
 
@@ -315,13 +336,13 @@ public class TriggerUnit : Trigger
 // 특정 type의 유닛 생성/파괴/초기화 시 동작
 public class TriggerUnits : Trigger
 {
-    private System.Type unitType;
+    private System.Type targetType;
     private TriggerType type;
 
     public TriggerUnits(Unit _owner, System.Type _unitType, TriggerType _type)
         : base(_owner)
     {
-        unitType = _unitType;
+        targetType = _unitType;
         type = _type;
 
         foreach (var unit in Unit.unitList)
@@ -361,7 +382,7 @@ public class TriggerUnits : Trigger
 
     private void HandleAddedUnit(Unit unit)
     {
-        if (unit.GetType().IsSubclassOf(unitType))
+        if (unit.GetType().IsSubclassOf(targetType))
         {
             LinkEventHandle(unit, true);
         }

@@ -8,7 +8,7 @@ public abstract class Operable : MonoBehaviour
 
     public Multistat state = new Multistat();
 
-    public static Dictionary<System.Type, List<Operable>> allOperableListDic
+    protected static Dictionary<System.Type, List<Operable>> allOperableListDic
         = new Dictionary<System.Type, List<Operable>>();
 
     public virtual void Init()
@@ -36,6 +36,15 @@ public abstract class Operable : MonoBehaviour
         allOperableListDic[operableType].Add(this);
 
         state.updateDelegate += HandleUpdateState;
+    }
+
+    public static List<Operable> GetOperableList<T>() where T : Operable
+    {
+        if (allOperableListDic.ContainsKey(typeof(T)))
+        {
+            return allOperableListDic[typeof(T)];
+        }
+        else return null;
     }
 
     protected virtual void OnDestroy()

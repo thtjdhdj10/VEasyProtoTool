@@ -6,42 +6,62 @@ public class Player : Unit
     private float speed = 2.5f;
     private float hitSpeed = 5f;
 
-    private SpriteRenderer sprite;
-
     protected override void Start()
     {
         base.Start();
 
         GetOperable<Movable>().speed = speed;
 
-        TriggerKeyInputs trgKeyInput = new TriggerKeyInputs(this);
-        new ActionVectorMoveUnit(trgKeyInput, 2f);
+        TriggerKeyInputs triKeyInput = new TriggerKeyInputs(this);
+        new ActionVectorMoveUnit(triKeyInput, 2f);
 
-        TriggerKeyInput trgMouseDown = new TriggerKeyInput(
+        TriggerFrame triAllways = new TriggerFrame(this, 0);
+        ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
+        new ActionDirectionToMouse(triAllways, this);
+
+        TriggerKeyInput triMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        new ActionActiveOperable<Shootable>(trgMouseDown, Multistat.StateType.CLICK, true);
+        new ActionActiveOperable<Shootable>(triMouseDown, Multistat.StateType.CLICK, true);
 
-        TriggerKeyInput trgMouseUp = new TriggerKeyInput(
+        TriggerKeyInput triMouseUp = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
-        new ActionActiveOperable<Shootable>(trgMouseUp, Multistat.StateType.CLICK, false);
+        new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
 
-        TriggerCollision trgCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
-//        new ActionGetDamage(trgCol, 1); bullet에서 처리함
-        new ActionKnockback(trgCol, 8f, 15f);
-        new ActionSetSpeed(trgCol, hitSpeed);
-        new ActionSetSpeed(trgCol, speed) { delay = 1.8f };
-        new ActionActiveOperable<Controllable>(trgCol, Multistat.StateType.KNOCKBACK, true);
-        new ActionActiveOperable<Controllable>(trgCol, Multistat.StateType.KNOCKBACK, false)
-        { delay = 0.8f };
-        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, true);
-        new ActionActiveOperable<Collidable>(trgCol, Multistat.StateType.KNOCKBACK, false)
-        { delay = 1.8f };
-        new ActionInitTrigger(trgCol, trgKeyInput);
-        new ActionSetSpriteColor(trgCol, GetComponent<SpriteRenderer>(), new Color());
-//        new action
-        // sprite 깜빡깜빡 TODO
-        // sprite 딤드
-        new ActionPrintLog(trgCol, "Player Hitted!");
+        {
+            // 플레이어 피격 처리
+            TriggerCollision triCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
+            new ActionInitTrigger(triCol, triKeyInput);
+
+            new ActionKnockback(triCol, this, 8f, 15f);
+            new ActionSetSpeed(triCol, hitSpeed);
+            new ActionSetSpeed(triCol, speed) { delay = 1.8f };
+
+            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, true);
+            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = 0.8f };
+            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, true);
+            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = 1.8f };
+            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, false);
+            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, true) { delay = 1.8f };
+
+            SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
+            new ActionSetSprite(triCol, sprite,
+                ResourcesManager<Sprite>.LoadResource(
+                    ResourcesManager<Sprite>.ResourceName.Player_BeHit_strip5));
+            new ActionSetAnimatorSpeed(triCol, gameObject, 0.2f);
+            new ActionSetController(triCol, gameObject,
+                ResourcesManager<RuntimeAnimatorController>.LoadResource(
+                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_BeHit_strip5_0));
+            new ActionSetSprite(triCol, sprite,
+                ResourcesManager<Sprite>.LoadResource(
+                    ResourcesManager<Sprite>.ResourceName.Player)) { delay = 1.8f };
+            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = 1.8f };
+
+            new ActionSetConditionBool(triCol, conMouseTrack, false);
+            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = 0.8f };
+
+            new ActionPrintLog(triCol, "Player Hitted!");
+        }
         
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
@@ -54,15 +74,7 @@ public class Player : Unit
     {
         base.FixedUpdate();
 
-        SetDirectionToMouse();
-
         SetShootableDirection();
-    }
-
-    private void SetDirectionToMouse()
-    {
-        Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
-        direction = VEasyCalculator.GetDirection(transform.position, mouseWorldPos);
     }
 
     private void SetShootableDirection()

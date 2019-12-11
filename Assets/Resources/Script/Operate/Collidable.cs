@@ -10,9 +10,15 @@ public class Collidable : Operable
     public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
     public static void OnHitCallback(Unit from, Unit to) { }
 
+    public delegate void OnCollidableAddedDelegate(Collidable col);
+    public static OnCollidableAddedDelegate onCollidableAddedDelegate
+        = new OnCollidableAddedDelegate(OnCollidableAdded);
+    public static void OnCollidableAdded(Collidable col) { }
+
     protected override void Awake()
     {
         base.Awake();
+        onCollidableAddedDelegate(this);
 
         // TODO 에디터에서 getcomponent해서 연결되게 수정
         if (collider == null) collider = GetComponent<Collider2D>();
@@ -26,7 +32,8 @@ public class Collidable : Operable
 
     protected virtual void FixedUpdate()
     {
-        if(state.State) CollisionCheckFrame();
+        if (state == false) return;
+        CollisionCheckFrame();
     }
 
     protected virtual void CollisionCheckFrame()

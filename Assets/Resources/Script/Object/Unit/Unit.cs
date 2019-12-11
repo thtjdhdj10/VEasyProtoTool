@@ -101,6 +101,11 @@ public class Unit : MyObject
         fixedUpdateDelegate();
     }
 
+    protected virtual void Update()
+    {
+
+    }
+
     protected virtual void LateUpdate()
     {
         if (willDestroy) Destroy(gameObject);
