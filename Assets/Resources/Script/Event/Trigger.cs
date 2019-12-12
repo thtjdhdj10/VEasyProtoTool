@@ -97,19 +97,20 @@ public class TriggerCollision : Trigger
 
     private void LinkEventHandle(Collidable col, bool isAdd)
     {
-        if (isAdd) col.onHitDelegate += HandleOnHit;
-        else col.onHitDelegate -= HandleOnHit;
+        foreach (var targetType in targetTypes)
+        {
+            if (col.owner.GetType().IsSubclassOf(targetType) ||
+                col.owner.GetType() == targetType)
+            {
+                if (isAdd) col.onHitDelegate += HandleOnHit;
+                else col.onHitDelegate -= HandleOnHit;
+            }
+        }
     }
 
     private void HandleAddedCollidable(Collidable col)
     {
-        foreach(var targetType in targetTypes)
-        {
-            if (col.owner.GetType().IsSubclassOf(targetType))
-            {
-                LinkEventHandle(col, true);
-            }
-        }
+        LinkEventHandle(col, true);
     }
 
     private void HandleOnHit(Unit from, Unit to)
@@ -381,7 +382,8 @@ public class TriggerUnits : Trigger
 
     private void HandleAddedUnit(Unit unit)
     {
-        if (unit.GetType().IsSubclassOf(targetType))
+        if (unit.GetType().IsSubclassOf(targetType) ||
+            unit.GetType() == targetType)
         {
             LinkEventHandle(unit, true);
         }

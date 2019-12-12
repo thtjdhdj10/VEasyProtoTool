@@ -48,20 +48,21 @@ public class Player : Unit
 
             SpriteRenderer sprite = GetComponent<SpriteRenderer>();
             new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
+            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
             new ActionSetSprite(triCol, sprite,
                 ResourcesManager<Sprite>.LoadResource(
                     ResourcesManager<Sprite>.ResourceName.Player_BeHit_strip5));
-            new ActionSetAnimatorSpeed(triCol, gameObject, 0.2f);
-            new ActionSetController(triCol, gameObject,
-                ResourcesManager<RuntimeAnimatorController>.LoadResource(
-                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_BeHit_strip5_0));
             new ActionSetSprite(triCol, sprite,
                 ResourcesManager<Sprite>.LoadResource(
                     ResourcesManager<Sprite>.ResourceName.Player)) { delay = dodgeTime };
-            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
+            new ActionSetController(triCol, gameObject,
+                ResourcesManager<RuntimeAnimatorController>.LoadResource(
+                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_BeHit_strip5_0));
+            new ActionSetController(triCol, gameObject, null) { delay = knockbackTime };
+            new ActionSetAnimatorSpeed(triCol, gameObject, 0.8f);
 
             new ActionSetConditionBool(triCol, conMouseTrack, false);
-            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = 0.6f };
+            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
 
             new ActionPrintLog(triCol, "Player Hitted!");
         }

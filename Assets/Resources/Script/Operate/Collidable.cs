@@ -18,11 +18,15 @@ public class Collidable : Operable
     protected override void Awake()
     {
         base.Awake();
-        onCollidableAddedDelegate(this);
 
         // TODO 에디터에서 getcomponent해서 연결되게 수정
         if (collider == null) collider = GetComponent<Collider2D>();
         if (collider == null) Debug.LogWarning(this.name + " has not collider.");
+    }
+
+    private void Start()
+    {
+        onCollidableAddedDelegate(this);
     }
 
     protected virtual void Hit(Unit target)

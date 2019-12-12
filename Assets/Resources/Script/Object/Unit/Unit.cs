@@ -81,12 +81,12 @@ public class Unit : MyObject
     protected virtual void Awake()
     {
         unitList.Add(this);
-        onUnitAddedDelegate(this);
         awakeDelegate();
     }
 
     protected virtual void Start()
     {
+        onUnitAddedDelegate(this);
         Init();
     }
 
