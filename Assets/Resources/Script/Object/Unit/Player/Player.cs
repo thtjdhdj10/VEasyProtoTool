@@ -19,6 +19,8 @@ public class Player : Unit
         ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
         new ActionDirectionToMouse(triAllways, this);
 
+        GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
+
         TriggerKeyInput triMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
         new ActionActiveOperable<Shootable>(triMouseDown, Multistat.StateType.CLICK, true);
@@ -63,8 +65,6 @@ public class Player : Unit
 
             new ActionSetConditionBool(triCol, conMouseTrack, false);
             new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
-
-            new ActionPrintLog(triCol, "Player Hitted!");
         }
         
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(

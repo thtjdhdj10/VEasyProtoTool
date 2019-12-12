@@ -16,7 +16,6 @@ public class BulletStraight : Bullet
         TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
         new ActionDestroyUnit(trgCol, this);
         new ActionDealDamage(trgCol, damage);
-        new ActionPrintLog(trgCol, "Bullet Collision!");
     }
 
 }

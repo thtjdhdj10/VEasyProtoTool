@@ -27,7 +27,7 @@ public class Collidable : Operable
     protected virtual void Hit(Collidable target)
     {
         onHitDelegate(owner, target.owner);
-        onHitDelegate(target.owner, owner);
+        target.onHitDelegate(target.owner, owner);
 
         collideInFrame = true;
         target.collideInFrame = true;

@@ -76,6 +76,8 @@ public class TriggerCollision : Trigger
 
     private void HandleOnHit(Unit from, Unit to)
     {
+        if (from != owner) return;
+
         foreach (var targetType in targetTypes)
         {
             if (to.GetType().IsSubclassOf(targetType) ||

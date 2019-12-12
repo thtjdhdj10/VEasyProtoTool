@@ -99,16 +99,13 @@ public class Unit : MyObject
     protected virtual void FixedUpdate()
     {
         fixedUpdateDelegate();
+
+        if (willDestroy) Destroy(gameObject);
     }
 
     protected virtual void Update()
     {
 
-    }
-
-    protected virtual void LateUpdate()
-    {
-        if (willDestroy) Destroy(gameObject);
     }
 
     public virtual void Init()
