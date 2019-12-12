@@ -437,7 +437,11 @@ public class ActionDealDamage : Action
         if (trgCol.target == null) return;
         if (trgCol.target.unitStatus == null) return;
 
-        trgCol.target.unitStatus.CurrentHp -= damage;
+        if (trgCol.target.TryGetOperable(out ShieldOwnable shield))
+        {
+            if (shield.enableShield) shield.ShieldBreak();
+            else trgCol.target.unitStatus.CurrentHp -= damage;
+        }
     }
 }
 
@@ -458,9 +462,12 @@ public class ActionGetDamage : Action
         if (trigger.owner == null) return;
         if (trigger.owner.unitStatus == null) return;
 
-        trigger.owner.unitStatus.CurrentHp -= damage;
+        if (trigger.owner.TryGetOperable(out ShieldOwnable shield))
+        {
+            if(shield.enableShield) shield.ShieldBreak();
+            else trigger.owner.unitStatus.CurrentHp -= damage;
+        }
     }
-
 }
 
 public class ActionDestroyUnit : Action

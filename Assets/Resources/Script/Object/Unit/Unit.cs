@@ -115,25 +115,38 @@ public class Unit : MyObject
     
     //
 
-    public void SetOperablesState(bool state)
+    public bool TryGetOperable<T>(out T operable) where T : Operable
     {
-        foreach(var type in operableListDic.Keys)
+        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            foreach(var o in operableListDic[type])
-            {
-                o.state.SetStateForce(state);
-            }
+            operable = operables[0] as T;
+            return true;
         }
+
+        operable = null;
+        return false;
     }
 
     public T GetOperable<T>() where T : Operable
     {
-        if (operableListDic.ContainsKey(typeof(T)) == false) return null;
-
-        if (operableListDic[typeof(T)].Count > 0)
-            return operableListDic[typeof(T)][0] as T;
+        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        {
+            return operables[0] as T;
+        }
 
         return null;
+    }
+
+    public bool TryGetOperables<T>(out List<Operable> operables) where T : Operable
+    {
+        if (operableListDic.ContainsKey(typeof(T)))
+        {
+            operables = operableListDic[typeof(T)];
+            return true;
+        }
+
+        operables = new List<Operable>();
+        return false;
     }
 
     public List<Operable> GetOperables<T>() where T : Operable
@@ -141,5 +154,16 @@ public class Unit : MyObject
         if (operableListDic.ContainsKey(typeof(T)) == false) return null;
 
         return operableListDic[typeof(T)];
+    }
+
+    public void SetOperablesState(bool state)
+    {
+        foreach (var type in operableListDic.Keys)
+        {
+            foreach (var o in operableListDic[type])
+            {
+                o.state.SetStateForce(state);
+            }
+        }
     }
 }

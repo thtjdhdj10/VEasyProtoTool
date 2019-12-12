@@ -143,8 +143,7 @@ public class TriggerKeyInput : Trigger
         command = _command;
         pressType = _pressType;
 
-        Controllable control = owner.GetOperable<Controllable>();
-        if (control != null)
+        if(owner.TryGetOperable(out Controllable control))
         {
             control.keyInputDelegate += HandleKeyInput;
         }
@@ -152,8 +151,7 @@ public class TriggerKeyInput : Trigger
 
     ~TriggerKeyInput()
     {
-        Controllable control = owner.GetOperable<Controllable>();
-        if (control != null)
+        if (owner.TryGetOperable(out Controllable control))
         {
             control.keyInputDelegate -= HandleKeyInput;
         }
@@ -177,8 +175,7 @@ public class TriggerKeyInputs : Trigger
     public TriggerKeyInputs(Unit _owner)
         : base(_owner)
     {
-        Controllable control = owner.GetOperable<Controllable>();
-        if (control != null)
+        if (owner.TryGetOperable(out Controllable control))
         {
             control.keyInputDelegate += HandleKeyInput;
         }
@@ -186,8 +183,7 @@ public class TriggerKeyInputs : Trigger
 
     ~TriggerKeyInputs()
     {
-        Controllable control = owner.GetOperable<Controllable>();
-        if (control != null)
+        if (owner.TryGetOperable(out Controllable control))
         {
             control.keyInputDelegate -= HandleKeyInput;
         }

@@ -140,8 +140,7 @@ public abstract class Movable : Operable
             bounceBy == BounceBy.ALLY ||
             bounceBy == BounceBy.ENEMY)
         {
-            Collidable col = owner.GetOperable<Collidable>();
-            if (col != null)
+            if(owner.TryGetOperable(out Collidable col))
             {
                 Unit.Relation targetRelation = Unit.Relation.NONE;
                 if (bounceBy == BounceBy.UNIT)
