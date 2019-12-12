@@ -56,37 +56,16 @@ public abstract class Trigger
 public class TriggerCollision : Trigger
 {
     public System.Type[] targetTypes;
+    public Collidable collider;
     public Unit target;
 
-    public TriggerCollision(Unit _owner, params System.Type[] _targetTypes)
+    public TriggerCollision(Unit _owner, Collidable _collider, params System.Type[] _targetTypes)
         : base(_owner)
     {
+        collider = _collider;
         targetTypes = _targetTypes;
 
-        List<Operable> operableList = Operable.GetOperableList<Collidable>();
-        if (operableList != null)
-        {
-            foreach (var o in operableList)
-            {
-                Collidable col = o as Collidable;
-                if (col != null) LinkEventHandle(col, true);
-            }
-        }
-
-        Collidable.onCollidableAddedDelegate += HandleAddedCollidable;
-    }
-
-    ~TriggerCollision()
-    {
-        List<Operable> operableList = Operable.GetOperableList<Collidable>();
-        if (operableList != null)
-        {
-            foreach (var o in operableList)
-            {
-                Collidable col = o as Collidable;
-                if (col != null) LinkEventHandle(col, false);
-            }
-        }
+        collider.onHitDelegate += HandleOnHit;
     }
 
     public override void Init()
@@ -95,30 +74,16 @@ public class TriggerCollision : Trigger
         target = null;
     }
 
-    private void LinkEventHandle(Collidable col, bool isAdd)
+    private void HandleOnHit(Unit from, Unit to)
     {
         foreach (var targetType in targetTypes)
         {
-            if (col.owner.GetType().IsSubclassOf(targetType) ||
-                col.owner.GetType() == targetType)
+            if (to.GetType().IsSubclassOf(targetType) ||
+                to.GetType() == targetType)
             {
-                if (isAdd) col.onHitDelegate += HandleOnHit;
-                else col.onHitDelegate -= HandleOnHit;
+                target = to;
+                ActivateTrigger();
             }
-        }
-    }
-
-    private void HandleAddedCollidable(Collidable col)
-    {
-        LinkEventHandle(col, true);
-    }
-
-    private void HandleOnHit(Unit from, Unit to)
-    {
-        if(from == owner)
-        {
-            target = to;
-            ActivateTrigger();
         }
     }
 }

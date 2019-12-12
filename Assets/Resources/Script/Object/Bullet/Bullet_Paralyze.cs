@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet_Paralyze : BulleStraight
+public class Bullet_Paralyze : BulletStraight
 {
     public float duration;
 

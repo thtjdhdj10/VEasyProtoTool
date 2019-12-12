@@ -286,8 +286,8 @@ public class ActionKnockback : Action
 
         while (currentSpeed > 0f && deceleration > 0f)
         {
-            currentSpeed -= deceleration * Time.fixedDeltaTime;
             knockbackMove.speed = currentSpeed;
+            currentSpeed -= deceleration * Time.fixedDeltaTime;
 
             yield return new WaitForFixedUpdate();
         }

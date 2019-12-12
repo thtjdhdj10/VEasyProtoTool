@@ -28,11 +28,11 @@ public class Player : Unit
         new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
 
         {
-            float knockbackTime = 0.4f;
-            float dodgeTime = 1.6f;
+            float knockbackTime = 0.38f;
+            float dodgeTime = 1.3f;
 
             // 플레이어 피격 처리
-            TriggerCollision triCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
+            TriggerCollision triCol = new TriggerCollision(this, GetOperable<Collidable>(), typeof(Bullet), typeof(Enemy));
             new ActionInitTrigger(triCol, triKeyInput);
 
             new ActionKnockback(triCol, this, 8f, 20f);

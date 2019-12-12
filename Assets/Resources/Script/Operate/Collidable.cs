@@ -6,14 +6,14 @@ public class Collidable : Operable
 {
     public new Collider2D collider;
 
+    // canCollideSeveral: true면 한 프레임에 1번만 충돌 가능
+    // collideInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
+    public bool canCollideSeveral = false;
+    public bool collideInFrame = false;
+
     public delegate void OnHitDelegate(Unit from, Unit to);
     public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
     public static void OnHitCallback(Unit from, Unit to) { }
-
-    public delegate void OnCollidableAddedDelegate(Collidable col);
-    public static OnCollidableAddedDelegate onCollidableAddedDelegate
-        = new OnCollidableAddedDelegate(OnCollidableAdded);
-    public static void OnCollidableAdded(Collidable col) { }
 
     protected override void Awake()
     {
@@ -24,14 +24,13 @@ public class Collidable : Operable
         if (collider == null) Debug.LogWarning(this.name + " has not collider.");
     }
 
-    private void Start()
+    protected virtual void Hit(Collidable target)
     {
-        onCollidableAddedDelegate(this);
-    }
+        onHitDelegate(owner, target.owner);
+        onHitDelegate(target.owner, owner);
 
-    protected virtual void Hit(Unit target)
-    {
-        onHitDelegate(owner, target);
+        collideInFrame = true;
+        target.collideInFrame = true;
     }
 
     protected virtual void FixedUpdate()
@@ -45,13 +44,17 @@ public class Collidable : Operable
         if (owner.unitActive == false)
             return;
 
+        if (canCollideSeveral == false &&
+            collideInFrame == true)
+            return;
+
         List<Collidable> colTargetList = CollisionCheck();
         if (colTargetList == null)
             return;
 
         for (int i = 0; i < colTargetList.Count; ++i)
         {
-            Hit(colTargetList[i].owner);
+            Hit(colTargetList[i]);
         }
     }
 
@@ -89,6 +92,10 @@ public class Collidable : Operable
                 continue;
 
             if (target.state == false)
+                continue;
+
+            if (target.canCollideSeveral == false &&
+                target.collideInFrame == true)
                 continue;
 
             Unit.Relation relation = Unit.GetRelation(owner.force, target.owner.force);

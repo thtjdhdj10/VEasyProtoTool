@@ -23,7 +23,7 @@ public class GameManager : MyObject
         NONE,
     }
 
-    public void Awake()
+    private void Awake()
     {
         gm = this;
 
@@ -32,8 +32,17 @@ public class GameManager : MyObject
         controllerManager = new ResourcesManager<RuntimeAnimatorController>();
     }
 
+    private void FixedUpdate()
+    {
+        foreach(var o in Operable.GetOperableList<Collidable>())
+        {
+            Collidable col = o as Collidable;
+            if (col != null) col.collideInFrame = false;
+        }
+    }
 
-    public void Start()
+
+    private void Start()
     {
         //TriggerForUnits tu = gameObject.AddComponent<TriggerForUnits>();
         //tu.type = TriggerForUnits.Type.CREATE_UNIT;
