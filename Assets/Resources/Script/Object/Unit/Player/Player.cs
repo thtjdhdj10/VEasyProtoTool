@@ -28,20 +28,23 @@ public class Player : Unit
         new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
 
         {
+            float knockbackTime = 0.4f;
+            float dodgeTime = 1.6f;
+
             // 플레이어 피격 처리
             TriggerCollision triCol = new TriggerCollision(this, typeof(Bullet), typeof(Enemy));
             new ActionInitTrigger(triCol, triKeyInput);
 
-            new ActionKnockback(triCol, this, 8f, 15f);
+            new ActionKnockback(triCol, this, 8f, 20f);
             new ActionSetSpeed(triCol, hitSpeed);
-            new ActionSetSpeed(triCol, speed) { delay = 1.8f };
+            new ActionSetSpeed(triCol, speed) { delay = dodgeTime };
 
             new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, true);
-            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = 0.8f };
+            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = knockbackTime };
             new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, true);
-            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = 1.8f };
+            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = dodgeTime };
             new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, false);
-            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, true) { delay = 1.8f };
+            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, true) { delay = dodgeTime };
 
             SpriteRenderer sprite = GetComponent<SpriteRenderer>();
             new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
@@ -54,11 +57,11 @@ public class Player : Unit
                     ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_BeHit_strip5_0));
             new ActionSetSprite(triCol, sprite,
                 ResourcesManager<Sprite>.LoadResource(
-                    ResourcesManager<Sprite>.ResourceName.Player)) { delay = 1.8f };
-            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = 1.8f };
+                    ResourcesManager<Sprite>.ResourceName.Player)) { delay = dodgeTime };
+            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
 
             new ActionSetConditionBool(triCol, conMouseTrack, false);
-            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = 0.8f };
+            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = 0.6f };
 
             new ActionPrintLog(triCol, "Player Hitted!");
         }

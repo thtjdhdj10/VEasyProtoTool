@@ -103,9 +103,6 @@ public class TriggerCollision : Trigger
 
     private void HandleAddedCollidable(Collidable col)
     {
-        // 나와 대상이 충돌할 때만 호출해야되는데
-        // 대상이 아무나랑 충돌하면 activate됨
-        // TODO 1
         foreach(var targetType in targetTypes)
         {
             if (col.owner.GetType().IsSubclassOf(targetType))
@@ -117,9 +114,11 @@ public class TriggerCollision : Trigger
 
     private void HandleOnHit(Unit from, Unit to)
     {
-        Debug.Log(from);
-        target = to;
-        ActivateTrigger();
+        if(from == owner)
+        {
+            target = to;
+            ActivateTrigger();
+        }
     }
 }
 

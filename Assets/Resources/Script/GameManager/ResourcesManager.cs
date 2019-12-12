@@ -88,27 +88,28 @@ public class ResourcesManager<T> where T : Object
             RESOURCES + "/" +
             MIDDLE_PATH + "/";
 
-        // Prefabs Directory 이하의 Directory 들을 가져옴
-        string[] targetDirectoryWithPath = System.IO.Directory.GetDirectories(fullPath);
+        List<string> resourceNameWithPathList = new List<string>(System.IO.Directory.GetFiles(fullPath, EXTENSION));
 
+        // Directory 이하의 Directory 들을 가져옴
+        string[] targetDirectoryWithPath = System.IO.Directory.GetDirectories(fullPath);
         for (int i = 0; i < targetDirectoryWithPath.Length; ++i)
         {
-            // directory 들 이하의 resource file 들을 가져옴
-            string[] resourceNameWithPath = System.IO.Directory.GetFiles(targetDirectoryWithPath[i], EXTENSION);
+            resourceNameWithPathList.AddRange(new List<string>(
+                System.IO.Directory.GetFiles(targetDirectoryWithPath[i], EXTENSION)));
+        }
 
-            for (int j = 0; j < resourceNameWithPath.Length; ++j)
+        for (int j = 0; j < resourceNameWithPathList.Count; ++j)
+        {
+            // resource.load 를 위한 이름
+            string resourceName = GetResourceName(resourceNameWithPathList[j]);
+
+            ResourceName resourceType = ResourceName.NONE;
+            if (System.Enum.TryParse(resourceName, out resourceType))
             {
-                // resource.load 를 위한 이름
-                string resourceName = GetResourceName(resourceNameWithPath[j]);
-
-                ResourceName resourceType = ResourceName.NONE;
-                if(System.Enum.TryParse(resourceName, out resourceType))
-                {
-                    string resourceLoadName = GetLoadingName(resourceNameWithPath[j]);
-                    T resource = Resources.Load<T>(resourceLoadName);
-                    resourceDic.Add(resourceType, resource);
-                    loadedResourceList.Add(resource);
-                }
+                string resourceLoadName = GetLoadingName(resourceNameWithPathList[j]);
+                T resource = Resources.Load<T>(resourceLoadName);
+                resourceDic.Add(resourceType, resource);
+                loadedResourceList.Add(resource);
             }
         }
     }

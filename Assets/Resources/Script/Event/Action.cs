@@ -261,7 +261,6 @@ public class ActionKnockback : Action
             {
                 target.direction = VEasyCalculator.GetDirection(
                     triggerCol.target, target);
-                Debug.Log(target.direction);
             }
         }
         else
