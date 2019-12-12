@@ -41,6 +41,10 @@ public class Bullet_Laser : Bullet
             bodies[i].GetComponent<EffectAnimDestroy>().duration = duration;
         }
     }
+    protected override void SetDefaultBulletSetting()
+    {
+
+    }
 
 
 }

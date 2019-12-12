@@ -7,7 +7,8 @@ public class PatternFireable : Operable
     public List<Pattern> patternList = new List<Pattern>();
     public Pattern currentPattern;
 
-    public float remainDelay = 3f;
+    public float delay = 3f;
+    public float elapseDelay = 3f;
 
     private void FixedUpdate()
     {
@@ -19,10 +20,14 @@ public class PatternFireable : Operable
                     return;
             }
 
-            if (remainDelay > 0f)
-                remainDelay -= Time.fixedDeltaTime;
+            if (elapseDelay < delay)
+            {
+                elapseDelay += Time.fixedDeltaTime;
+            }
             else
             {
+                elapseDelay = 0f;
+
                 currentPattern = SelectNextPattern();
 
                 if (currentPattern != null)

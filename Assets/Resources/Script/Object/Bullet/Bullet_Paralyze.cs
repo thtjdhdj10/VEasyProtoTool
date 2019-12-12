@@ -6,22 +6,19 @@ public class Bullet_Paralyze : BulletStraight
 {
     public float duration;
 
-    protected override void Awake()
+    protected override void SetDefaultBulletSetting()
     {
-        base.Awake();
+        System.Type targetType;
+        if (force == Force.A) targetType = typeof(Enemy);
+        else targetType = typeof(Player);
 
-        foreach(var trg in triggerList)
-        {
-            if(trg is TriggerCollision)
-            {
-                new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, true);
-                new ActionActiveTargetOperable<Movable>(trg, Multistat.StateType.STURN, false)
-                { delay = duration };
-                break;
-            }
-        }
+        TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
+        new ActionActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, true);
+        new ActionActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, false)
+        { delay = duration };
+        new ActionDealDamage(trgCol, damage);
+        new ActionDestroyUnit(trgCol, this);
     }
-
 
 
 }

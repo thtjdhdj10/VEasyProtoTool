@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet_Boom : MonoBehaviour
+public class Bullet_Boom : Bullet
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void SetDefaultBulletSetting()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

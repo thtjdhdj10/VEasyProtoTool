@@ -231,7 +231,7 @@ public class Pattern_Slayer_1 : Pattern
 
     public Pattern_Slayer_1(Unit unit)
     {
-        postDelay = 5f;
+        postDelay = 3f;
 
         move = unit.GetOperable<Movable>();
 
@@ -247,7 +247,7 @@ public class Pattern_Slayer_1 : Pattern
 
         float duration = 5f;
 
-        pattern1.count = 150;
+        pattern1.count = 120;
         pattern1.term = duration / pattern1.count;
         pattern1.angle = 110f;
 
@@ -303,7 +303,7 @@ public class Pattern_Slayer_2 : Pattern
 
     public Pattern_Slayer_2(Unit unit)
     {
-        postDelay = 5f;
+        postDelay = 3f;
 
         move = unit.GetOperable<Movable>();
 
