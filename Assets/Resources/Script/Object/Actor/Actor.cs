@@ -1,32 +1,44 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-/* Unit 구조 설명
- * 
- * Unit 은 GameObject 의 Operable 들을 멤버로 가짐. (operableListDic)
- * ( GetComponent 사용을 줄이기 위하여 )
- * 각 Operable 은 static 으로 동종의 Operable List 를 가짐.
- * ( Operable 순회 작업을 쉽게 하기 위하여 )
- */
-
-public class Unit : MyObject
+public class Actor : MyObject
 {
-    public static List<Unit> unitList = new List<Unit>();
+    public Force force = Force.NONE;
 
-    [System.NonSerialized]
-    public UnitStatus unitStatus;
-
-    public bool unitActive = true;
-    public bool willDestroy = false;
-
-    public float direction;
+    public bool willDestroy = false; // 바로 삭제하면 충돌처리할때 문제됨
 
     public Dictionary<System.Type, List<Operable>> operableListDic
         = new Dictionary<System.Type, List<Operable>>();
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public Force force = Force.NONE;
+    public float MoveDirection
+    {
+        get
+        {
+            return GetOperable<Movable>().direction;
+        }
+        set
+        {
+            if (TryGetOperable(out Movable move))
+                move.direction = value;
+        }
+    }
+    public float TargetDirection
+    {
+        get
+        {
+            return GetOperable<Targetable>().direction;
+        }
+        set
+        {
+            if (TryGetOperable(out Targetable move))
+                move.direction = value;
+        }
+    }
+
+    //
 
     public enum Force
     {
@@ -72,28 +84,26 @@ public class Unit : MyObject
     public FixedUpdateDelegate fixedUpdateDelegate = new FixedUpdateDelegate(fixedUpdateCallback);
     public static void fixedUpdateCallback() { }
 
-    public delegate void OnUnitAddedDelegate(Unit unit);
-    public static OnUnitAddedDelegate onUnitAddedDelegate = new OnUnitAddedDelegate(OnUnitAdded);
-    public static void OnUnitAdded(Unit unit) { }
+    public delegate void OnActorAddedDelegate(Actor actor);
+    public static OnActorAddedDelegate onActorAddedDelegate = new OnActorAddedDelegate(OnActorAdded);
+    public static void OnActorAdded(Actor actor) { }
 
     //
 
     protected virtual void Awake()
     {
-        unitList.Add(this);
         awakeDelegate();
     }
 
     protected virtual void Start()
     {
-        onUnitAddedDelegate(this);
+        onActorAddedDelegate(this);
         Init();
     }
 
     protected virtual void OnDestroy()
     {
         onDestroyDelegate();
-        unitList.Remove(this);
     }
 
     protected virtual void FixedUpdate()
@@ -103,16 +113,11 @@ public class Unit : MyObject
         if (willDestroy) Destroy(gameObject);
     }
 
-    protected virtual void Update()
-    {
-
-    }
-
     public virtual void Init()
     {
         initDelegate();
     }
-    
+
     //
 
     public bool TryGetOperable<T>(out T operable) where T : Operable
@@ -137,23 +142,35 @@ public class Unit : MyObject
         return null;
     }
 
-    public bool TryGetOperables<T>(out List<Operable> operables) where T : Operable
+    public bool TryGetOperableList<T>(out List<T> operableList) where T : Operable
     {
-        if (operableListDic.ContainsKey(typeof(T)))
+        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            operables = operableListDic[typeof(T)];
+            List<T> retList = new List<T>();
+            foreach (var o in operables)
+            {
+                retList.Add(o as T);
+            }
+            operableList = retList;
             return true;
         }
 
-        operables = new List<Operable>();
+        operableList = null;
         return false;
     }
 
-    public List<Operable> GetOperables<T>() where T : Operable
+    public List<T> GetOperableList<T>() where T : Operable
     {
-        if (operableListDic.ContainsKey(typeof(T)) == false) return null;
-
-        return operableListDic[typeof(T)];
+        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        {
+            List<T> retList = new List<T>();
+            foreach (var o in operables)
+            {
+                retList.Add(o as T);
+            }
+            return retList;
+        }
+        else return null;
     }
 
     public void SetOperablesState(bool state)
@@ -166,4 +183,5 @@ public class Unit : MyObject
             }
         }
     }
+
 }

@@ -14,6 +14,7 @@ public class ShootableEditor : Editor
     SerializedProperty attackDelayProp;
     SerializedProperty remainAttackDelayProp;
     SerializedProperty loadOnDeactiveProp;
+    SerializedProperty followUnitTargetProp;
     SerializedProperty fireToTargetProp;
     SerializedProperty targetProp;
     SerializedProperty targetingEachFireProp;
@@ -33,6 +34,7 @@ public class ShootableEditor : Editor
         attackDelayProp = serializedObject.FindProperty("attackDelay");
         remainAttackDelayProp = serializedObject.FindProperty("remainAttackDelay");
         loadOnDeactiveProp = serializedObject.FindProperty("loadOnDeactive");
+        followUnitTargetProp = serializedObject.FindProperty("followUnitTarget");
         fireToTargetProp = serializedObject.FindProperty("fireToTarget");
         targetProp = serializedObject.FindProperty("target");
         targetingEachFireProp = serializedObject.FindProperty("targetingEachFire");
@@ -63,32 +65,37 @@ public class ShootableEditor : Editor
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
-        EditorGUILayout.PropertyField(isRangelessProp);
+        //EditorGUILayout.PropertyField(isRangelessProp);
 
-        if (!obj.isRangeless)
-        {
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(rangeProp);
-            EditorGUI.indentLevel -= 1;
-        }
+        //if (!obj.isRangeless)
+        //{
+        //    EditorGUI.indentLevel += 1;
+        //    EditorGUILayout.PropertyField(rangeProp);
+        //    EditorGUI.indentLevel -= 1;
+        //}
 
         EditorGUILayout.PropertyField(attackDelayProp);
         EditorGUILayout.PropertyField(remainAttackDelayProp);
         EditorGUILayout.PropertyField(loadOnDeactiveProp);
-        EditorGUILayout.PropertyField(fireToTargetProp);
+//        EditorGUILayout.PropertyField(fireToTargetProp);
 
-        if (obj.fireToTarget)
-        {
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(targetProp);
-            EditorGUILayout.PropertyField(targetingEachFireProp);
-            EditorGUI.indentLevel -= 1;
-        }
-        else
-        {
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(fireDirectionProp);
-            EditorGUI.indentLevel -= 1;
-        }
+        //if (!obj.followUnitTarget)
+        //{
+        //    EditorGUI.indentLevel += 1;
+        //    if (obj.fireToTarget)
+        //    {
+        //        EditorGUI.indentLevel += 1;
+        //        EditorGUILayout.PropertyField(targetProp);
+        //        EditorGUILayout.PropertyField(targetingEachFireProp);
+        //        EditorGUI.indentLevel -= 1;
+        //    }
+        //    else
+        //    {
+        //        EditorGUI.indentLevel += 1;
+        //        EditorGUILayout.PropertyField(fireDirectionProp);
+        //        EditorGUI.indentLevel -= 1;
+        //    }
+        //    EditorGUI.indentLevel -= 1;
+        //}
     }
 }

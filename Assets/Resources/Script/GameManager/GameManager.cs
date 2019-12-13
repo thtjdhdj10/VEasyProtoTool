@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager : MyObject
+public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
     private ResourcesManager<GameObject> prefabmanager;

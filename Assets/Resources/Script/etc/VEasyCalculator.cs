@@ -39,17 +39,17 @@ public class VEasyCalculator
         return f * f;
     }
 
-    public static Vector2 GetPosition(Unit a)
+    public static Vector2 GetPosition(MyObject a)
     {
         return new Vector2(a.transform.position.x, a.transform.position.y);
     }
 
-    public static Vector2 GetDeltaPosition(Unit from, Unit to)
+    public static Vector2 GetDeltaPosition(MyObject from, MyObject to)
     {
         return GetPosition(to) - GetPosition(from);
     }
 
-    public static float GetSqrDistance(Unit a, Unit b)
+    public static float GetSqrDistance(MyObject a, MyObject b)
     {
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
@@ -263,7 +263,7 @@ public class VEasyCalculator
         return (cornerDistance_sq <= scale1 * scale1);
     }
 
-    public static float GetDirection(Unit from, Unit to)
+    public static float GetDirection(MyObject from, MyObject to)
     {
         return GetDirection(from.transform.position, to.transform.position);
     }

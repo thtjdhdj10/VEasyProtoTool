@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public abstract class Operable : MonoBehaviour
 {
     [System.NonSerialized]
-    public Unit owner;
+    public Actor owner;
 
     public Multistat state = new Multistat();
 
@@ -18,44 +18,86 @@ public abstract class Operable : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if(owner == null) owner = GetComponent<Unit>();
+        if(owner == null) owner = GetComponent<Actor>();
 
-        System.Type operableType = this.GetType();
-        if (operableType.BaseType != typeof(Operable))
-            operableType = operableType.BaseType;
-        // TODO base의 base 타입도 지원되게 수정
+        System.Type type = GetOperableOriginType();
 
-        if (owner.operableListDic.ContainsKey(operableType) == false)
-            owner.operableListDic.Add(operableType, new List<Operable>());
+        if (allOperableListDic.TryGetValue(type, out List<Operable> operableList))
+        {
+            if (operableList != null) operableList.Add(this);
+            else allOperableListDic[type] = new List<Operable>() { this };
+        }
+        else allOperableListDic.Add(type, new List<Operable>() { this });
 
-        owner.operableListDic[operableType].Add(this);
-
-        if (allOperableListDic.ContainsKey(operableType) == false)
-            allOperableListDic.Add(operableType, new List<Operable>());
-
-        allOperableListDic[operableType].Add(this);
+        if (owner.operableListDic.TryGetValue(type, out List<Operable> ownerOperableList))
+        {
+            if (ownerOperableList != null) ownerOperableList.Add(this);
+            else owner.operableListDic[type] = new List<Operable>() { this };
+        }
+        else owner.operableListDic.Add(type, new List<Operable>() { this });
 
         state.updateDelegate += HandleUpdateState;
     }
 
-    public static List<Operable> GetOperableList<T>() where T : Operable
+    protected virtual void OnDestroy()
     {
-        if (allOperableListDic.ContainsKey(typeof(T)))
+        System.Type type = GetOperableOriginType();
+
+        owner.operableListDic[type].Remove(this);
+        allOperableListDic[type].Remove(this);
+    }
+
+    //
+
+    public System.Type GetOperableOriginType()
+    {
+        System.Type ret = this.GetType();
+
+        if (ret.IsSubclassOf(typeof(Operable)))
         {
-            return allOperableListDic[typeof(T)];
+            while (ret.BaseType != typeof(Operable))
+            {
+                ret = ret.BaseType;
+            }
+        }
+
+        return ret;
+    }
+
+    //
+
+    public static bool TryGetOperableList<T>(out List<T> operableList) where T : Operable
+    {
+        if (allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        {
+            List<T> retList = new List<T>();
+            foreach (var o in operables)
+            {
+                retList.Add(o as T);
+            }
+            operableList = retList;
+            return true;
+        }
+
+        operableList = null;
+        return false;
+    }
+
+    public static List<T> GetOperableList<T>() where T : Operable
+    {
+        if (allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        {
+            List<T> retList = new List<T>();
+            foreach (var o in operables)
+            {
+                retList.Add(o as T);
+            }
+            return retList;
         }
         else return null;
     }
 
-    protected virtual void OnDestroy()
-    {
-        System.Type operableType = this.GetType();
-        if (operableType.BaseType != typeof(Operable))
-            operableType = operableType.BaseType;
-
-        owner.operableListDic[operableType].Remove(this);
-        allOperableListDic[operableType].Remove(this);
-    }
+    //
 
     protected virtual void HandleUpdateState(bool _state)
     {

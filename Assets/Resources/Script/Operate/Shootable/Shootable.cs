@@ -6,33 +6,14 @@ using System.Collections.Generic;
 // target 찾는 알고리즘 여기 말고 딴데로 빼기
 public class Shootable : Operable
 {
-    public bool isRangeless;
-    public float range;
-
     public float attackDelay;
     public float remainAttackDelay;
     public bool loadOnDeactive; // 비활성 중 장전 여부
-
-    public bool fireToTarget;
-    public Unit target;
-    public bool targetingEachFire; // 공격 마다 타겟찾음
-    public float fireDirection;
-
-    public override void Init()
-    {
-        target = null;
-    }
 
     void FixedUpdate()
     {
         if (AttackDelayCheck() == true)
         {
-            if(fireToTarget)
-            {
-                if (target == null) target = GetTarget();
-                else if (targetingEachFire == true) target = GetTarget();
-            }
-
             Shoot();
         }
     }
@@ -64,71 +45,6 @@ public class Shootable : Operable
         }
 
         return false;
-    }
-
-    public Unit GetTarget()
-    {
-        List<KeyValuePair<Targetable, float>> targetList
-            = new List<KeyValuePair<Targetable, float>>();
-
-        foreach(var targetable in allOperableListDic[typeof(Targetable)])
-        {
-            targetList.Add(new KeyValuePair<Targetable, float>(
-                targetable as Targetable, 0f));
-        }
-
-        TargetingByForce(targetList);
-
-        TargetingByRange(targetList, range);
-
-        return TargetingByDistance(targetList).owner;
-    }
-
-    // 적만 대상
-    public virtual void TargetingByForce(List<KeyValuePair<Targetable,float>> targetList)
-    {
-        foreach(var target in targetList)
-        {
-            if (target.Key.owner.force == owner.force)
-            {
-                targetList.Remove(target);
-            }
-        }
-    }
-
-    // 사정거리 내의 것만 대상
-    public virtual void TargetingByRange(List<KeyValuePair<Targetable, float>> targetList, float range)
-    {
-        if (isRangeless) return;
-
-        foreach (var target in targetList)
-        {
-            float sqrDistance = VEasyCalculator.GetSqrDistance(owner, target.Key.owner);
-
-            if (sqrDistance > range * range)
-            {
-                targetList.Remove(target);
-            }
-        }
-    }
-
-    // 가장 가까운거 리턴
-    public virtual Targetable TargetingByDistance(List<KeyValuePair<Targetable, float>> targetList)
-    {
-        Targetable ret = null;
-        float minDistance = float.MaxValue;
-
-        foreach(var target in targetList)
-        {
-            VEasyCalculator.GetSqrDistance(owner, target.Key.owner);
-            if (target.Value < minDistance)
-            {
-                minDistance = target.Value;
-                ret = target.Key;
-            }
-        }
-        
-        return ret;
     }
 
     // TODO

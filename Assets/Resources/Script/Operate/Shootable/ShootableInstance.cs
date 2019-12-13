@@ -7,10 +7,10 @@ public class ShootableInstance : Shootable
 
     protected override void Shoot()
     {
-        if(target == null) return;
-        if(target.unitStatus == null) return;
+        //if(owner.target == null) return;
+        //if(owner.target.unitStatus == null) return;
 
-        target.unitStatus.CurrentHp -= damage;
+        //owner.target.unitStatus.CurrentHp -= damage;
 
     }
 }

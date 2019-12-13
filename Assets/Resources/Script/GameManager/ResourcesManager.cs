@@ -109,9 +109,9 @@ public class ResourcesManager<T> where T : Object
             if (System.Enum.TryParse(resourceName, out resourceType))
             {
                 string resourceLoadName = GetLoadingName(resourceNameWithPathList[j]);
-                T resource = Resources.Load<T>(resourceLoadName);
-                resourceDic.Add(resourceType, resource);
-                loadedResourceList.Add(resource);
+                T r = Resources.Load<T>(resourceLoadName);
+                resourceDic.Add(resourceType, r);
+                loadedResourceList.Add(r);
             }
         }
     }

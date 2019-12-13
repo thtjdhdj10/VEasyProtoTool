@@ -8,17 +8,27 @@ public class Bullet_Laser : Bullet
     public float scale = 1f;
     public float duration = 1.5f;
 
+    public float direction;
+
     public GameObject laserRoot;
     public GameObject laserBody;
 
     // TODO 충돌시간 당 데미지
 
-        // TODO 코드 정리
-
-    protected override void Awake()
+    public override void InitTransform(Unit _owner)
     {
-        base.Awake();
+        owner = _owner;
 
+        transform.position = owner.transform.position;
+
+        if (owner.TryGetOperable(out Targetable ownerTarget))
+        {
+            direction = ownerTarget.direction;
+        }
+    }
+
+    protected override void SetDefaultBulletSetting()
+    {
         BoxCollider2D col = GetOperable<Collidable>().collider as BoxCollider2D;
 
         col.size = new Vector2(scale * length, scale);
@@ -40,10 +50,6 @@ public class Bullet_Laser : Bullet
             bodies[i].transform.position = bodyPos;
             bodies[i].GetComponent<EffectAnimDestroy>().duration = duration;
         }
-    }
-    protected override void SetDefaultBulletSetting()
-    {
-
     }
 
 

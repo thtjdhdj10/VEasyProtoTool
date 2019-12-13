@@ -11,9 +11,9 @@ public class Collidable : Operable
     public bool canCollideSeveral = false;
     public bool collideInFrame = false;
 
-    public delegate void OnHitDelegate(Unit from, Unit to);
+    public delegate void OnHitDelegate(Actor from, Actor to);
     public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
-    public static void OnHitCallback(Unit from, Unit to) { }
+    public static void OnHitCallback(Actor from, Actor to) { }
 
     protected override void Awake()
     {
@@ -41,9 +41,6 @@ public class Collidable : Operable
 
     protected virtual void CollisionCheckFrame()
     {
-        if (owner.unitActive == false)
-            return;
-
         if (canCollideSeveral == false &&
             collideInFrame == true)
             return;
@@ -86,9 +83,6 @@ public class Collidable : Operable
                 continue;
 
             if (target.gameObject.activeInHierarchy == false)
-                continue;
-
-            if (target.owner.unitActive == false)
                 continue;
 
             if (target.state == false)

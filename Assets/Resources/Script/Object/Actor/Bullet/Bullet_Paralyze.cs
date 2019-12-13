@@ -17,7 +17,7 @@ public class Bullet_Paralyze : BulletStraight
         new ActionActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, false)
         { delay = duration };
         new ActionDealDamage(trgCol, damage);
-        new ActionDestroyUnit(trgCol, this);
+        new ActionDestroyActor(trgCol, this);
     }
 
 

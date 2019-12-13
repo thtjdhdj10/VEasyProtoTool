@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : Unit
+public class Bullet : Actor
 {
+    public Unit owner;
+
     public int damage;
 
     protected override void Start()
@@ -11,6 +13,21 @@ public class Bullet : Unit
         base.Start();
 
         SetDefaultBulletSetting();
+    }
+
+    public virtual void InitTransform(Unit _owner)
+    {
+        owner = _owner;
+
+        transform.position = owner.transform.position;
+
+        if(owner.TryGetOperable(out Targetable ownerTarget))
+        {
+            if(TryGetOperable(out Movable move))
+            {
+                move.direction = ownerTarget.direction;
+            }
+        }
     }
 
     protected virtual void SetDefaultBulletSetting()
@@ -21,6 +38,6 @@ public class Bullet : Unit
 
         TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
         new ActionDealDamage(trgCol, damage);
-        new ActionDestroyUnit(trgCol, this);
+        new ActionDestroyActor(trgCol, this);
     }
 }

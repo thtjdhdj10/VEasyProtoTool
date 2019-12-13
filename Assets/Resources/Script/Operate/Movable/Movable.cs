@@ -4,27 +4,23 @@ using System.Collections.Generic;
 public abstract class Movable : Operable
 {
     public float speed = 1f;
-    public bool isRotate = true;
+    public float direction;
 
-    public Unit target;
     protected Vector2 targetPos;
-
-    public override void Init()
-    {
-        target = null;
-    }
 
     protected virtual void FixedUpdate()
     {
         if (state == false) return;
 
-        if (target != null) targetPos = target.transform.position;
+        if(owner.TryGetOperable(out Targetable ownerTarget))
+        {
+            if (ownerTarget.target != null)
+                targetPos = ownerTarget.target.transform.position;
+        }
 
         // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
         // 그거땜에 다른 하나가 동작안할때가있음
-        // hit 충돌처리할때 다른 하나가 이미 destroy됐을수도 있음
-
-        SetSpriteAngle();
+        // hit 충돌처리할때 다른 하나가 이미 destroy 됐을수도 있음
 
         MoveFrame();
 
@@ -58,15 +54,6 @@ public abstract class Movable : Operable
         REFLECT, // 거울반사
         BLOCK, // 길막
         DESTROY,
-    }
-
-    public virtual void SetSpriteAngle()
-    {
-        if (isRotate == false) return;
-
-        Vector3 rot = transform.eulerAngles;
-        rot.z = owner.direction + SpriteManager.spriteDefaultRotation;
-        transform.eulerAngles = rot;
     }
 
     protected virtual void BounceProcessing()
@@ -165,17 +152,17 @@ public abstract class Movable : Operable
             switch (bounceTo)
             {
                 case BounceTo.TARGET:
-                    owner.direction = targetDir;
+                    direction = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    owner.direction += 180f;
+                    direction += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    owner.direction = VEasyCalculator.GetReflectedDirection(owner.direction, targetDir);
+                    direction = VEasyCalculator.GetReflectedDirection(direction, targetDir);
                     break;
                 case BounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        owner.direction, 1f);
+                        direction, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
                         targetDir, 1f);
 
@@ -209,6 +196,7 @@ public abstract class Movable : Operable
 
 //
 
+// 엔터더건전 쥐갈공명 참고
 // TODO: 미구현
 //protected virtual void DodgeMove()
 //{
@@ -278,83 +266,4 @@ public abstract class Movable : Operable
 //    {
 
 //    }
-//}
-//// TODO
-// 생각해봤는데, InitLerpCurve 와 InitLerpCurvePerDistanceMove 는
-// 필요로 하는 멤버가 다르므로, 다른 기능이라고 봐야 함.
-// 따라서 클래스를 따로 하는게 의미상 명확.
-
-//public float maxCurveDistance;
-
-//public float minCurveDistance;
-
-//    public float distanceFactor;
-
-//public void Init(float spd, float dir, Unit tar, float curve, float maxDis, float minDis, float disFactor)
-//{
-//    target = tar;
-
-//    speed = spd;
-//    direction = dir;
-//    curveFactor = curve;
-//    maxCurveDistance = maxDis;
-//    minCurveDistance = minDis;
-//    distanceFactor = disFactor;
-//}
-
-//// 목적과의 방향차이와 거리차이에 비례해서 선회
-//protected virtual void LerpCurvePerDistanceMove()
-//{
-//    float moveDistance = speed * Time.fixedDeltaTime;
-
-//    float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, target.transform.position);
-
-//    float disToPlayer = Vector2.Distance(target.transform.position, owner.transform.position);
-
-//    direction = VEasyCalculator.GetLerpDirection(
-//        direction, dirToPlayer, curveFactor * Time.fixedDeltaTime,
-//        maxCurveDistance, minCurveDistance, disToPlayer, distanceFactor);
-
-//    Vector2 moveVector = VEasyCalculator.GetRotatedPosition(direction, moveDistance);
-
-//    Vector2 v2Pos = owner.transform.position;
-//    owner.transform.position = v2Pos + moveVector;
-//}
-
-
-//public float maxCurveDistance;
-
-//public float minCurveDistance;
-
-//public float distanceFactor;
-
-//public void Init(float spd, float dir, Unit tar, float curve, float maxDis, float minDis, float disFactor)
-//{
-//    target = tar;
-
-//    speed = spd;
-//    direction = dir;
-//    curveFactor = curve;
-//    maxCurveDistance = maxDis;
-//    minCurveDistance = minDis;
-//    distanceFactor = disFactor;
-//}
-
-//// 방향 무관. 거리 차이에 비례해 선회
-//protected virtual void RegularCurvePerDistanceMove()
-//{
-//    float moveDistance = speed * Time.fixedDeltaTime;
-
-//    float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, target.transform.position);
-
-//    float disToPlayer = Vector2.Distance(target.transform.position, owner.transform.position);
-
-//    direction = VEasyCalculator.GetTurningDirection(
-//        direction, dirToPlayer, curveFactor * Time.fixedDeltaTime,
-//        maxCurveDistance, minCurveDistance, disToPlayer, distanceFactor * Time.fixedDeltaTime);
-
-//    Vector2 moveVector = VEasyCalculator.GetRotatedPosition(direction, moveDistance);
-
-//    Vector2 v2Pos = owner.transform.position;
-//    owner.transform.position = v2Pos + moveVector;
 //}

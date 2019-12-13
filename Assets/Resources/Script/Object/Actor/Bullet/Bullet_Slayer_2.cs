@@ -18,7 +18,7 @@ public class Bullet_Slayer_2 : Bullet
         for(int i = 0; i < 3; ++i)
         {
             yield return new WaitForSeconds(term);
-            direction += 30f;
+            MoveDirection += 30f;
         }
     }
 }

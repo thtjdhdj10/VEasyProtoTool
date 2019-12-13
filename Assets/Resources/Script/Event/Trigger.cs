@@ -8,13 +8,13 @@ public abstract class Trigger
     public List<Condition> conditionList = new List<Condition>();
     public List<Action> actionList = new List<Action>();
 
-    public Unit owner;
+    public Actor owner;
 
     // Option
     public bool isDisposableTrigger = false; // Trigger 가 작동할 때까지 존재.
     public bool isDisposableAction = false; // Action 이 한 번 실행될 때까지 존재.
 
-    public Trigger(Unit _owner)
+    public Trigger(Actor _owner)
     {
         owner = _owner;
         owner.triggerList.Add(this);
@@ -57,9 +57,9 @@ public class TriggerCollision : Trigger
 {
     public System.Type[] targetTypes;
     public Collidable collider;
-    public Unit target;
+    public Actor target;
 
-    public TriggerCollision(Unit _owner, Collidable _collider, params System.Type[] _targetTypes)
+    public TriggerCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
         : base(_owner)
     {
         collider = _collider;
@@ -74,7 +74,7 @@ public class TriggerCollision : Trigger
         target = null;
     }
 
-    private void HandleOnHit(Unit from, Unit to)
+    private void HandleOnHit(Actor from, Actor to)
     {
         if (from != owner) return;
 
@@ -92,7 +92,7 @@ public class TriggerCollision : Trigger
 
 public class TriggerFrame : Trigger
 {
-    public TriggerFrame(Unit _owner, int _passCount)
+    public TriggerFrame(Actor _owner, int _passCount)
         : base(_owner)
     {
         passCount = _passCount;
@@ -137,7 +137,7 @@ public class TriggerKeyInput : Trigger
     private KeyManager.KeyCommand command;
     private KeyManager.KeyPressType pressType;
 
-    public TriggerKeyInput(Unit _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    public TriggerKeyInput(Actor _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
         : base(_owner)
     {
         command = _command;
@@ -172,7 +172,7 @@ public class TriggerKeyInputs : Trigger
     public KeyManager.KeyCommand command;
     public KeyManager.KeyPressType pressType;
 
-    public TriggerKeyInputs(Unit _owner)
+    public TriggerKeyInputs(Actor _owner)
         : base(_owner)
     {
         if (owner.TryGetOperable(out Controllable control))
@@ -206,7 +206,7 @@ public class TriggerKeyInputs : Trigger
 
 public class TriggerTimer : Trigger
 {
-    public TriggerTimer(Unit _owner, float _delay, bool _isActivateOnStart)
+    public TriggerTimer(Actor _owner, float _delay, bool _isActivateOnStart)
         : base(_owner)
     {
         delay = _delay;
@@ -252,7 +252,7 @@ public class TriggerUnit : Trigger
     private Unit target;
     private TriggerType type;
 
-    public TriggerUnit(Unit _owner, Unit _target, TriggerType _type)
+    public TriggerUnit(Actor _owner, Unit _target, TriggerType _type)
         : base(_owner)
     {
         target = _target;
@@ -302,7 +302,7 @@ public class TriggerUnits : Trigger
     private System.Type targetType;
     private TriggerType type;
 
-    public TriggerUnits(Unit _owner, System.Type _unitType, TriggerType _type)
+    public TriggerUnits(Actor _owner, System.Type _unitType, TriggerType _type)
         : base(_owner)
     {
         targetType = _unitType;
@@ -313,7 +313,7 @@ public class TriggerUnits : Trigger
             LinkEventHandle(unit, true);
         }
 
-        Unit.onUnitAddedDelegate += HandleAddedUnit;
+        Actor.onActorAddedDelegate += HandleAddedUnit;
     }
 
     ~TriggerUnits()
@@ -343,10 +343,13 @@ public class TriggerUnits : Trigger
         }
     }
 
-    private void HandleAddedUnit(Unit unit)
+    private void HandleAddedUnit(Actor actor)
     {
-        if (unit.GetType().IsSubclassOf(targetType) ||
-            unit.GetType() == targetType)
+        Unit unit = actor as Unit;
+        if (unit == null) return;
+
+        if (actor.GetType().IsSubclassOf(targetType) ||
+            actor.GetType() == targetType)
         {
             LinkEventHandle(unit, true);
         }

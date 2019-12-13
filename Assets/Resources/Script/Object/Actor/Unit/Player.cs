@@ -13,7 +13,7 @@ public class Player : Unit
         GetOperable<Movable>().speed = speed;
 
         TriggerKeyInputs triKeyInput = new TriggerKeyInputs(this);
-        new ActionVectorMoveUnit(triKeyInput, 2f);
+        new ActionVectorMoveActor(triKeyInput, 2f);
 
         TriggerFrame triAllways = new TriggerFrame(this, 0);
         ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
@@ -72,18 +72,5 @@ public class Player : Unit
         //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
         //ActionActivatePattern actActivatePattern =
         //    new ActionActivatePattern(trgRightClick, pattern_S1);
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        SetShootableDirection();
-    }
-
-    private void SetShootableDirection()
-    {
-        Shootable shoot = GetOperable<Shootable>();
-        if(shoot != null) shoot.fireDirection = direction;
     }
 }

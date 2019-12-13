@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Bullet_Slayer_1 : Bullet
 {
-    public Unit owner;
-
     public float delay = 0.5f;
 
     protected override void Awake()
@@ -18,7 +16,7 @@ public class Bullet_Slayer_1 : Bullet
     public IEnumerator Redirection()
     {
         yield return new WaitForSeconds(delay);
-        direction = owner.direction;
+        MoveDirection = owner.MoveDirection;
     }
 
 }
