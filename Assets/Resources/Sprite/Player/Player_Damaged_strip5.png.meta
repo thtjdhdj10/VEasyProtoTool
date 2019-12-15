@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 873f6c111aefcbd4a9e25544019db3f5
+guid: 243b18fb17de11e4197c8a254d4dc5c3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4451572923862758873
-    second: Player_BeHit_strip5_0
+      213: -8019095636428411765
+    second: Player_Damaged_strip5_0
   - first:
-      213: 3990982767093277309
-    second: Player_BeHit_strip5_1
+      213: 7812373367059679331
+    second: Player_Damaged_strip5_1
   - first:
-      213: 7509825122276052847
-    second: Player_BeHit_strip5_2
+      213: -6475861470578340353
+    second: Player_Damaged_strip5_2
   - first:
-      213: 9074136349656084397
-    second: Player_BeHit_strip5_3
+      213: -7718399810113550693
+    second: Player_Damaged_strip5_3
   - first:
-      213: -3435029691461125895
-    second: Player_BeHit_strip5_4
+      213: -3414957935321303719
+    second: Player_Damaged_strip5_4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -101,7 +101,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_BeHit_strip5_0
+      name: Player_Damaged_strip5_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,14 +115,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 608540debdad6584aa5e7950cfa81258
-      internalID: 4451572923862758873
+      spriteID: aa1ed4d9799c52a44b675e2134e8a631
+      internalID: -8019095636428411765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_BeHit_strip5_1
+      name: Player_Damaged_strip5_1
       rect:
         serializedVersion: 2
         x: 33
@@ -136,14 +136,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 16382ca18d61a1c4bad7bae7022b4234
-      internalID: 3990982767093277309
+      spriteID: 51467464335f43a499dece0d44e46980
+      internalID: 7812373367059679331
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_BeHit_strip5_2
+      name: Player_Damaged_strip5_2
       rect:
         serializedVersion: 2
         x: 66
@@ -157,14 +157,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9eac847722bd2154bbadd2611a1819df
-      internalID: 7509825122276052847
+      spriteID: c3a06b53720e7be4d9b4d5b43013c25e
+      internalID: -6475861470578340353
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_BeHit_strip5_3
+      name: Player_Damaged_strip5_3
       rect:
         serializedVersion: 2
         x: 99
@@ -178,14 +178,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 817aa9bd1f0247549a056fb321546018
-      internalID: 9074136349656084397
+      spriteID: 9ab9145ba7ef50648a6e4fafc08f8a24
+      internalID: -7718399810113550693
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_BeHit_strip5_4
+      name: Player_Damaged_strip5_4
       rect:
         serializedVersion: 2
         x: 132
@@ -199,8 +199,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5132d3c7068df7b40ac576fa557e1a73
-      internalID: -3435029691461125895
+      spriteID: 12dbe30b56277894d88ca2d4294ca86c
+      internalID: -3414957935321303719
       vertices: []
       indices: 
       edges: []

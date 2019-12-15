@@ -16,7 +16,8 @@ public class Bullet_Slayer_1 : Bullet
     public IEnumerator Redirection()
     {
         yield return new WaitForSeconds(delay);
-        MoveDirection = owner.MoveDirection;
+        moveDirection = owner.targetDirection;
+        targetDirection = owner.targetDirection;
     }
 
 }

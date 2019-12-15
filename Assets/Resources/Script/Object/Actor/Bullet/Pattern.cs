@@ -79,7 +79,7 @@ public class PatternFire : Pattern
     public override IEnumerator Fire()
     {
         if (posRoot != null) position = posRoot.transform.position;
-        if (dirRoot != null) direction = dirRoot.TargetDirection;
+        if (dirRoot != null) direction = dirRoot.targetDirection;
 
         for (int i = 0; i < count; ++i)
         {
@@ -110,8 +110,9 @@ public class PatternFire : Pattern
         if (posRoot != null) position = posRoot.transform.position;
         actor.transform.position = position + deltaPos;
 
-        if (dirRoot != null) direction = dirRoot.TargetDirection;
-        actor.TargetDirection = direction + deltaDir;
+        if (dirRoot != null) direction = dirRoot.targetDirection;
+        actor.targetDirection = direction + deltaDir;
+        actor.moveDirection = direction + deltaDir;
     }
 }
 
@@ -125,7 +126,7 @@ public class PatternFireDirection : PatternFire
 
     public override void PreFireProcess()
     {
-        if (owner != null) direction = owner.TargetDirection;
+        if (owner != null) direction = owner.targetDirection;
     }
 }
 
@@ -142,9 +143,7 @@ public class PatternFireTarget : PatternFire
     {
         if(target == null &&
             owner != null)
-        {
             target = owner.GetOperable<Targetable>().target;
-        }
 
         if (target != null) targetPos = target.transform.position;
         direction = VEasyCalculator.GetDirection(position, targetPos);
@@ -160,6 +159,10 @@ public class PatternFireTarget_AngleRandom : PatternFireTarget
 
     public override void PreFireProcess()
     {
+        if (target == null &&
+            owner != null)
+            target = owner.GetOperable<Targetable>().target;
+
         if (target != null) targetPos = target.transform.position;
         direction = VEasyCalculator.GetDirection(position, targetPos);
 
@@ -310,36 +313,45 @@ public class Pattern_Slayer_1 : Pattern
 
         patternList.Add(pattern1);
 
-        PatternFire[] pattern2 = new PatternFire[2];
-        for(int i = 0; i < 2; ++i)
-        {
-            pattern2[i] = new PatternFire(_owner) ;
-            pattern2[i].firePrefab = bullet;
+        //PatternFire[] pattern2 = new PatternFire[2];
+        //for(int i = 0; i < 2; ++i)
+        //{
+        //    pattern2[i] = new PatternFire(_owner);
+        //    pattern2[i].firePrefab = bullet;
 
-            pattern2[i].count = 30;
-            pattern2[i].term = duration / pattern2[i].count;
-            if(i == 0) pattern2[i].deltaDir = -60f;
-            else pattern2[i].deltaDir = 60f;
+        //    pattern2[i].count = 30;
+        //    pattern2[i].term = duration / pattern2[i].count;
+        //    if(i == 0) pattern2[i].deltaDir = -60f;
+        //    else pattern2[i].deltaDir = 60f;
 
-            pattern2[i].posRoot = _owner;
-            pattern2[i].dirRoot = _owner;
+        //    pattern2[i].posRoot = _owner;
+        //    pattern2[i].dirRoot = _owner;
 
-            patternList.Add(pattern2[i]);
-        }
+        //    patternList.Add(pattern2[i]);
+        //}
     }
 
     public override IEnumerator Fire()
     {
         move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
-        GameManager.gm.StartCoroutine(patternList[0].Fire());
-        GameManager.gm.StartCoroutine(patternList[1].Fire());
-        yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
+        yield return GameManager.gm.StartCoroutine(patternList[0].Fire());
+        //GameManager.gm.StartCoroutine(patternList[1].Fire());
+        //yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
     }
 
+    private Actor.RotateTo originRotateTo;
     public override IEnumerator PostFire()
     {
+        owner.rotateTo = originRotateTo;
         move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
+        yield break;
+    }
+
+    public override IEnumerator PreFire()
+    {
+        originRotateTo = owner.rotateTo;
+        owner.rotateTo = Actor.RotateTo.TARGET;
         yield break;
     }
 }

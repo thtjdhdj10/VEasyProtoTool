@@ -13,30 +13,10 @@ public class Actor : MyObject
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public float MoveDirection
-    {
-        get
-        {
-            return GetOperable<Movable>().direction;
-        }
-        set
-        {
-            if (TryGetOperable(out Movable move))
-                move.direction = value;
-        }
-    }
-    public float TargetDirection
-    {
-        get
-        {
-            return GetOperable<Targetable>().direction;
-        }
-        set
-        {
-            if (TryGetOperable(out Targetable move))
-                move.direction = value;
-        }
-    }
+    public float moveDirection;
+    public float targetDirection;
+
+    public RotateTo rotateTo = RotateTo.TARGET;
 
     //
 
@@ -54,6 +34,13 @@ public class Actor : MyObject
         ENEMY,
 
         ALLY_OR_ENEMY,
+    }
+
+    public enum RotateTo
+    {
+        NONE = 0,
+        TARGET,
+        MOVE,
     }
 
     public static Relation GetRelation(Force a, Force b)
@@ -109,6 +96,8 @@ public class Actor : MyObject
     protected virtual void FixedUpdate()
     {
         fixedUpdateDelegate();
+
+        SetSpriteAngle();
 
         if (willDestroy) Destroy(gameObject);
     }
@@ -184,4 +173,20 @@ public class Actor : MyObject
         }
     }
 
+    //
+
+    public virtual void SetSpriteAngle() // TODO by target? direction?
+    {
+        Vector3 rot = transform.eulerAngles;
+        switch (rotateTo)
+        {
+            case RotateTo.TARGET:
+                rot.z = targetDirection;
+                break;
+            case RotateTo.MOVE:
+                rot.z = moveDirection;
+                break;
+        }
+        transform.eulerAngles = rot;
+    }
 }

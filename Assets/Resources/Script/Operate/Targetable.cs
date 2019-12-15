@@ -3,16 +3,13 @@ using System.Collections.Generic;
 
 public class Targetable : Operable
 {
-    public bool enableTargetUpdate;
-
     public Unit target;
 
-    public float direction;
+    public bool enableTargetUpdate;
 
-    public bool isRangeless;
+    public bool isRangeless = true;
     public float range;
 
-    public bool isRotateByTarget;
 
     // TODO target update delay 기능 추가
 
@@ -20,11 +17,12 @@ public class Targetable : Operable
 
     private void FixedUpdate()
     {
+        if (state == false) return;
+
         if (enableTargetUpdate) TargetUpdate();
-        if (isRotateByTarget) SetSpriteAngle();
 
         if (target != null)
-            direction = VEasyCalculator.GetDirection(owner, target);
+            owner.targetDirection = VEasyCalculator.GetDirection(owner, target);
     }
 
     //
@@ -86,14 +84,5 @@ public class Targetable : Operable
         }
 
         return ret;
-    }
-
-    //
-
-    public virtual void SetSpriteAngle() // TODO by target? direction?
-    {
-        Vector3 rot = transform.eulerAngles;
-        rot.z = direction;
-        transform.eulerAngles = rot;
     }
 }

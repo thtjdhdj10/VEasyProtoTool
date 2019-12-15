@@ -12,10 +12,10 @@ public class MovableTurnLerp : Movable
 
         float dirToPlayer = VEasyCalculator.GetDirection(owner.transform.position, targetPos);
 
-        direction = VEasyCalculator.GetLerpDirection(
-            direction, dirToPlayer, turnFactor * Time.fixedDeltaTime);
+        owner.moveDirection = VEasyCalculator.GetLerpDirection(
+            owner.moveDirection, dirToPlayer, turnFactor * Time.fixedDeltaTime);
 
-        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(direction, moveDistance);
+        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(owner.moveDirection, moveDistance);
 
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;

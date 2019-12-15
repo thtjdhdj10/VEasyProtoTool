@@ -62,7 +62,7 @@ public class ActionDirectionToMouse : Action
     protected override void ActionProcess(Trigger trigger)
     {
         Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
-        target.TargetDirection = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
+        target.targetDirection = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
     }
 }
 
@@ -80,7 +80,7 @@ public class ActionDirectionToTarget : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        from.TargetDirection = VEasyCalculator.GetDirection(from, to);
+        from.targetDirection = VEasyCalculator.GetDirection(from, to);
     }
 }
 
@@ -259,12 +259,12 @@ public class ActionKnockback : Action
             TriggerCollision triggerCol = trigger as TriggerCollision;
             if (triggerCol.target != null)
             {
-                target.MoveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
+                target.moveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
             }
         }
         else
         {
-            target.MoveDirection += 180f;
+            target.moveDirection += 180f;
         }
 
         GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
@@ -278,8 +278,10 @@ public class ActionKnockback : Action
             foreach (var move in moves)
                 move.state.SetState(Multistat.StateType.KNOCKBACK, true);
 
+        Actor.RotateTo originRotateTo = target.rotateTo;
+
         MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
-        target.GetOperable<Targetable>().isRotateByTarget = false;
+        target.rotateTo = Actor.RotateTo.NONE;
 
         float currentSpeed = speed;
 
@@ -291,6 +293,7 @@ public class ActionKnockback : Action
             yield return new WaitForFixedUpdate();
         }
 
+        target.rotateTo = originRotateTo;
         knockbackMove.speed = 0f;
 
         GameObject.Destroy(knockbackMove);
@@ -411,7 +414,7 @@ public class ActionCreateActor : Action
         if (isMovingActor)
         {
             Movable move = actor.GetOperable<Movable>();
-            move.direction = direction;
+            move.owner.moveDirection = direction;
             move.speed = speed;
         }
     }

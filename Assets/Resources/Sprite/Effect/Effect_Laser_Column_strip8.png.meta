@@ -1,31 +1,31 @@
 fileFormatVersion: 2
-guid: c3b29b6e2ca170a448f2478e30050751
+guid: a54a59abfb8a22047ab17f8a7ef31291
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7419108043303064948
-    second: Effect_Laser_Column_strip8_0
+      213: -863185658392792990
+    second: Effect_Laser_Column_strip9_0
   - first:
-      213: -8241952281030222894
-    second: Effect_Laser_Column_strip8_1
+      213: 5044379050354263359
+    second: Effect_Laser_Column_strip9_1
   - first:
-      213: -1454641948654983263
-    second: Effect_Laser_Column_strip8_2
+      213: 4645541278968560109
+    second: Effect_Laser_Column_strip9_2
   - first:
-      213: -5284903092372890557
-    second: Effect_Laser_Column_strip8_3
+      213: -7661891311828956937
+    second: Effect_Laser_Column_strip9_3
   - first:
-      213: -4111310119417035623
-    second: Effect_Laser_Column_strip8_4
+      213: -3238558570010320137
+    second: Effect_Laser_Column_strip9_4
   - first:
-      213: -86938849527174377
-    second: Effect_Laser_Column_strip8_5
+      213: -361723298337315907
+    second: Effect_Laser_Column_strip9_5
   - first:
-      213: 6315594292513952091
-    second: Effect_Laser_Column_strip8_6
+      213: -6204139546496147264
+    second: Effect_Laser_Column_strip9_6
   - first:
-      213: -2765861047647339151
-    second: Effect_Laser_Column_strip8_7
+      213: 2430843664811219479
+    second: Effect_Laser_Column_strip9_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_0
+      name: Effect_Laser_Column_strip9_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed3665c68b4b109469b6365c89e387e2
-      internalID: 7419108043303064948
+      spriteID: 753ccd761d19d594db9dc10d92c4962c
+      internalID: -863185658392792990
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_1
+      name: Effect_Laser_Column_strip9_1
       rect:
         serializedVersion: 2
         x: 32
@@ -145,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f9111a4aaffe7748a76d2b5caaf27cb
-      internalID: -8241952281030222894
+      spriteID: 98b8c2aa4a03d644d93ed3928b45e0fb
+      internalID: 5044379050354263359
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_2
+      name: Effect_Laser_Column_strip9_2
       rect:
         serializedVersion: 2
         x: 64
@@ -166,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: befda5871aecea149bdc051e380c8dd2
-      internalID: -1454641948654983263
+      spriteID: 49ce80d36ce39ac48b8cfe8fdf13ab58
+      internalID: 4645541278968560109
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_3
+      name: Effect_Laser_Column_strip9_3
       rect:
         serializedVersion: 2
         x: 96
@@ -187,14 +187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 489739e3daa72f04a9d4f8d15124be55
-      internalID: -5284903092372890557
+      spriteID: 0868eeeef5dd25e488ce8fcc94d2d812
+      internalID: -7661891311828956937
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_4
+      name: Effect_Laser_Column_strip9_4
       rect:
         serializedVersion: 2
         x: 128
@@ -208,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5067ceeb2f5bc2b45abeba6e7c2f4b3f
-      internalID: -4111310119417035623
+      spriteID: ce170df9e4a72e24fad1654182d1c19f
+      internalID: -3238558570010320137
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_5
+      name: Effect_Laser_Column_strip9_5
       rect:
         serializedVersion: 2
         x: 160
@@ -229,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cfbed75d8c63d404e8f25cb61029f263
-      internalID: -86938849527174377
+      spriteID: 34006440b04437145a38c0ebed121814
+      internalID: -361723298337315907
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_6
+      name: Effect_Laser_Column_strip9_6
       rect:
         serializedVersion: 2
         x: 192
@@ -250,14 +250,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 85009001e2612d4418e07f0136498b96
-      internalID: 6315594292513952091
+      spriteID: 904dd499a0abb2a4abab72523e424703
+      internalID: -6204139546496147264
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect_Laser_Column_strip8_7
+      name: Effect_Laser_Column_strip9_7
       rect:
         serializedVersion: 2
         x: 224
@@ -271,8 +271,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d119e77de063ea94d91e8f2a000ebc2b
-      internalID: -2765861047647339151
+      spriteID: e00555777f9c6c14e8355d46de3b23a3
+      internalID: 2430843664811219479
       vertices: []
       indices: 
       edges: []

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public abstract class Movable : Operable
 {
     public float speed = 1f;
-    public float direction;
 
     protected Vector2 targetPos;
 
@@ -152,17 +151,17 @@ public abstract class Movable : Operable
             switch (bounceTo)
             {
                 case BounceTo.TARGET:
-                    direction = targetDir;
+                    owner.moveDirection = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    direction += 180f;
+                    owner.moveDirection += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    direction = VEasyCalculator.GetReflectedDirection(direction, targetDir);
+                    owner.moveDirection = VEasyCalculator.GetReflectedDirection(owner.moveDirection, targetDir);
                     break;
                 case BounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        direction, 1f);
+                        owner.moveDirection, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
                         targetDir, 1f);
 

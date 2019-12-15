@@ -53,13 +53,13 @@ public class Player : Unit
             new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
             new ActionSetSprite(triCol, sprite,
                 ResourcesManager<Sprite>.LoadResource(
-                    ResourcesManager<Sprite>.ResourceName.Player_BeHit_strip5));
+                    ResourcesManager<Sprite>.ResourceName.Player_Damaged_strip5));
             new ActionSetSprite(triCol, sprite,
                 ResourcesManager<Sprite>.LoadResource(
                     ResourcesManager<Sprite>.ResourceName.Player)) { delay = dodgeTime };
             new ActionSetController(triCol, gameObject,
                 ResourcesManager<RuntimeAnimatorController>.LoadResource(
-                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_BeHit_strip5_0));
+                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_Damaged_Controller));
             new ActionSetController(triCol, gameObject, null) { delay = knockbackTime };
             new ActionSetAnimatorSpeed(triCol, gameObject, 0.8f);
 

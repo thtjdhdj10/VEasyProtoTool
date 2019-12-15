@@ -46,11 +46,16 @@ public class ResourcesManager<T> where T : Object
 
         // sprite
 
-        Player_BeHit_strip5,
+        Player_Damaged_strip5,
 
         // controller
 
-        Player_BeHit_strip5_0,
+        Effect_Laser_Column_Controller,
+        Effect_Laser_Root__Controller,
+
+        EnemyBoss_Slayer__Controller,
+
+        Player_Damaged_Controller,
     }
 
     public enum Option

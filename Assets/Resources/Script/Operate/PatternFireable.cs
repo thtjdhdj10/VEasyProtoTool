@@ -8,7 +8,7 @@ public class PatternFireable : Operable
     public Pattern currentPattern;
 
     public float delay = 3f;
-    public float elapseDelay = 3f;
+    public float elapseDelay = 0f;
 
     private void FixedUpdate()
     {

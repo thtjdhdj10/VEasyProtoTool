@@ -8,6 +8,8 @@ public class ShootableProjectile : Shootable
     protected override void Shoot()
     {
         Bullet bullet = Instantiate(projectile);
-        bullet.InitTransform(owner as Unit);
+        bullet.transform.position = transform.position;
+        bullet.moveDirection = owner.targetDirection;
+        bullet.targetDirection = owner.targetDirection;
     }
 }

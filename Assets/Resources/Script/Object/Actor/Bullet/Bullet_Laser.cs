@@ -15,18 +15,6 @@ public class Bullet_Laser : Bullet
 
     // TODO 충돌시간 당 데미지
 
-    public override void InitTransform(Unit _owner)
-    {
-        owner = _owner;
-
-        transform.position = owner.transform.position;
-
-        if (owner.TryGetOperable(out Targetable ownerTarget))
-        {
-            direction = ownerTarget.direction;
-        }
-    }
-
     protected override void SetDefaultBulletSetting()
     {
         BoxCollider2D col = GetOperable<Collidable>().collider as BoxCollider2D;
