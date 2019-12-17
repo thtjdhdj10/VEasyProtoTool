@@ -17,6 +17,11 @@ public class Bullet_Laser : Bullet
 
     protected override void SetDefaultBulletSetting()
     {
+        force = owner.force;
+        System.Type targetType;
+        if (force == Force.A) targetType = typeof(Enemy);
+        else targetType = typeof(Player);
+
         BoxCollider2D col = GetOperable<Collidable>().collider as BoxCollider2D;
 
         col.size = new Vector2(scale * length, scale);

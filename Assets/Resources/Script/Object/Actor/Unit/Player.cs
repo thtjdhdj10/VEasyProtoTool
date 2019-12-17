@@ -12,6 +12,7 @@ public class Player : Unit
 
         GetOperable<Movable>().speed = speed;
 
+        // 플레이어 이동, 회전 처리
         TriggerKeyInputs triKeyInput = new TriggerKeyInputs(this);
         new ActionVectorMoveActor(triKeyInput, 2f);
 
@@ -19,6 +20,7 @@ public class Player : Unit
         ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
         new ActionDirectionToMouse(triAllways, this);
 
+        // 플레이어 공격 처리
         GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
 
         TriggerKeyInput triMouseDown = new TriggerKeyInput(
@@ -29,44 +31,43 @@ public class Player : Unit
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
         new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
 
-        {
-            float knockbackTime = 0.38f;
-            float dodgeTime = 1.3f;
+        // 플레이어 피격 처리
+        float knockbackTime = 0.38f;
+        float dodgeTime = 1.3f;
 
-            // 플레이어 피격 처리
-            TriggerCollision triCol = new TriggerCollision(this, GetOperable<Collidable>(), typeof(Bullet), typeof(Enemy));
-            new ActionInitTrigger(triCol, triKeyInput);
+        TriggerCollision triCol = new TriggerCollision(this, GetOperable<Collidable>(), typeof(Bullet), typeof(Enemy));
+        new ActionInitTrigger(triCol, triKeyInput);
 
-            new ActionKnockback(triCol, this, 8f, 20f);
-            new ActionSetSpeed(triCol, hitSpeed);
-            new ActionSetSpeed(triCol, speed) { delay = dodgeTime };
+        new ActionKnockback(triCol, this, 8f, 20f);
+        new ActionSetSpeed(triCol, hitSpeed);
+        new ActionSetSpeed(triCol, speed) { delay = dodgeTime };
 
-            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, true);
-            new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = knockbackTime };
-            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, true);
-            new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = dodgeTime };
-            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, false);
-            new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, true) { delay = dodgeTime };
+        new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, true);
+        new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = knockbackTime };
+        new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, true);
+        new ActionActiveOperable<Collidable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = dodgeTime };
+        new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, false);
+        new ActionActiveOperable<Shootable>(triCol, Multistat.StateType.KNOCKBACK, true) { delay = dodgeTime };
 
-            SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
-            new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
-            new ActionSetSprite(triCol, sprite,
-                ResourcesManager<Sprite>.LoadResource(
-                    ResourcesManager<Sprite>.ResourceName.Player_Damaged_strip5));
-            new ActionSetSprite(triCol, sprite,
-                ResourcesManager<Sprite>.LoadResource(
-                    ResourcesManager<Sprite>.ResourceName.Player)) { delay = dodgeTime };
-            new ActionSetController(triCol, gameObject,
-                ResourcesManager<RuntimeAnimatorController>.LoadResource(
-                    ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_Damaged_Controller));
-            new ActionSetController(triCol, gameObject, null) { delay = knockbackTime };
-            new ActionSetAnimatorSpeed(triCol, gameObject, 0.8f);
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
+        new ActionSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
+        new ActionSetSprite(triCol, sprite,
+            ResourcesManager<Sprite>.LoadResource(
+                ResourcesManager<Sprite>.ResourceName.Player_Damaged_strip5));
+        new ActionSetSprite(triCol, sprite,
+            ResourcesManager<Sprite>.LoadResource(
+                ResourcesManager<Sprite>.ResourceName.Player))
+        { delay = dodgeTime };
+        new ActionSetController(triCol, gameObject,
+            ResourcesManager<RuntimeAnimatorController>.LoadResource(
+                ResourcesManager<RuntimeAnimatorController>.ResourceName.Player_Damaged_Controller));
+        new ActionSetController(triCol, gameObject, null) { delay = knockbackTime };
+        new ActionSetAnimatorSpeed(triCol, gameObject, 0.8f);
 
-            new ActionSetConditionBool(triCol, conMouseTrack, false);
-            new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
-        }
-        
+        new ActionSetConditionBool(triCol, conMouseTrack, false);
+        new ActionSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
+
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
         //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);

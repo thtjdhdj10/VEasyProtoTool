@@ -8,8 +8,8 @@ public class Collidable : Operable
 
     // canCollideSeveral: true면 한 프레임에 1번만 충돌 가능
     // collideInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
-    public bool canCollideSeveral = false;
-    public bool collideInFrame = false;
+    public bool canCollisionSeveralInFrame = false;
+    public bool isCollisionInFrame = false;
 
     public delegate void OnHitDelegate(Actor from, Actor to);
     public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
@@ -29,8 +29,8 @@ public class Collidable : Operable
         onHitDelegate(owner, target.owner);
         target.onHitDelegate(target.owner, owner);
 
-        collideInFrame = true;
-        target.collideInFrame = true;
+        isCollisionInFrame = true;
+        target.isCollisionInFrame = true;
     }
 
     protected virtual void FixedUpdate()
@@ -41,8 +41,8 @@ public class Collidable : Operable
 
     protected virtual void CollisionCheckFrame()
     {
-        if (canCollideSeveral == false &&
-            collideInFrame == true)
+        if (canCollisionSeveralInFrame == false &&
+            isCollisionInFrame == true)
             return;
 
         List<Collidable> colTargetList = CollisionCheck();
@@ -88,8 +88,8 @@ public class Collidable : Operable
             if (target.state == false)
                 continue;
 
-            if (target.canCollideSeveral == false &&
-                target.collideInFrame == true)
+            if (target.canCollisionSeveralInFrame == false &&
+                target.isCollisionInFrame == true)
                 continue;
 
             Unit.Relation relation = Unit.GetRelation(owner.force, target.owner.force);

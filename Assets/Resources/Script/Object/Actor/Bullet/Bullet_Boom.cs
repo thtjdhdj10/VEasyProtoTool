@@ -6,7 +6,12 @@ public class Bullet_Boom : Bullet
 {
     protected override void SetDefaultBulletSetting()
     {
+        force = owner.force;
+        System.Type targetType;
+        if (force == Force.A) targetType = typeof(Enemy);
+        else targetType = typeof(Player);
 
+        // TODO
     }
 
 

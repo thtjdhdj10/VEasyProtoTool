@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TODO : MonoBehaviour
 {
-    // 플레이어총알충돌
     // 패턴리필
 
     //    movable 에디터

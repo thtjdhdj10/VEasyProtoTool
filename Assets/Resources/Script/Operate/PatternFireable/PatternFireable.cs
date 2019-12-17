@@ -38,13 +38,22 @@ public class PatternFireable : Operable
         }
     }
 
-    // TODO 주석달기
-    public Pattern SelectNextPattern()
+    public virtual Pattern SelectNextPattern()
     {
         int prioritySum = 0;
+
         foreach(var pattern in patternList)
         {
             prioritySum += pattern.currentPriority;
+        }
+
+        if (prioritySum == 0)
+        {
+            RefillPattern();
+            foreach (var pattern in patternList)
+            {
+                prioritySum += pattern.currentPriority;
+            }
         }
 
         int r = Random.Range(0, prioritySum);
@@ -61,5 +70,13 @@ public class PatternFireable : Operable
         }
 
         return null;
+    }
+
+    public void RefillPattern()
+    {
+        foreach(var pattern in patternList)
+        {
+            pattern.currentPriority = pattern.priority;
+        }
     }
 }

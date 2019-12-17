@@ -17,6 +17,7 @@ public class Bullet : Actor
 
     protected virtual void SetDefaultBulletSetting()
     {
+        force = owner.force;
         System.Type targetType;
         if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
