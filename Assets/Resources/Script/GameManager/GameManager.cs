@@ -31,67 +31,7 @@ public class GameManager : MonoBehaviour
         prefabmanager = new ResourcesManager<GameObject>();
         prefabManager = new ResourcesManager<Sprite>();
         controllerManager = new ResourcesManager<RuntimeAnimatorController>();
-
-        pivotType = PivotType.RANDOM;
-        List<int> numberList = new List<int>() { 2, 6, 4, 7, 12, 4, 7, 8, 23, 425, 23, 78, 8, 3, 2, 76 };
-        QuickRecursion(0, numberList.Count - 1, ref numberList);
-        Debug.Log(numberList);
     }
-
-    private void QuickRecursion(int left, int right, ref List<int> numbers)
-    {
-        if (left >= right) return;
-
-        int pivot = QuickFunc(left, right, ref numbers);
-
-        QuickRecursion(left, pivot - 1, ref numbers);
-        QuickRecursion(pivot + 1, right, ref numbers);
-    }
-
-    private int QuickFunc(int left, int right, ref List<int> numbers)
-    {
-        int pivot = left;
-        switch (pivotType)
-        {
-            case PivotType.RANDOM:
-                pivot = Random.Range(left, right + 1);
-                break;
-        }
-
-        int j = left;
-        for (int i = j + 1; i <= right; ++i)
-        {
-            if (j < i && i < pivot)
-            {
-                if (j == pivot) ++j;
-                Swap(i, j, ref numbers);
-            }
-        }
-
-        Swap(pivot, j, ref numbers);
-        pivot = j;
-
-        return pivot;
-    }
-
-    private void Swap(int a, int b, ref List<int> numbers)
-    {
-        int t = numbers[a];
-        numbers[a] = numbers[b];
-        numbers[b] = numbers[t];
-    }
-
-    private PivotType pivotType;
-
-    enum PivotType
-    {
-        RANDOM,
-        FIRST,
-        CENTER,
-        LAST,
-    }
-
-
 
     private void FixedUpdate()
     {
