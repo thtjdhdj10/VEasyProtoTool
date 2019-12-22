@@ -43,15 +43,9 @@ public class Effect_Shield : Effect
         transform.localScale = toScale / parentScale;
     }
 
-    private bool isQuitting = false;
-    private void OnApplicationQuit()
-    {
-        isQuitting = true;
-    }
-
     private void OnDestroy()
     {
-        if (isQuitting == false)
+        if (GameManager.isQuitting == false)
         {
             GameObject go = Instantiate(ResourcesManager<GameObject>.LoadResource(
                 ResourcesManager<GameObject>.ResourceName.Effect_ShieldBreak));

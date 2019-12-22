@@ -304,7 +304,7 @@ public class Pattern_Slayer_1 : Pattern
 
         float duration = 5f;
 
-        pattern1.count = 100;
+        pattern1.count = 80;
         pattern1.term = duration / pattern1.count;
         pattern1.angle = 110f;
 
@@ -313,31 +313,31 @@ public class Pattern_Slayer_1 : Pattern
 
         patternList.Add(pattern1);
 
-        //PatternFire[] pattern2 = new PatternFire[2];
-        //for(int i = 0; i < 2; ++i)
-        //{
-        //    pattern2[i] = new PatternFire(_owner);
-        //    pattern2[i].firePrefab = bullet;
+        PatternFire[] pattern2 = new PatternFire[2];
+        for (int i = 0; i < 2; ++i)
+        {
+            pattern2[i] = new PatternFire(_owner);
+            pattern2[i].firePrefab = bullet;
 
-        //    pattern2[i].count = 30;
-        //    pattern2[i].term = duration / pattern2[i].count;
-        //    if(i == 0) pattern2[i].deltaDir = -60f;
-        //    else pattern2[i].deltaDir = 60f;
+            pattern2[i].count = 30;
+            pattern2[i].term = duration / pattern2[i].count;
+            if (i == 0) pattern2[i].deltaDir = -60f;
+            else pattern2[i].deltaDir = 60f;
 
-        //    pattern2[i].posRoot = _owner;
-        //    pattern2[i].dirRoot = _owner;
+            pattern2[i].posRoot = _owner;
+            pattern2[i].dirRoot = _owner;
 
-        //    patternList.Add(pattern2[i]);
-        //}
+            patternList.Add(pattern2[i]);
+        }
     }
 
     public override IEnumerator Fire()
     {
         move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
-        yield return GameManager.gm.StartCoroutine(patternList[0].Fire());
-        //GameManager.gm.StartCoroutine(patternList[1].Fire());
-        //yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
+        GameManager.gm.StartCoroutine(patternList[0].Fire());
+        GameManager.gm.StartCoroutine(patternList[1].Fire());
+        yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
     }
 
     private Actor.RotateTo originRotateTo;
@@ -361,7 +361,7 @@ public class Pattern_Slayer_2 : Pattern
 {
     public List<Pattern> patternList = new List<Pattern>();
 
-    private const int count = 20;
+    private const int count = 100;
     private const float duration = 5f;
     private const float term = duration / count;
     private PatternFireCircle[] patterns = new PatternFireCircle[count];
@@ -383,12 +383,12 @@ public class Pattern_Slayer_2 : Pattern
 
             patterns[i].firePrefab = go.GetComponent<Bullet>();
 
-            patterns[i].count = 8;
+            patterns[i].count = 6;
             patterns[i].term = 0f;
 
             patterns[i].posRoot = _owner;
             patterns[i].dirRoot = null;
-            patterns[i].direction = i * 120f;
+            patterns[i].direction = i * 2f;
         }
     }
 

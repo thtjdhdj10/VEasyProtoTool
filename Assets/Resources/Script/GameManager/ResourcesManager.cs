@@ -34,6 +34,7 @@ public class ResourcesManager<T> where T : Object
         Bullet_Straight_1,
         Bullet_Straight_2,
 
+        Effect_Bullet,
         Effect_LaserBody,
         Effect_LaserRoot,
         Effect_Shield,

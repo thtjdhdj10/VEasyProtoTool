@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TODO : MonoBehaviour
 {
-    // 패턴리필
+    // FSM으로 보스 패턴
 
     //    movable 에디터
 

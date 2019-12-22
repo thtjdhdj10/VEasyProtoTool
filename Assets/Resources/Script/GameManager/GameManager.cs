@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
+    public static bool isQuitting = false;
     private ResourcesManager<GameObject> prefabmanager;
     private ResourcesManager<Sprite> prefabManager;
     private ResourcesManager<RuntimeAnimatorController> controllerManager;
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
         //tu.target = typeof(Unit);
 
         //ActionCreateObject action = new ActionCreateObject();
-        
+
         //tu.actionList.Add()
 
         //TriggerKeyInput tk = gameObject.AddComponent<TriggerKeyInput>();
@@ -81,6 +82,11 @@ public class GameManager : MonoBehaviour
         //}
 
 
+    }
+
+    private void OnApplicationQuit()
+    {
+        isQuitting = true;
     }
 
 }

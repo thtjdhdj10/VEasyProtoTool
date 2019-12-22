@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Player : Unit
 {
-    private float speed = 2.5f;
+    private float speed = 3.5f;
     private float hitSpeed = 5f;
 
     protected override void Start()
