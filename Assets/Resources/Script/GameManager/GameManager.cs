@@ -43,6 +43,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            GameObject shock = Instantiate(ResourcesManager<GameObject>.LoadResource(
+                ResourcesManager<GameObject>.ResourceName.Effect_Shockwave));
+            shock.transform.position = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
+        }
+    }
 
     private void Start()
     {

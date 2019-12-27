@@ -5,7 +5,8 @@
     {
         // Inspector 에서 컨트롤 가능한 속성 변수
         //_Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Tex (RGB)", 2D) = "white" {}
+        _MainTex ("_MainTex (RGB)", 2D) = "white" {}
+        _SubTex ("_SubTex (RGB)", 2D) = "white" {}
     }
     SubShader
     {
@@ -26,10 +27,11 @@
             // 쉐이딩할 변수 재정의
             // half4 _Color;
             sampler2D _MainTex;
-            sampler2D _GradientTex;
+            sampler2D _SubTex;
 
             struct Input {
                 float2 uv_MainTex;
+                float2 uv_SubTex;
             };
 
             //// vert에서 받을 파라미터들
@@ -75,7 +77,7 @@
 
             // surface shader
             void surf(Input IN, inout SurfaceOutput o) {
-                half4 c = tex2D(_MainTex, IN.uv_MainTex);
+                half4 c = tex2D(_SubTex, IN.uv_SubTex);
                 o.Emission = c.rgb;
                 o.Alpha = c.a;
             }

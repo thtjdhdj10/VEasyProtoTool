@@ -20,16 +20,16 @@ public class Player : Unit
         ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
         new ActionDirectionToMouse(triAllways, this);
 
-        // 플레이어 공격 처리
-        GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
+        //// 플레이어 공격 처리
+        //GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
 
-        TriggerKeyInput triMouseDown = new TriggerKeyInput(
-            this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
-        new ActionActiveOperable<Shootable>(triMouseDown, Multistat.StateType.CLICK, true);
+        //TriggerKeyInput triMouseDown = new TriggerKeyInput(
+        //    this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
+        //new ActionActiveOperable<Shootable>(triMouseDown, Multistat.StateType.CLICK, true);
 
-        TriggerKeyInput triMouseUp = new TriggerKeyInput(
-            this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
-        new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
+        //TriggerKeyInput triMouseUp = new TriggerKeyInput(
+        //    this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.UP);
+        //new ActionActiveOperable<Shootable>(triMouseUp, Multistat.StateType.CLICK, false);
 
         // 플레이어 피격 처리
         float knockbackTime = 0.38f;

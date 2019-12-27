@@ -39,6 +39,7 @@ public class ResourcesManager<T> where T : Object
         Effect_LaserRoot,
         Effect_Shield,
         Effect_ShieldBreak,
+        Effect_Shockwave,
 
         Enemy_Wing,
         EnemyBoss_Slayer,
