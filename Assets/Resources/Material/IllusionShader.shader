@@ -1,4 +1,4 @@
-﻿Shader "Custom/ShockwaveShader"
+﻿Shader "Custom/IllusionShader"
 {
     Properties
     {
@@ -10,16 +10,9 @@
     }
     SubShader
     {
-        // 반투명
         Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
-        
-        // 컬링 안함, 
-        Cull Off ZWrite Off ZTest Always
 
-        // Grab the screen behind the object into _GrabTexture
-        GrabPass { 
-            "_GrabTexture"
-        }
+        LOD 100
  
         Pass
         {
@@ -32,9 +25,10 @@
             sampler2D _ScaleTex;
             sampler2D _NormalTex;
             sampler2D _GrabTexture;
-            float _Duration;
             float _GeneratedTime;
+            float _Duration;
             float _Power;
+            float4 _MainTex_ST;
  
             struct appdata
             {

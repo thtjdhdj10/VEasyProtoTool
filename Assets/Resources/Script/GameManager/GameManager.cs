@@ -36,11 +36,12 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        foreach(var o in Operable.GetOperableList<Collidable>())
-        {
-            Collidable col = o as Collidable;
-            if (col != null) col.isCollisionInFrame = false;
-        }
+        if (Operable.GetOperableList<Collidable>() != null)
+            foreach (var o in Operable.GetOperableList<Collidable>())
+            {
+                Collidable col = o as Collidable;
+                if (col != null) col.isCollisionInFrame = false;
+            }
     }
 
     private void Update()
