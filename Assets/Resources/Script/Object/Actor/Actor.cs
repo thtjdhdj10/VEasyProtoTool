@@ -175,7 +175,7 @@ public class Actor : MyObject
 
     //
 
-    public virtual void SetSpriteAngle() // TODO by target? direction?
+    public virtual void SetSpriteAngle()
     {
         Vector3 rot = transform.eulerAngles;
         switch (rotateTo)
