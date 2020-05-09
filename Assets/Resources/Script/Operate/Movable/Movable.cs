@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class Movable : Operable
 {
     public float speed = 1f;
 
-    protected Vector2 targetPos;
+    protected Vector2 _targetPos;
 
     protected virtual void FixedUpdate()
     {
-        if (_state == false) return;
+        if (state == false) return;
 
-        if(_owner.TryGetOperable(out Targetable ownerTarget))
+        if(owner.TryGetOperable(out Targetable ownerTarget))
         {
             if (ownerTarget.target != null)
-                targetPos = ownerTarget.target.transform.position;
+                _targetPos = ownerTarget.target.transform.position;
         }
 
         // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
@@ -28,11 +29,11 @@ public abstract class Movable : Operable
 
     protected abstract void MoveFrame();
 
-    public bool enableBounce;
-    public float bounceCooldown;
-    private float remainBounceCooldown;
-    public BounceBy bounceBy;
-    public BounceTo bounceTo;
+    public bool _enableBounce;
+    public float _bounceCooldown;
+    private float _remainBounceCooldown;
+    public BounceBy _bounceBy;
+    public BounceTo _bounceTo;
 
     public enum BounceBy
     {
@@ -57,22 +58,22 @@ public abstract class Movable : Operable
 
     protected virtual void BounceProcessing()
     {
-        if (enableBounce == false) return;
+        if (_enableBounce == false) return;
 
-        if (remainBounceCooldown > 0f)
+        if (_remainBounceCooldown > 0f)
         {
-            remainBounceCooldown -= Time.fixedDeltaTime;
+            _remainBounceCooldown -= Time.fixedDeltaTime;
             return;
         }
-        else remainBounceCooldown = bounceCooldown;
+        else _remainBounceCooldown = _bounceCooldown;
 
         bool isBounced = false;
         float targetDir = 0f;
 
-        if (bounceBy == BounceBy.ALL ||
-            bounceBy == BounceBy.BOUNDARY_TOUCH)
+        if (_bounceBy == BounceBy.ALL ||
+            _bounceBy == BounceBy.BOUNDARY_TOUCH)
         {
-            Collidable col = _owner.GetOperable<Collidable>();
+            Collidable col = owner.GetOperable<Collidable>();
             GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
 
             isBounced = true;
@@ -95,10 +96,10 @@ public abstract class Movable : Operable
                     break;
             }
         }
-        else if (bounceBy == BounceBy.ALL ||
-            bounceBy == BounceBy.BOUNDARY_OUT)
+        else if (_bounceBy == BounceBy.ALL ||
+            _bounceBy == BounceBy.BOUNDARY_OUT)
         {
-            Collidable col = _owner.GetOperable<Collidable>();
+            Collidable col = owner.GetOperable<Collidable>();
             GameManager.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
             isBounced = true;
@@ -121,47 +122,47 @@ public abstract class Movable : Operable
                     break;
             }
         }
-        else if (bounceBy == BounceBy.ALL ||
-            bounceBy == BounceBy.UNIT ||
-            bounceBy == BounceBy.ALLY ||
-            bounceBy == BounceBy.ENEMY)
+        else if (_bounceBy == BounceBy.ALL ||
+            _bounceBy == BounceBy.UNIT ||
+            _bounceBy == BounceBy.ALLY ||
+            _bounceBy == BounceBy.ENEMY)
         {
-            if(_owner.TryGetOperable(out Collidable col))
+            if(owner.TryGetOperable(out Collidable col))
             {
                 Unit.Relation targetRelation = Unit.Relation.NONE;
-                if (bounceBy == BounceBy.UNIT)
+                if (_bounceBy == BounceBy.UNIT)
                     targetRelation = Unit.Relation.NEUTRAL;
-                else if (bounceBy == BounceBy.ALLY)
+                else if (_bounceBy == BounceBy.ALLY)
                     targetRelation = Unit.Relation.ALLY;
-                else if (bounceBy == BounceBy.ENEMY)
+                else if (_bounceBy == BounceBy.ENEMY)
                     targetRelation = Unit.Relation.ENEMY;
 
-                Collidable colTarget = col.FirstCollisionCheck(targetRelation);
+                Collidable colTarget = col.GetCollisionTarget(targetRelation)?.First();
 
                 if (colTarget != null)
                 {
                     isBounced = true;
-                    targetDir = VEasyCalculator.GetDirection(_owner.transform.position, targetPos);
+                    targetDir = VEasyCalculator.GetDirection(owner.transform.position, _targetPos);
                 }
             }
         }
 
         if(isBounced)
         {
-            switch (bounceTo)
+            switch (_bounceTo)
             {
                 case BounceTo.TARGET:
-                    _owner._moveDirection = targetDir;
+                    owner.moveDirection = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    _owner._moveDirection += 180f;
+                    owner.moveDirection += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    _owner._moveDirection = VEasyCalculator.GetReflectedDirection(_owner._moveDirection, targetDir);
+                    owner.moveDirection = VEasyCalculator.GetReflectedDirection(owner.moveDirection, targetDir);
                     break;
                 case BounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        _owner._moveDirection, 1f);
+                        owner.moveDirection, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
                         targetDir, 1f);
 
@@ -170,11 +171,11 @@ public abstract class Movable : Operable
                     Vector2 escapeVector = VEasyCalculator.GetRotatedPosition(
                         targetDir + 180f, inner * speed * Time.fixedDeltaTime);
 
-                    _owner.transform.position = (Vector2)_owner.transform.position + escapeVector;
+                    owner.transform.position = (Vector2)owner.transform.position + escapeVector;
                     // TODO 최적화 및 벽에서 달달달 안하게
                     break;
                 case BounceTo.DESTROY:
-                    Destroy(_owner.gameObject);
+                    Destroy(owner.gameObject);
                     break;
             }
         }

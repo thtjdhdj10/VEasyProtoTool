@@ -8,9 +8,9 @@ public class ShootableProjectile : Shootable
     protected override void Shoot()
     {
         Bullet bullet = Instantiate(projectile);
-        bullet.owner = _owner as Unit;
+        bullet.owner = owner as Unit;
         bullet.transform.position = transform.position;
-        bullet._moveDirection = _owner._targetDirection;
-        bullet._targetDirection = _owner._targetDirection;
+        bullet.moveDirection = owner.targetDirection;
+        bullet.targetDirection = owner.targetDirection;
     }
 }

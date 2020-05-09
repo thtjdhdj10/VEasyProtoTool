@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using System.Linq;
 
 public class Collidable : Operable
 {
@@ -12,8 +12,8 @@ public class Collidable : Operable
     public bool isCollisionInFrame = false;
 
     public delegate void OnHitDelegate(Actor from, Actor to);
-    public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitCallback);
-    public static void OnHitCallback(Actor from, Actor to) { }
+    public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitMethod);
+    public static void OnHitMethod(Actor from, Actor to) { }
 
     protected override void Awake()
     {
@@ -26,8 +26,8 @@ public class Collidable : Operable
 
     protected virtual void Hit(Collidable target)
     {
-        onHitDelegate(_owner, target._owner);
-        target.onHitDelegate(target._owner, _owner);
+        onHitDelegate(owner, target.owner);
+        target.onHitDelegate(target.owner, owner);
 
         isCollisionInFrame = true;
         target.isCollisionInFrame = true;
@@ -35,7 +35,7 @@ public class Collidable : Operable
 
     protected virtual void FixedUpdate()
     {
-        if (_state == false) return;
+        if (state == false) return;
         CollisionCheckFrame();
     }
 
@@ -45,65 +45,26 @@ public class Collidable : Operable
             isCollisionInFrame == true)
             return;
 
-        List<Collidable> colTargetList = CollisionCheck();
-        if (colTargetList == null)
-            return;
-
-        for (int i = 0; i < colTargetList.Count; ++i)
-        {
-            Hit(colTargetList[i]);
-        }
+        GetCollisionTarget(Unit.Relation.ENEMY)?.ForEach(t => Hit(t));
     }
 
-    public virtual Collidable FirstCollisionCheck(Unit.Relation targetRelation)
+    public virtual List<Collidable> GetCollisionTarget(Unit.Relation targetRelation)
     {
-        List<Collidable> colTargetList = CollisionCheck(targetRelation);
+        List<Collidable> ret = _allOperableListDic[typeof(Collidable)].
+            ConvertAll(t => t as Collidable);
 
-        if (colTargetList == null) return null;
-
-        return colTargetList[0];
+        return (from target in ret
+               where target != null
+               where target.gameObject.activeInHierarchy == true 
+               where target.state == true
+               where target.canCollisionSeveralInFrame == true ||
+                    target.isCollisionInFrame == false
+               where targetRelation == Unit.GetRelation(owner.force, target.owner.force)
+               where IsCollision(target)
+               select target).ToList();
     }
 
-    public virtual List<Collidable> CollisionCheck()
-    {
-        return CollisionCheck(Unit.Relation.ENEMY);
-    }
-
-    public virtual List<Collidable> CollisionCheck(Unit.Relation targetRelation)
-    {
-        List<Collidable> ret = new List<Collidable>();
-
-        List<Operable> collidableList = _allOperableListDic[typeof(Collidable)];
-
-        for (int i = 0; i < collidableList.Count; ++i)
-        {
-            Collidable target = collidableList[i] as Collidable;
-
-            if (target == null)
-                continue;
-
-            if (target.gameObject.activeInHierarchy == false)
-                continue;
-
-            if (target._state == false)
-                continue;
-
-            if (target.canCollisionSeveralInFrame == false &&
-                target.isCollisionInFrame == true)
-                continue;
-
-            Unit.Relation relation = Unit.GetRelation(_owner._force, target._owner._force);
-            if (targetRelation != relation)
-                continue;
-
-            if (CollisionCheck(target) == true)
-                ret.Add(target);
-        }
-
-        return ret;
-    }
-
-    public virtual bool CollisionCheck(Collidable target)
+    public virtual bool IsCollision(Collidable target)
     {
         return collider.IsTouching(target.collider);
     }

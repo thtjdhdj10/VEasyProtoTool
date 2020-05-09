@@ -11,22 +11,22 @@ public class ShieldOwnable : Operable
     {
         get
         {
-            return shieldCount;
+            return _shieldCount;
         }
         set
         {
-            shieldCount = value;
-            if (shieldCount > 0) enableShield = true;
+            _shieldCount = value;
+            if (_shieldCount > 0) enableShield = true;
             else enableShield = false;
         }
     }
     [SerializeField]
-    private int shieldCount = 1;
+    private int _shieldCount = 1;
 
     public float shieldRegenDelay;
-    private float regenProgress;
+    private float _regenProgress;
 
-    private List<GameObject> shieldList = new List<GameObject>();
+    private List<GameObject> _shieldList = new List<GameObject>();
 
     //
 
@@ -42,7 +42,7 @@ public class ShieldOwnable : Operable
                 ResourcesManager<GameObject>.ResourceName.Effect_Shield));
             shield.transform.position = transform.position;
             shield.transform.parent = transform;
-            shieldList.Add(shield);
+            _shieldList.Add(shield);
 
             enableShield = true;
         }
@@ -50,34 +50,34 @@ public class ShieldOwnable : Operable
 
     private void FixedUpdate()
     {
-        if(shieldCount < maxShieldCount)
+        if(_shieldCount < maxShieldCount)
         {
-            if(regenProgress < shieldRegenDelay)
+            if(_regenProgress < shieldRegenDelay)
             {
-                regenProgress += Time.fixedDeltaTime;
+                _regenProgress += Time.fixedDeltaTime;
             }
             else
             {
-                regenProgress = 0f;
-                ++shieldCount;
+                _regenProgress = 0f;
+                ++_shieldCount;
 
                 GameObject shield = Instantiate(ResourcesManager<GameObject>.LoadResource(
                     ResourcesManager<GameObject>.ResourceName.Effect_Shield));
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
-                shieldList.Add(shield);
+                _shieldList.Add(shield);
             }
         }
     }
 
     public bool ShieldBreak()
     {
-        if (shieldCount > 0)
+        if (_shieldCount > 0)
         {
-            --shieldCount;
+            --_shieldCount;
 
-            GameObject shield = shieldList[shieldList.Count - 1];
-            shieldList.Remove(shield);
+            GameObject shield = _shieldList[_shieldList.Count - 1];
+            _shieldList.Remove(shield);
             Destroy(shield);
 
             return true;

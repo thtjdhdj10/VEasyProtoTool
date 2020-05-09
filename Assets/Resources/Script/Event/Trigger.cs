@@ -97,7 +97,7 @@ public class TriggerFrame : Trigger
     {
         passCount = _passCount;
 
-        _owner.fixedUpdateDelegate += HandleFixedUpdate;
+        _owner.fixedUpdateDel += HandleFixedUpdate;
     }
 
     public int passCount = 0;
@@ -145,7 +145,7 @@ public class TriggerKeyInput : Trigger
 
         if(owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDelegate += HandleKeyInput;
+            control.keyInputDel += HandleKeyInput;
         }
     }
 
@@ -153,7 +153,7 @@ public class TriggerKeyInput : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDelegate -= HandleKeyInput;
+            control.keyInputDel -= HandleKeyInput;
         }
     }
 
@@ -177,7 +177,7 @@ public class TriggerKeyInputs : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDelegate += HandleKeyInput;
+            control.keyInputDel += HandleKeyInput;
         }
     }
 
@@ -185,7 +185,7 @@ public class TriggerKeyInputs : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDelegate -= HandleKeyInput;
+            control.keyInputDel -= HandleKeyInput;
         }
     }
 
@@ -212,7 +212,7 @@ public class TriggerTimer : Trigger
         delay = _delay;
         isActivateOnStart = _isActivateOnStart;
 
-        _owner.fixedUpdateDelegate += HandleFixedUpdate;
+        _owner.fixedUpdateDel += HandleFixedUpdate;
 
         if (isActivateOnStart == true)
             remainDelay = delay;
@@ -261,13 +261,13 @@ public class TriggerUnit : Trigger
         switch (type)
         {
             case TriggerType.AWAKE:
-                target.awakeDelegate += ActivateTrigger;
+                target.awakeDel += ActivateTrigger;
                 break;
             case TriggerType.INIT:
-                target.initDelegate += ActivateTrigger;
+                target.initDel += ActivateTrigger;
                 break;
             case TriggerType.ON_DESTROY:
-                target.onDestroyDelegate += ActivateTrigger;
+                target.onDestroyDel += ActivateTrigger;
                 break;
         }
     }
@@ -277,13 +277,13 @@ public class TriggerUnit : Trigger
         switch (type)
         {
             case TriggerType.AWAKE:
-                target.awakeDelegate -= ActivateTrigger;
+                target.awakeDel -= ActivateTrigger;
                 break;
             case TriggerType.INIT:
-                target.initDelegate -= ActivateTrigger;
+                target.initDel -= ActivateTrigger;
                 break;
             case TriggerType.ON_DESTROY:
-                target.onDestroyDelegate -= ActivateTrigger;
+                target.onDestroyDel -= ActivateTrigger;
                 break;
         }
     }
@@ -313,7 +313,7 @@ public class TriggerUnits : Trigger
             LinkEventHandle(unit, true);
         }
 
-        Actor.onActorAddedDelegate += HandleAddedUnit;
+        Actor.onActorAddedDel += HandleAddedUnit;
     }
 
     ~TriggerUnits()
@@ -329,16 +329,16 @@ public class TriggerUnits : Trigger
         switch (type)
         {
             case TriggerType.AWAKE:
-                if(isAdd) unit.awakeDelegate += ActivateTrigger;
-                else unit.awakeDelegate -= ActivateTrigger;
+                if(isAdd) unit.awakeDel += ActivateTrigger;
+                else unit.awakeDel -= ActivateTrigger;
                 break;
             case TriggerType.INIT:
-                if(isAdd) unit.initDelegate += ActivateTrigger;
-                else unit.initDelegate -= ActivateTrigger;
+                if(isAdd) unit.initDel += ActivateTrigger;
+                else unit.initDel -= ActivateTrigger;
                 break;
             case TriggerType.ON_DESTROY:
-                if(isAdd) unit.onDestroyDelegate += ActivateTrigger;
-                else unit.onDestroyDelegate -= ActivateTrigger;
+                if(isAdd) unit.onDestroyDel += ActivateTrigger;
+                else unit.onDestroyDel -= ActivateTrigger;
                 break;
         }
     }
@@ -362,3 +362,4 @@ public class TriggerUnits : Trigger
         ON_DESTROY,
     }
 }
+

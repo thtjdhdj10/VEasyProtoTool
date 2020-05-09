@@ -6,9 +6,9 @@ using System.Linq;
 public abstract class Operable : MonoBehaviour
 {
     [System.NonSerialized]
-    public Actor _owner;
+    public Actor owner;
 
-    public Multistat _state = new Multistat();
+    public Multistat state = new Multistat();
 
     protected static Dictionary<Type, List<Operable>> _allOperableListDic
         = new Dictionary<Type, List<Operable>>();
@@ -20,7 +20,7 @@ public abstract class Operable : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if(_owner == null) _owner = GetComponent<Actor>();
+        if(owner == null) owner = GetComponent<Actor>();
 
         Type originType = GetOperableOriginType();
 
@@ -34,22 +34,22 @@ public abstract class Operable : MonoBehaviour
         }
         else _allOperableListDic.Add(originType, new List<Operable>() { this });
 
-        if (_owner._operableListDic.TryGetValue(originType, out List<Operable> ownerOperableList))
+        if (owner.operableListDic.TryGetValue(originType, out List<Operable> ownerOperableList))
         {
             ownerOperableList?.Add(this);
-            if (_owner._operableListDic[originType] == null)
-                _owner._operableListDic[originType] = new List<Operable>() { this };
+            if (owner.operableListDic[originType] == null)
+                owner.operableListDic[originType] = new List<Operable>() { this };
         }
-        else _owner._operableListDic.Add(originType, new List<Operable>() { this });
+        else owner.operableListDic.Add(originType, new List<Operable>() { this });
 
-        _state.updateDelegate += HandleUpdateState;
+        state.updateDelegate += HandleUpdateState;
     }
 
     protected virtual void OnDestroy()
     {
         Type type = GetOperableOriginType();
 
-        _owner._operableListDic[type].Remove(this);
+        owner.operableListDic[type].Remove(this);
         _allOperableListDic[type].Remove(this);
     }
 

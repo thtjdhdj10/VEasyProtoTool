@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class Player : Unit
 {
-    private float speed = 3.5f;
-    private float hitSpeed = 5f;
+    private float _speed = 3.5f;
+    private float _hitSpeed = 5f;
 
     protected override void Start()
     {
         base.Start();
 
-        GetOperable<Movable>().speed = speed;
+        GetOperable<Movable>().speed = _speed;
 
         // 플레이어 이동, 회전 처리
         TriggerKeyInputs triKeyInput = new TriggerKeyInputs(this);
@@ -21,7 +21,7 @@ public class Player : Unit
         new ActionDirectionToMouse(triAllways, this);
 
         // 플레이어 공격 처리
-        GetOperable<Shootable>()._state.SetState(Multistat.StateType.CLICK, false);
+        GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
 
         TriggerKeyInput triMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);
@@ -39,8 +39,8 @@ public class Player : Unit
         new ActionInitTrigger(triCol, triKeyInput);
 
         new ActionKnockback(triCol, this, 8f, 20f);
-        new ActionSetSpeed(triCol, hitSpeed);
-        new ActionSetSpeed(triCol, speed) { delay = dodgeTime };
+        new ActionSetSpeed(triCol, _hitSpeed);
+        new ActionSetSpeed(triCol, _speed) { delay = dodgeTime };
 
         new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, true);
         new ActionActiveOperable<Controllable>(triCol, Multistat.StateType.KNOCKBACK, false) { delay = knockbackTime };

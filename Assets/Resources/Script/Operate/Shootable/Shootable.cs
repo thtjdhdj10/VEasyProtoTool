@@ -25,7 +25,7 @@ public class Shootable : Operable
 
     bool AttackDelayCheck()
     {
-        if (_state == false)
+        if (state == false)
         {
             if(remainAttackDelay > 0f &&
                 loadOnDeactive == true)

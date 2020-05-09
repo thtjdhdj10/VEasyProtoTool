@@ -6,9 +6,9 @@ public class Bullet_Boom : Bullet
 {
     protected override void SetDefaultBulletSetting()
     {
-        _force = owner._force;
+        force = owner.force;
         System.Type targetType;
-        if (_force == Force.A) targetType = typeof(Enemy);
+        if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         // TODO

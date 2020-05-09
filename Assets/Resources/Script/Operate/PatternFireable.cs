@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PatternFireable : Operable
@@ -9,34 +10,34 @@ public class PatternFireable : Operable
     public float delay = 3f;
     public float elapseDelay = 0f;
 
-    private Dictionary<string, List<Pattern>> phasePatternsDic = new Dictionary<string, List<Pattern>>();
-    private List<Pattern> currentPatternList = new List<Pattern>();
-    private Pattern currentPattern;
+    private Dictionary<string, List<Pattern>> _phasePatternsDic = new Dictionary<string, List<Pattern>>();
+    private List<Pattern> _currentPatternList = new List<Pattern>();
+    private Pattern _currentPattern;
 
     public void AddPattern(string phase, Pattern pattern)
     {
-        if(phasePatternsDic.TryGetValue(phase, out List<Pattern> patterns))
+        if(_phasePatternsDic.TryGetValue(phase, out List<Pattern> patterns))
         {
             patterns.Add(pattern);
         }
         else
         {
-            phasePatternsDic.Add(phase, new List<Pattern>() { pattern });
+            _phasePatternsDic.Add(phase, new List<Pattern>() { pattern });
         }
     }
 
     private void FixedUpdate()
     {
-        if (_state.State)
+        if (state.State)
         {
-            if(phasePatternsDic.TryGetValue(phase, out List<Pattern> patterns))
+            if(_phasePatternsDic.TryGetValue(phase, out List<Pattern> patterns))
             {
-                currentPatternList = patterns;
+                _currentPatternList = patterns;
             }
 
-            if (currentPattern != null)
+            if (_currentPattern != null)
             {
-                if (currentPattern.isPatternRunning == true)
+                if (_currentPattern.isPatternRunning == true)
                     return;
             }
 
@@ -48,11 +49,11 @@ public class PatternFireable : Operable
             {
                 elapseDelay = 0f;
 
-                currentPattern = SelectNextPattern();
+                _currentPattern = SelectNextPattern();
 
-                if (currentPattern != null)
+                if (_currentPattern != null)
                 {
-                    currentPattern.Activate();
+                    _currentPattern.Activate();
                 }
             }
         }
@@ -60,34 +61,28 @@ public class PatternFireable : Operable
 
     public virtual Pattern SelectNextPattern()
     {
-        if (currentPatternList == null) return null;
+        if (_currentPatternList == null) return null;
 
         int prioritySum = 0;
 
-        foreach(var pattern in currentPatternList)
-        {
-            prioritySum += pattern.currentPriority;
-        }
+        _currentPatternList.ForEach(pattern => prioritySum += pattern.currentPriority);
 
         if (prioritySum == 0)
         {
             RefillPattern();
-            foreach (var pattern in currentPatternList)
-            {
-                prioritySum += pattern.currentPriority;
-            }
+            _currentPatternList.ForEach(pattern => prioritySum += pattern.currentPriority);
         }
 
         int r = Random.Range(0, prioritySum);
         int targetRange = 0;
 
-        for(int i = 0; i < currentPatternList.Count; ++i)
+        for (int i = 0; i < _currentPatternList.Count; ++i)
         {
-            targetRange += currentPatternList[i].currentPriority;
+            targetRange += _currentPatternList[i].currentPriority;
             if (r < targetRange)
             {
-                currentPatternList[i].currentPriority = 0;
-                return currentPatternList[i];
+                _currentPatternList[i].currentPriority = 0;
+                return _currentPatternList[i];
             }
         }
 
@@ -96,9 +91,6 @@ public class PatternFireable : Operable
 
     public void RefillPattern()
     {
-        foreach(var pattern in currentPatternList)
-        {
-            pattern.currentPriority = pattern.priority;
-        }
+        _currentPatternList.ForEach(p => p.currentPriority = p.priority);
     }
 }

@@ -79,7 +79,7 @@ public class PatternFire : Pattern
     public override IEnumerator Fire()
     {
         if (posRoot != null) position = posRoot.transform.position;
-        if (dirRoot != null) direction = dirRoot._targetDirection;
+        if (dirRoot != null) direction = dirRoot.targetDirection;
 
         for (int i = 0; i < count; ++i)
         {
@@ -110,9 +110,9 @@ public class PatternFire : Pattern
         if (posRoot != null) position = posRoot.transform.position;
         actor.transform.position = position + deltaPos;
 
-        if (dirRoot != null) direction = dirRoot._targetDirection;
-        actor._targetDirection = direction + deltaDir;
-        actor._moveDirection = direction + deltaDir;
+        if (dirRoot != null) direction = dirRoot.targetDirection;
+        actor.targetDirection = direction + deltaDir;
+        actor.moveDirection = direction + deltaDir;
     }
 }
 
@@ -126,7 +126,7 @@ public class PatternFireDirection : PatternFire
 
     public override void PreFireProcess()
     {
-        if (owner != null) direction = owner._targetDirection;
+        if (owner != null) direction = owner.targetDirection;
     }
 }
 
@@ -333,7 +333,7 @@ public class Pattern_Slayer_1 : Pattern
 
     public override IEnumerator Fire()
     {
-        move._state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
+        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
         GameManager.gm.StartCoroutine(patternList[0].Fire());
         GameManager.gm.StartCoroutine(patternList[1].Fire());
@@ -343,15 +343,15 @@ public class Pattern_Slayer_1 : Pattern
     private Actor.RotateTo originRotateTo;
     public override IEnumerator PostFire()
     {
-        owner._rotateTo = originRotateTo;
-        move._state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
+        owner.rotateTo = originRotateTo;
+        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 
     public override IEnumerator PreFire()
     {
-        originRotateTo = owner._rotateTo;
-        owner._rotateTo = Actor.RotateTo.TARGET;
+        originRotateTo = owner.rotateTo;
+        owner.rotateTo = Actor.RotateTo.TARGET;
         yield break;
     }
 }
@@ -394,7 +394,7 @@ public class Pattern_Slayer_2 : Pattern
 
     public override IEnumerator Fire()
     {
-        move._state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
+        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
 
         for (int i = 0; i < count; ++i)
         {
@@ -406,7 +406,7 @@ public class Pattern_Slayer_2 : Pattern
 
     public override IEnumerator PostFire()
     {
-        move._state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
+        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 }

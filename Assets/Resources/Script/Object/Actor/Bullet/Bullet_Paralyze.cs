@@ -8,9 +8,9 @@ public class Bullet_Paralyze : BulletStraight
 
     protected override void SetDefaultBulletSetting()
     {
-        _force = owner._force;
+        force = owner.force;
         System.Type targetType;
-        if (_force == Force.A) targetType = typeof(Enemy);
+        if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
