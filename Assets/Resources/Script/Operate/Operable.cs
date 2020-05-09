@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class Operable : MonoBehaviour
 {
     [System.NonSerialized]
-    public Actor owner;
+    public Actor _owner;
 
-    public Multistat state = new Multistat();
+    public Multistat _state = new Multistat();
 
-    protected static Dictionary<System.Type, List<Operable>> allOperableListDic
-        = new Dictionary<System.Type, List<Operable>>();
+    protected static Dictionary<Type, List<Operable>> _allOperableListDic
+        = new Dictionary<Type, List<Operable>>();
 
     public virtual void Init()
     {
@@ -18,40 +20,44 @@ public abstract class Operable : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if(owner == null) owner = GetComponent<Actor>();
+        if(_owner == null) _owner = GetComponent<Actor>();
 
-        System.Type type = GetOperableOriginType();
+        Type originType = GetOperableOriginType();
 
-        if (allOperableListDic.TryGetValue(type, out List<Operable> operableList))
+        if (_allOperableListDic.TryGetValue(originType, out List<Operable> operableList))
         {
-            if (operableList != null) operableList.Add(this);
-            else allOperableListDic[type] = new List<Operable>() { this };
+            operableList?.Add(this);
+            // Note: UnityEngine.Object인 GameObject, Componenet에 대해 ?? 연산자가 동작하지 않음
+            // _allOperableListDic[originType] ??= new List<Operable>() { this };
+            if (_allOperableListDic[originType] == null)
+                _allOperableListDic[originType] = new List<Operable>() { this };
         }
-        else allOperableListDic.Add(type, new List<Operable>() { this });
+        else _allOperableListDic.Add(originType, new List<Operable>() { this });
 
-        if (owner._operableListDic.TryGetValue(type, out List<Operable> ownerOperableList))
+        if (_owner._operableListDic.TryGetValue(originType, out List<Operable> ownerOperableList))
         {
-            if (ownerOperableList != null) ownerOperableList.Add(this);
-            else owner._operableListDic[type] = new List<Operable>() { this };
+            ownerOperableList?.Add(this);
+            if (_owner._operableListDic[originType] == null)
+                _owner._operableListDic[originType] = new List<Operable>() { this };
         }
-        else owner._operableListDic.Add(type, new List<Operable>() { this });
+        else _owner._operableListDic.Add(originType, new List<Operable>() { this });
 
-        state.updateDelegate += HandleUpdateState;
+        _state.updateDelegate += HandleUpdateState;
     }
 
     protected virtual void OnDestroy()
     {
-        System.Type type = GetOperableOriginType();
+        Type type = GetOperableOriginType();
 
-        owner._operableListDic[type].Remove(this);
-        allOperableListDic[type].Remove(this);
+        _owner._operableListDic[type].Remove(this);
+        _allOperableListDic[type].Remove(this);
     }
 
     //
 
-    public System.Type GetOperableOriginType()
+    public Type GetOperableOriginType()
     {
-        System.Type ret = this.GetType();
+        Type ret = this.GetType();
 
         if (ret.IsSubclassOf(typeof(Operable)))
         {
@@ -68,14 +74,9 @@ public abstract class Operable : MonoBehaviour
 
     public static bool TryGetOperableList<T>(out List<T> operableList) where T : Operable
     {
-        if (allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            List<T> retList = new List<T>();
-            foreach (var o in operables)
-            {
-                retList.Add(o as T);
-            }
-            operableList = retList;
+            operableList = operables.Select(x => x as T).ToList();
             return true;
         }
 
@@ -85,14 +86,9 @@ public abstract class Operable : MonoBehaviour
 
     public static List<T> GetOperableList<T>() where T : Operable
     {
-        if (allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_allOperableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            List<T> retList = new List<T>();
-            foreach (var o in operables)
-            {
-                retList.Add(o as T);
-            }
-            return retList;
+            return operables.Select(x => x as T).ToList();
         }
         else return null;
     }
@@ -103,15 +99,4 @@ public abstract class Operable : MonoBehaviour
     {
         Init();
     }
-
-    //protected bool ConfirmExistence()
-    //{
-    //    if (owner == null ||
-    //        owner.isActiveAndEnabled == false)
-    //    {
-    //        return false;
-    //    }
-
-    //    return true;
-    //}
 }

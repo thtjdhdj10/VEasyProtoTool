@@ -276,7 +276,7 @@ public class ActionKnockback : Action
 
         if (moves != null)
             foreach (var move in moves)
-                move.state.SetState(Multistat.StateType.KNOCKBACK, true);
+                move._state.SetState(Multistat.StateType.KNOCKBACK, true);
 
         Actor.RotateTo originRotateTo = target._rotateTo;
 
@@ -300,7 +300,7 @@ public class ActionKnockback : Action
 
         if (moves != null)
             foreach (var move in moves)
-                move.state.SetState(Multistat.StateType.KNOCKBACK, false);
+                move._state.SetState(Multistat.StateType.KNOCKBACK, false);
     }
 }
 
@@ -335,7 +335,7 @@ public class ActionActiveOperable<T> : Action where T : Operable
     protected override void ActionProcess(Trigger trigger)
     {
         Operable operable = trigger.owner.GetOperable<T>();
-        operable.state.SetState(stateType, doActive);
+        operable._state.SetState(stateType, doActive);
     }
 }
 
@@ -358,7 +358,7 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
         if (target == null) return;
 
         Operable operable = target.GetOperable<T>();
-        operable.state.SetState(stateType, doActive);
+        operable._state.SetState(stateType, doActive);
     }
 }
 
@@ -414,7 +414,7 @@ public class ActionCreateActor : Action
         if (isMovingActor)
         {
             Movable move = actor.GetOperable<Movable>();
-            move.owner._moveDirection = direction;
+            move._owner._moveDirection = direction;
             move.speed = speed;
         }
     }

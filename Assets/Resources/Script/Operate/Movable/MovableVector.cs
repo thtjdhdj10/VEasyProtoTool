@@ -49,7 +49,7 @@ public class MovableVector : Movable
             delta.y -= moveDelta;
         }
 
-        Vector2 v2Pos = owner.transform.position;
-        owner.transform.position = v2Pos + delta;
+        Vector2 v2Pos = _owner.transform.position;
+        _owner.transform.position = v2Pos + delta;
     }
 }

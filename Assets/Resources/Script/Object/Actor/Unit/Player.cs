@@ -21,7 +21,7 @@ public class Player : Unit
         new ActionDirectionToMouse(triAllways, this);
 
         // 플레이어 공격 처리
-        GetOperable<Shootable>().state.SetState(Multistat.StateType.CLICK, false);
+        GetOperable<Shootable>()._state.SetState(Multistat.StateType.CLICK, false);
 
         TriggerKeyInput triMouseDown = new TriggerKeyInput(
             this, KeyManager.KeyCommand.COMMAND_ATTACK, KeyManager.KeyPressType.DOWN);

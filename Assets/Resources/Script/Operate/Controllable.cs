@@ -9,7 +9,7 @@ public class Controllable : Operable
 
     public virtual void KeyInput(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType)
     {
-        if (state == false) return;
+        if (_state == false) return;
         keyInputDelegate(command, pressType);
     }
 }

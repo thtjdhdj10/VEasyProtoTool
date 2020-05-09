@@ -26,8 +26,8 @@ public class Collidable : Operable
 
     protected virtual void Hit(Collidable target)
     {
-        onHitDelegate(owner, target.owner);
-        target.onHitDelegate(target.owner, owner);
+        onHitDelegate(_owner, target._owner);
+        target.onHitDelegate(target._owner, _owner);
 
         isCollisionInFrame = true;
         target.isCollisionInFrame = true;
@@ -35,7 +35,7 @@ public class Collidable : Operable
 
     protected virtual void FixedUpdate()
     {
-        if (state == false) return;
+        if (_state == false) return;
         CollisionCheckFrame();
     }
 
@@ -73,7 +73,7 @@ public class Collidable : Operable
     {
         List<Collidable> ret = new List<Collidable>();
 
-        List<Operable> collidableList = allOperableListDic[typeof(Collidable)];
+        List<Operable> collidableList = _allOperableListDic[typeof(Collidable)];
 
         for (int i = 0; i < collidableList.Count; ++i)
         {
@@ -85,14 +85,14 @@ public class Collidable : Operable
             if (target.gameObject.activeInHierarchy == false)
                 continue;
 
-            if (target.state == false)
+            if (target._state == false)
                 continue;
 
             if (target.canCollisionSeveralInFrame == false &&
                 target.isCollisionInFrame == true)
                 continue;
 
-            Unit.Relation relation = Unit.GetRelation(owner._force, target.owner._force);
+            Unit.Relation relation = Unit.GetRelation(_owner._force, target._owner._force);
             if (targetRelation != relation)
                 continue;
 

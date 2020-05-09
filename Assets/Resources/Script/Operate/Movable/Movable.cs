@@ -9,9 +9,9 @@ public abstract class Movable : Operable
 
     protected virtual void FixedUpdate()
     {
-        if (state == false) return;
+        if (_state == false) return;
 
-        if(owner.TryGetOperable(out Targetable ownerTarget))
+        if(_owner.TryGetOperable(out Targetable ownerTarget))
         {
             if (ownerTarget.target != null)
                 targetPos = ownerTarget.target.transform.position;
@@ -72,7 +72,7 @@ public abstract class Movable : Operable
         if (bounceBy == BounceBy.ALL ||
             bounceBy == BounceBy.BOUNDARY_TOUCH)
         {
-            Collidable col = owner.GetOperable<Collidable>();
+            Collidable col = _owner.GetOperable<Collidable>();
             GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
 
             isBounced = true;
@@ -98,7 +98,7 @@ public abstract class Movable : Operable
         else if (bounceBy == BounceBy.ALL ||
             bounceBy == BounceBy.BOUNDARY_OUT)
         {
-            Collidable col = owner.GetOperable<Collidable>();
+            Collidable col = _owner.GetOperable<Collidable>();
             GameManager.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
             isBounced = true;
@@ -126,7 +126,7 @@ public abstract class Movable : Operable
             bounceBy == BounceBy.ALLY ||
             bounceBy == BounceBy.ENEMY)
         {
-            if(owner.TryGetOperable(out Collidable col))
+            if(_owner.TryGetOperable(out Collidable col))
             {
                 Unit.Relation targetRelation = Unit.Relation.NONE;
                 if (bounceBy == BounceBy.UNIT)
@@ -141,7 +141,7 @@ public abstract class Movable : Operable
                 if (colTarget != null)
                 {
                     isBounced = true;
-                    targetDir = VEasyCalculator.GetDirection(owner.transform.position, targetPos);
+                    targetDir = VEasyCalculator.GetDirection(_owner.transform.position, targetPos);
                 }
             }
         }
@@ -151,17 +151,17 @@ public abstract class Movable : Operable
             switch (bounceTo)
             {
                 case BounceTo.TARGET:
-                    owner._moveDirection = targetDir;
+                    _owner._moveDirection = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    owner._moveDirection += 180f;
+                    _owner._moveDirection += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    owner._moveDirection = VEasyCalculator.GetReflectedDirection(owner._moveDirection, targetDir);
+                    _owner._moveDirection = VEasyCalculator.GetReflectedDirection(_owner._moveDirection, targetDir);
                     break;
                 case BounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        owner._moveDirection, 1f);
+                        _owner._moveDirection, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
                         targetDir, 1f);
 
@@ -170,11 +170,11 @@ public abstract class Movable : Operable
                     Vector2 escapeVector = VEasyCalculator.GetRotatedPosition(
                         targetDir + 180f, inner * speed * Time.fixedDeltaTime);
 
-                    owner.transform.position = (Vector2)owner.transform.position + escapeVector;
+                    _owner.transform.position = (Vector2)_owner.transform.position + escapeVector;
                     // TODO 최적화 및 벽에서 달달달 안하게
                     break;
                 case BounceTo.DESTROY:
-                    Destroy(owner.gameObject);
+                    Destroy(_owner.gameObject);
                     break;
             }
         }

@@ -27,7 +27,7 @@ public class PatternFireable : Operable
 
     private void FixedUpdate()
     {
-        if (state.State)
+        if (_state.State)
         {
             if(phasePatternsDic.TryGetValue(phase, out List<Pattern> patterns))
             {

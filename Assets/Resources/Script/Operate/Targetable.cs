@@ -17,12 +17,12 @@ public class Targetable : Operable
 
     private void FixedUpdate()
     {
-        if (state == false) return;
+        if (_state == false) return;
 
         if (enableTargetUpdate) TargetUpdate();
 
         if (target != null)
-            owner._targetDirection = VEasyCalculator.GetDirection(owner, target);
+            _owner._targetDirection = VEasyCalculator.GetDirection(_owner, target);
     }
 
     //
@@ -43,7 +43,7 @@ public class Targetable : Operable
     {
         foreach (var target in targetList)
         {
-            if (target._force == owner._force)
+            if (target._force == _owner._force)
             {
                 targetList.Remove(target);
             }
@@ -57,7 +57,7 @@ public class Targetable : Operable
 
         foreach (var target in targetList)
         {
-            float sqrDistance = VEasyCalculator.GetSqrDistance(owner, target);
+            float sqrDistance = VEasyCalculator.GetSqrDistance(_owner, target);
 
             if (sqrDistance > range * range)
             {
@@ -74,7 +74,7 @@ public class Targetable : Operable
 
         foreach (var target in targetList)
         {
-            float distance = VEasyCalculator.GetSqrDistance(owner, target);
+            float distance = VEasyCalculator.GetSqrDistance(_owner, target);
 
             if (distance < minDistance)
             {

@@ -134,7 +134,7 @@ public class Actor : MyObject
     {
         if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            operableList = new List<T>(operables.Select(x => x as T));
+            operableList = operables.Select(x => x as T).ToList();
             return true;
         }
 
@@ -146,7 +146,7 @@ public class Actor : MyObject
     {
         if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            return new List<T>(operables.Select(x => x as T));
+            return operables.Select(x => x as T).ToList();
         }
         
         return null;
@@ -155,7 +155,7 @@ public class Actor : MyObject
     public void SetOperablesState(bool state)
     {
         _operableListDic.Values.ToList().ForEach(
-            ol => ol.ForEach(o => o.state.SetStateForce(state)));
+            ol => ol.ForEach(o => o._state.SetStateForce(state)));
     }
 
     //
