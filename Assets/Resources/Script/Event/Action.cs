@@ -62,7 +62,7 @@ public class ActionDirectionToMouse : Action
     protected override void ActionProcess(Trigger trigger)
     {
         Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
-        target.targetDirection = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
+        target._targetDirection = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
     }
 }
 
@@ -80,7 +80,7 @@ public class ActionDirectionToTarget : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        from.targetDirection = VEasyCalculator.GetDirection(from, to);
+        from._targetDirection = VEasyCalculator.GetDirection(from, to);
     }
 }
 
@@ -259,12 +259,12 @@ public class ActionKnockback : Action
             TriggerCollision triggerCol = trigger as TriggerCollision;
             if (triggerCol.target != null)
             {
-                target.moveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
+                target._moveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
             }
         }
         else
         {
-            target.moveDirection += 180f;
+            target._moveDirection += 180f;
         }
 
         GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
@@ -278,10 +278,10 @@ public class ActionKnockback : Action
             foreach (var move in moves)
                 move.state.SetState(Multistat.StateType.KNOCKBACK, true);
 
-        Actor.RotateTo originRotateTo = target.rotateTo;
+        Actor.RotateTo originRotateTo = target._rotateTo;
 
         MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
-        target.rotateTo = Actor.RotateTo.NONE;
+        target._rotateTo = Actor.RotateTo.NONE;
 
         float currentSpeed = speed;
 
@@ -293,7 +293,7 @@ public class ActionKnockback : Action
             yield return new WaitForFixedUpdate();
         }
 
-        target.rotateTo = originRotateTo;
+        target._rotateTo = originRotateTo;
         knockbackMove.speed = 0f;
 
         GameObject.Destroy(knockbackMove);
@@ -414,7 +414,7 @@ public class ActionCreateActor : Action
         if (isMovingActor)
         {
             Movable move = actor.GetOperable<Movable>();
-            move.owner.moveDirection = direction;
+            move.owner._moveDirection = direction;
             move.speed = speed;
         }
     }
@@ -484,7 +484,7 @@ public class ActionDestroyActor : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        target.willDestroy = true;
+        target._willDestroy = true;
     }
 }
 

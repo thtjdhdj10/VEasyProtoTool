@@ -1,22 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Actor : MyObject
 {
-    public Force force = Force.NONE;
+    public Force _force = Force.NONE;
 
-    public bool willDestroy = false; // 바로 삭제하면 충돌처리할때 문제됨
+    public bool _willDestroy = false; // 바로 삭제하면 충돌처리할때 문제됨
 
-    public Dictionary<System.Type, List<Operable>> operableListDic
-        = new Dictionary<System.Type, List<Operable>>();
+    public Dictionary<Type, List<Operable>> _operableListDic
+        = new Dictionary<Type, List<Operable>>();
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public float moveDirection;
-    public float targetDirection;
+    public float _moveDirection;
+    public float _targetDirection;
 
-    public RotateTo rotateTo = RotateTo.TARGET;
+    public RotateTo _rotateTo = RotateTo.TARGET;
 
     //
 
@@ -33,7 +35,7 @@ public class Actor : MyObject
         ALLY,
         ENEMY,
 
-        ALLY_OR_ENEMY,
+        NEUTRAL,
     }
 
     public enum RotateTo
@@ -55,25 +57,22 @@ public class Actor : MyObject
 
     //
 
+    public static void DoNothing() { }
     public delegate void AwakeDelegate();
-    public AwakeDelegate awakeDelegate = new AwakeDelegate(AwakeCallback);
-    public static void AwakeCallback() { }
+    public AwakeDelegate awakeDelegate = new AwakeDelegate(DoNothing);
 
     public delegate void OnDestroyDelegate();
-    public OnDestroyDelegate onDestroyDelegate = new OnDestroyDelegate(OnDestroyCallback);
-    public static void OnDestroyCallback() { }
+    public OnDestroyDelegate onDestroyDelegate = new OnDestroyDelegate(DoNothing);
 
     public delegate void InitDelegate();
-    public InitDelegate initDelegate = new InitDelegate(InitCallback);
-    public static void InitCallback() { }
+    public InitDelegate initDelegate = new InitDelegate(DoNothing);
 
     public delegate void FixedUpdateDelegate();
-    public FixedUpdateDelegate fixedUpdateDelegate = new FixedUpdateDelegate(fixedUpdateCallback);
-    public static void fixedUpdateCallback() { }
+    public FixedUpdateDelegate fixedUpdateDelegate = new FixedUpdateDelegate(DoNothing);
 
+    public static void DoNothing(Actor actor) { }
     public delegate void OnActorAddedDelegate(Actor actor);
-    public static OnActorAddedDelegate onActorAddedDelegate = new OnActorAddedDelegate(OnActorAdded);
-    public static void OnActorAdded(Actor actor) { }
+    public static OnActorAddedDelegate onActorAddedDelegate = new OnActorAddedDelegate(DoNothing);
 
     //
 
@@ -99,7 +98,7 @@ public class Actor : MyObject
 
         SetSpriteAngle();
 
-        if (willDestroy) Destroy(gameObject);
+        if (_willDestroy) Destroy(gameObject);
     }
 
     public virtual void Init()
@@ -111,7 +110,7 @@ public class Actor : MyObject
 
     public bool TryGetOperable<T>(out T operable) where T : Operable
     {
-        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
             operable = operables[0] as T;
             return true;
@@ -123,7 +122,7 @@ public class Actor : MyObject
 
     public T GetOperable<T>() where T : Operable
     {
-        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
             return operables[0] as T;
         }
@@ -133,14 +132,9 @@ public class Actor : MyObject
 
     public bool TryGetOperableList<T>(out List<T> operableList) where T : Operable
     {
-        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            List<T> retList = new List<T>();
-            foreach (var o in operables)
-            {
-                retList.Add(o as T);
-            }
-            operableList = retList;
+            operableList = new List<T>(operables.Select(x => x as T));
             return true;
         }
 
@@ -150,27 +144,18 @@ public class Actor : MyObject
 
     public List<T> GetOperableList<T>() where T : Operable
     {
-        if (operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
+        if (_operableListDic.TryGetValue(typeof(T), out List<Operable> operables))
         {
-            List<T> retList = new List<T>();
-            foreach (var o in operables)
-            {
-                retList.Add(o as T);
-            }
-            return retList;
+            return new List<T>(operables.Select(x => x as T));
         }
-        else return null;
+        
+        return null;
     }
 
     public void SetOperablesState(bool state)
     {
-        foreach (var type in operableListDic.Keys)
-        {
-            foreach (var o in operableListDic[type])
-            {
-                o.state.SetStateForce(state);
-            }
-        }
+        _operableListDic.Values.ToList().ForEach(
+            ol => ol.ForEach(o => o.state.SetStateForce(state)));
     }
 
     //
@@ -178,13 +163,13 @@ public class Actor : MyObject
     public virtual void SetSpriteAngle()
     {
         Vector3 rot = transform.eulerAngles;
-        switch (rotateTo)
+        switch (_rotateTo)
         {
             case RotateTo.TARGET:
-                rot.z = targetDirection;
+                rot.z = _targetDirection;
                 break;
             case RotateTo.MOVE:
-                rot.z = moveDirection;
+                rot.z = _moveDirection;
                 break;
         }
         transform.eulerAngles = rot;

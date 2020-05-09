@@ -29,12 +29,12 @@ public abstract class Operable : MonoBehaviour
         }
         else allOperableListDic.Add(type, new List<Operable>() { this });
 
-        if (owner.operableListDic.TryGetValue(type, out List<Operable> ownerOperableList))
+        if (owner._operableListDic.TryGetValue(type, out List<Operable> ownerOperableList))
         {
             if (ownerOperableList != null) ownerOperableList.Add(this);
-            else owner.operableListDic[type] = new List<Operable>() { this };
+            else owner._operableListDic[type] = new List<Operable>() { this };
         }
-        else owner.operableListDic.Add(type, new List<Operable>() { this });
+        else owner._operableListDic.Add(type, new List<Operable>() { this });
 
         state.updateDelegate += HandleUpdateState;
     }
@@ -43,7 +43,7 @@ public abstract class Operable : MonoBehaviour
     {
         System.Type type = GetOperableOriginType();
 
-        owner.operableListDic[type].Remove(this);
+        owner._operableListDic[type].Remove(this);
         allOperableListDic[type].Remove(this);
     }
 

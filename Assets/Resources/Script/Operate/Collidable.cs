@@ -92,7 +92,7 @@ public class Collidable : Operable
                 target.isCollisionInFrame == true)
                 continue;
 
-            Unit.Relation relation = Unit.GetRelation(owner.force, target.owner.force);
+            Unit.Relation relation = Unit.GetRelation(owner._force, target.owner._force);
             if (targetRelation != relation)
                 continue;
 

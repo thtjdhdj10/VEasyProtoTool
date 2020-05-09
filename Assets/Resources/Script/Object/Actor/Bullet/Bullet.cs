@@ -17,9 +17,9 @@ public class Bullet : Actor
 
     protected virtual void SetDefaultBulletSetting()
     {
-        force = owner.force;
+        _force = owner._force;
         System.Type targetType;
-        if (force == Force.A) targetType = typeof(Enemy);
+        if (_force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);

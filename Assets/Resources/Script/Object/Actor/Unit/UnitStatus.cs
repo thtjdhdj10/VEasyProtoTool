@@ -19,7 +19,7 @@ public class UnitStatus : MonoBehaviour
             currentHp = value;
             if (currentHp <= 0)
             {
-                owner.willDestroy = true;
+                owner._willDestroy = true;
             }
 
             vital = GetVitalSign();

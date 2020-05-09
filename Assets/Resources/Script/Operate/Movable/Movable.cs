@@ -130,7 +130,7 @@ public abstract class Movable : Operable
             {
                 Unit.Relation targetRelation = Unit.Relation.NONE;
                 if (bounceBy == BounceBy.UNIT)
-                    targetRelation = Unit.Relation.ALLY_OR_ENEMY;
+                    targetRelation = Unit.Relation.NEUTRAL;
                 else if (bounceBy == BounceBy.ALLY)
                     targetRelation = Unit.Relation.ALLY;
                 else if (bounceBy == BounceBy.ENEMY)
@@ -151,17 +151,17 @@ public abstract class Movable : Operable
             switch (bounceTo)
             {
                 case BounceTo.TARGET:
-                    owner.moveDirection = targetDir;
+                    owner._moveDirection = targetDir;
                     break;
                 case BounceTo.REVERSE:
-                    owner.moveDirection += 180f;
+                    owner._moveDirection += 180f;
                     break;
                 case BounceTo.REFLECT:
-                    owner.moveDirection = VEasyCalculator.GetReflectedDirection(owner.moveDirection, targetDir);
+                    owner._moveDirection = VEasyCalculator.GetReflectedDirection(owner._moveDirection, targetDir);
                     break;
                 case BounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        owner.moveDirection, 1f);
+                        owner._moveDirection, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
                         targetDir, 1f);
 

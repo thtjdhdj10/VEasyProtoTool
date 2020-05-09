@@ -8,7 +8,7 @@ public class MovableStraight : Movable
     {
         float moveDistance = speed * Time.fixedDeltaTime;
 
-        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(owner.moveDirection, moveDistance);
+        Vector2 moveVector = VEasyCalculator.GetRotatedPosition(owner._moveDirection, moveDistance);
         Vector2 v2Pos = owner.transform.position;
         owner.transform.position = v2Pos + moveVector;
     }

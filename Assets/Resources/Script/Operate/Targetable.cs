@@ -22,7 +22,7 @@ public class Targetable : Operable
         if (enableTargetUpdate) TargetUpdate();
 
         if (target != null)
-            owner.targetDirection = VEasyCalculator.GetDirection(owner, target);
+            owner._targetDirection = VEasyCalculator.GetDirection(owner, target);
     }
 
     //
@@ -43,7 +43,7 @@ public class Targetable : Operable
     {
         foreach (var target in targetList)
         {
-            if (target.force == owner.force)
+            if (target._force == owner._force)
             {
                 targetList.Remove(target);
             }
