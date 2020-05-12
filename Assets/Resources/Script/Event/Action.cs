@@ -31,12 +31,12 @@ public abstract class Action
     }
 }
 
-public class ActionSetConditionBool : Action
+public class ActSetConditionBool : Action
 {
     public ConditionBool target;
     public bool state;
 
-    public ActionSetConditionBool(Trigger trigger, ConditionBool _target, bool _state)
+    public ActSetConditionBool(Trigger trigger, ConditionBool _target, bool _state)
         : base(trigger)
     {
         state = _state;
@@ -49,11 +49,11 @@ public class ActionSetConditionBool : Action
     }
 }
 
-public class ActionDirectionToMouse : Action
+public class ActDirectionToMouse : Action
 {
     public Actor target;
     
-    public ActionDirectionToMouse(Trigger trigger, Actor _target)
+    public ActDirectionToMouse(Trigger trigger, Actor _target)
         : base(trigger)
     {
         target = _target;
@@ -66,12 +66,12 @@ public class ActionDirectionToMouse : Action
     }
 }
 
-public class ActionDirectionToTarget : Action
+public class ActDirectionToTarget : Action
 {
     public Actor from;
     public Actor to;
 
-    public ActionDirectionToTarget(Trigger trigger, Actor _from, Actor _to)
+    public ActDirectionToTarget(Trigger trigger, Actor _from, Actor _to)
         :base(trigger)
     {
         from = _from;
@@ -84,12 +84,12 @@ public class ActionDirectionToTarget : Action
     }
 }
 
-public class ActionSetAnimatorSpeed : Action
+public class ActSetAnimatorSpeed : Action
 {
     public GameObject target;
     public float speed;
 
-    public ActionSetAnimatorSpeed(Trigger trigger, GameObject _target, float _speed)
+    public ActSetAnimatorSpeed(Trigger trigger, GameObject _target, float _speed)
         :base(trigger)
     {
         target = _target;
@@ -105,12 +105,12 @@ public class ActionSetAnimatorSpeed : Action
     }
 }
 
-public class ActionSetComponent<T> : Action where T : Component
+public class ActSetComponent<T> : Action where T : Component
 {
     public GameObject target;
     public bool isAdd;
 
-    public ActionSetComponent(Trigger trigger, GameObject _target, bool _isAdd)
+    public ActSetComponent(Trigger trigger, GameObject _target, bool _isAdd)
         : base(trigger)
     {
         target = _target;
@@ -130,12 +130,12 @@ public class ActionSetComponent<T> : Action where T : Component
     }
 }
 
-public class ActionSetController : Action
+public class ActSetController : Action
 {
     public GameObject target;
     public RuntimeAnimatorController controller;
 
-    public ActionSetController(Trigger trigger, GameObject _target, RuntimeAnimatorController _controller)
+    public ActSetController(Trigger trigger, GameObject _target, RuntimeAnimatorController _controller)
         :base(trigger)
     {
         target = _target;
@@ -151,12 +151,12 @@ public class ActionSetController : Action
     }
 }
 
-public class ActionSetSprite : Action
+public class ActSetSprite : Action
 {
     public SpriteRenderer spriteRenderer;
     public Sprite sprite;
 
-    public ActionSetSprite(Trigger trigger, SpriteRenderer _spriteRenderer, Sprite _sprite)
+    public ActSetSprite(Trigger trigger, SpriteRenderer _spriteRenderer, Sprite _sprite)
         :base(trigger)
     {
         spriteRenderer = _spriteRenderer;
@@ -169,12 +169,12 @@ public class ActionSetSprite : Action
     }
 }
 
-public class ActionSetSpriteColor : Action
+public class ActSetSpriteColor : Action
 {
     public SpriteRenderer sprite;
     public Color color;
 
-    public ActionSetSpriteColor(Trigger trigger, SpriteRenderer _sprite, Color _color)
+    public ActSetSpriteColor(Trigger trigger, SpriteRenderer _sprite, Color _color)
         : base(trigger)
     {
         sprite = _sprite;
@@ -187,11 +187,11 @@ public class ActionSetSpriteColor : Action
     }
 }
 
-public class ActionInitTrigger : Action
+public class ActInitTrigger : Action
 {
     public Trigger target;
 
-    public ActionInitTrigger(Trigger trigger, Trigger _target)
+    public ActInitTrigger(Trigger trigger, Trigger _target)
         : base(trigger)
     {
         target = _target;
@@ -203,11 +203,11 @@ public class ActionInitTrigger : Action
     }
 }
 
-public class ActionSetSpeed : Action
+public class ActSetSpeed : Action
 {
     public float speed;
 
-    public ActionSetSpeed(Trigger trigger, float _speed)
+    public ActSetSpeed(Trigger trigger, float _speed)
         : base(trigger)
     {
         speed = _speed;
@@ -222,11 +222,11 @@ public class ActionSetSpeed : Action
     }
 }
 
-public class ActionPrintLog : Action
+public class ActPrintLog : Action
 {
     public string log;
 
-    public ActionPrintLog(Trigger trigger, string _log)
+    public ActPrintLog(Trigger trigger, string _log)
         : base(trigger)
     {
         log = _log;
@@ -238,13 +238,13 @@ public class ActionPrintLog : Action
     }
 }
 
-public class ActionKnockback : Action
+public class ActKnockback : Action
 {
     public Actor target;
     public float speed;
     public float deceleration; // 초당 속도 감소
 
-    public ActionKnockback(Trigger trigger, Actor _target, float _speed, float _deceleration)
+    public ActKnockback(Trigger trigger, Actor _target, float _speed, float _deceleration)
         : base(trigger)
     {
         target = _target;
@@ -254,9 +254,9 @@ public class ActionKnockback : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        if (trigger is TriggerCollision)
+        if (trigger is TrgCollision)
         {
-            TriggerCollision triggerCol = trigger as TriggerCollision;
+            TrgCollision triggerCol = trigger as TrgCollision;
             if (triggerCol.target != null)
             {
                 target.moveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
@@ -304,11 +304,11 @@ public class ActionKnockback : Action
     }
 }
 
-public class ActionActivatePattern : Action
+public class ActActivatePattern : Action
 {
     public Pattern pattern;
 
-    public ActionActivatePattern(Trigger trigger, Pattern _pattern)
+    public ActActivatePattern(Trigger trigger, Pattern _pattern)
         : base(trigger)
     {
         pattern = _pattern;
@@ -320,12 +320,12 @@ public class ActionActivatePattern : Action
     }
 }
 
-public class ActionActiveOperable<T> : Action where T : Operable
+public class ActActiveOperable<T> : Action where T : Operable
 {
     protected bool doActive;
     protected Multistat.StateType stateType;
 
-    public ActionActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
+    public ActActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
         : base(trigger)
     {
         stateType = _type;
@@ -339,9 +339,9 @@ public class ActionActiveOperable<T> : Action where T : Operable
     }
 }
 
-public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : Operable
+public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
 {
-    public ActionActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
+    public ActActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
         : base(trigger, _type, _doActive)
     {
 
@@ -352,8 +352,8 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
         if (trigger == null) return;
 
         Actor target = trigger.owner;
-        if (trigger is TriggerCollision)
-            target = (trigger as TriggerCollision).target;
+        if (trigger is TrgCollision)
+            target = (trigger as TrgCollision).target;
 
         if (target == null) return;
 
@@ -362,9 +362,9 @@ public class ActionActiveTargetOperable<T> : ActionActiveOperable<T> where T : O
     }
 }
 
-public class ActionAddOperable : Action
+public class ActAddOperable : Action
 {
-    public ActionAddOperable(Trigger trigger)
+    public ActAddOperable(Trigger trigger)
         : base(trigger)
     {
 
@@ -377,7 +377,7 @@ public class ActionAddOperable : Action
     }
 }
 
-public class ActionCreateActor : Action
+public class ActCreateActor : Action
 {
     public Actor target;
     public Vector2 pos;
@@ -385,7 +385,7 @@ public class ActionCreateActor : Action
     public float direction;
     public float speed;
 
-    public ActionCreateActor(Trigger trigger, Actor _target, Vector2 _pos)
+    public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos)
         : base(trigger)
     {
         target = _target;
@@ -394,7 +394,7 @@ public class ActionCreateActor : Action
         isMovingActor = false;
     }
 
-    public ActionCreateActor(Trigger trigger, Actor _target, Vector2 _pos, float _direction, float _speed)
+    public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos, float _direction, float _speed)
         : base(trigger)
     {
         target = _target;
@@ -420,11 +420,11 @@ public class ActionCreateActor : Action
     }
 }
 
-public class ActionDealDamage : Action
+public class ActDealDamage : Action
 {
     public int damage;
 
-    public ActionDealDamage(Trigger trigger, int _damage)
+    public ActDealDamage(Trigger trigger, int _damage)
         : base(trigger)
     {
         damage = _damage;
@@ -432,7 +432,7 @@ public class ActionDealDamage : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        TriggerCollision trgCol = trigger as TriggerCollision;
+        TrgCollision trgCol = trigger as TrgCollision;
         if (trgCol == null) return;
 
         if (trgCol.target == null) return;
@@ -449,11 +449,11 @@ public class ActionDealDamage : Action
     }
 }
 
-public class ActionGetDamage : Action
+public class ActGetDamage : Action
 {
     public int damage;
 
-    public ActionGetDamage(Trigger trigger, int _damage)
+    public ActGetDamage(Trigger trigger, int _damage)
         : base(trigger)
     {
         damage = _damage;
@@ -472,11 +472,11 @@ public class ActionGetDamage : Action
     }
 }
 
-public class ActionDestroyActor : Action
+public class ActDestroyActor : Action
 {
     public Actor target;
 
-    public ActionDestroyActor(Trigger trigger, Actor _target)
+    public ActDestroyActor(Trigger trigger, Actor _target)
         : base(trigger)
     {
         target = _target;
@@ -489,7 +489,7 @@ public class ActionDestroyActor : Action
 }
 
 // TriggerKeyInputs 로만 활용이 가능한 액션
-public class ActionVectorMoveActor : Action
+public class ActVectorMoveActor : Action
 {
     public override void Init()
     {
@@ -505,7 +505,7 @@ public class ActionVectorMoveActor : Action
     Dictionary<GameManager.Direction, GameManager.Direction> dirRevdirDic =
         new Dictionary<GameManager.Direction, GameManager.Direction>();
 
-    public ActionVectorMoveActor(Trigger trigger, float _speed)
+    public ActVectorMoveActor(Trigger trigger, float _speed)
         : base(trigger)
     {
         speed = _speed;
@@ -523,10 +523,10 @@ public class ActionVectorMoveActor : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        if (trigger.GetType() != typeof(TriggerKeyInputs))
+        if (trigger.GetType() != typeof(TrgKeyInputs))
             return;
 
-        TriggerKeyInputs triggerKeyInputs = (TriggerKeyInputs)trigger;
+        TrgKeyInputs triggerKeyInputs = (TrgKeyInputs)trigger;
 
         UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
 

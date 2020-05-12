@@ -2,10 +2,8 @@
 using System.Collections;
 
 // TODO 카메라 쉐이크 지원
-
 public class CameraManager : MonoBehaviour
 {
-
     public static CameraManager manager;
 
     public float widthLogicalSize;

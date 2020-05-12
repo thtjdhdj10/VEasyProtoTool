@@ -1,28 +1,56 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ResourcesManager<T> where T : Object
-{
-    public static Dictionary<ResourceName, T> resourceDic
-        = new Dictionary<ResourceName, T>();
+using UObject = UnityEngine.Object;
+using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type>;
 
-    public List<T> loadedResourceList = new List<T>();
+public class ResourcesManager
+{
+    private static Dictionary<NameTypePair, UObject> _resNameObjDic =
+        new Dictionary<NameTypePair, UObject>();
+
+    private List<UObject> _loadedResDic = new List<UObject>();
 
     public const string RESOURCES = "Resources";
-    public static string MIDDLE_PATH = "";
-    public static string EXTENSION = "";
+    public static Type[] RESOURCE_TYPE_ARR =  {
+        typeof(GameObject),
+        typeof(Sprite),
+        typeof(RuntimeAnimatorController),
+    };
 
-    public static T LoadResource(ResourceName name)
+    public static string ResourceTypeToExtension(Type type)
     {
-        if (resourceDic.ContainsKey(name))
-            return resourceDic[name];
+        if (type == typeof(GameObject))
+            return "*.prefab";
+        if (type == typeof(Sprite))
+            return "*.png";
+        if (type == typeof(RuntimeAnimatorController))
+            return "*.controller";
+
+        return "";
+    }
+
+    public static T LoadResource<T>(ResName resourceType) where T : UObject
+    {
+        return LoadResource<T>(resourceType.ToString());
+    }
+
+    public static T LoadResource<T>(string resourceName) where T : UObject
+    {
+        NameTypePair nameType = new NameTypePair(resourceName, typeof(GameObject));
+        if (_resNameObjDic.ContainsKey(nameType))
+            return _resNameObjDic[nameType] as T;
+
         return default;
     }
 
     // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
     // 모든 prefab 다 할 필요는 없고, 필요할 때 마다 추가
-    public enum ResourceName
+    public enum ResName
     {
         NONE = 0,
 
@@ -60,66 +88,37 @@ public class ResourcesManager<T> where T : Object
         Player_Damaged_Controller,
     }
 
-    public enum Option
-    {
-        NONE = 0,
-        FORECE_PLAYER,
-        FORECE_ENEMY,
-    }
-
     public ResourcesManager()
     {
-        // prefab
-        if(typeof(T) == typeof(GameObject))
-        {
-            MIDDLE_PATH = "Prefabs";
-            EXTENSION = "*.prefab";
-        }
-        else if(typeof(T) == typeof(Sprite))
-        {
-            MIDDLE_PATH = "Sprite";
-            EXTENSION = "*.png";
-        }
-        else if(typeof(T) == typeof(RuntimeAnimatorController))
-        {
-            MIDDLE_PATH = "Sprite/Anim";
-            EXTENSION = "*.controller";
-        }
-
         LoadResources();
     }
 
     private void LoadResources()
     {
-        loadedResourceList.Clear();
+        _loadedResDic.Clear();
 
-        string fullPath = Application.dataPath + "/" +
-            RESOURCES + "/" +
-            MIDDLE_PATH + "/";
+        string dataPath = Application.dataPath;
 
-        List<string> resourceNameWithPathList = new List<string>(System.IO.Directory.GetFiles(fullPath, EXTENSION));
-
-        // Directory 이하의 Directory 들을 가져옴
-        string[] targetDirectoryWithPath = System.IO.Directory.GetDirectories(fullPath);
-        for (int i = 0; i < targetDirectoryWithPath.Length; ++i)
+        foreach (var resType in RESOURCE_TYPE_ARR)
         {
-            resourceNameWithPathList.AddRange(new List<string>(
-                System.IO.Directory.GetFiles(targetDirectoryWithPath[i], EXTENSION)));
-        }
+            string[] subDirectories = Directory.GetDirectories(
+                dataPath + "/" + RESOURCES, "*", SearchOption.AllDirectories);
 
-        for (int j = 0; j < resourceNameWithPathList.Count; ++j)
-        {
-            // resource.load 를 위한 이름
-            string resourceName = GetResourceName(resourceNameWithPathList[j]);
+            List<string> resNameWithPathList = new List<string>();
 
-            ResourceName resourceType = ResourceName.NONE;
-            if (System.Enum.TryParse(resourceName, out resourceType))
+            string extension = ResourceTypeToExtension(resType);
+
+            // 하위 경로의 파일명 로딩
+            subDirectories.ToList().ForEach(subPath =>
+                resNameWithPathList.AddRange(Directory.GetFiles(subPath, extension)));
+
+            resNameWithPathList.ForEach(resourcePath =>
             {
-                string resourceLoadName = GetLoadingName(resourceNameWithPathList[j]);
-                T r = Resources.Load<T>(resourceLoadName);
-                resourceDic.Add(resourceType, r);
-                loadedResourceList.Add(r);
-            }
+                UObject resource = Resources.Load<UObject>(GetLoadingName(resourcePath));
+                _resNameObjDic.Add(new NameTypePair(
+                    GetResourceName(resourcePath), resType), resource);
+                _loadedResDic.Add(resource);
+            });
         }
     }
 
@@ -131,24 +130,16 @@ public class ResourcesManager<T> where T : Object
 
     private string GetLoadingName(string fullName)
     {
-        string[] resourceName = fullName.Split('/', '\\');
+        string[] resourceNameArr = fullName.Split('/', '\\');
 
         string loadingName = "";
 
         // Resouces 하위의 상대경로 + 파일이름( 확장자명 제외 )
-
-        bool b = false;
-        for (int i = 0; i < resourceName.Length; ++i)
+        bool isAfterResources = false;
+        foreach (var resName in resourceNameArr)
         {
-            if (resourceName[i] == RESOURCES)
-            {
-                b = true;
-                continue;
-            }
-            if (b)
-            {
-                loadingName += resourceName[i] + "/";
-            }
+            if (isAfterResources) loadingName += resName + "/";
+            if (resName == RESOURCES) isAfterResources = true;
         }
         return loadingName.Split('.')[0];
     }

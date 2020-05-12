@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
     public static bool isQuitting = false;
-    private ResourcesManager<GameObject> prefabmanager;
-    private ResourcesManager<Sprite> prefabManager;
-    private ResourcesManager<RuntimeAnimatorController> controllerManager;
+    private ResourcesManager _resManager;
 
     // 순서를 바꾸지 말 것.
     // index 로 사용할 수 있도록 NONE 을 맨 뒤로 했음
@@ -29,19 +28,12 @@ public class GameManager : MonoBehaviour
     {
         gm = this;
 
-        prefabmanager = new ResourcesManager<GameObject>();
-        prefabManager = new ResourcesManager<Sprite>();
-        controllerManager = new ResourcesManager<RuntimeAnimatorController>();
+        _resManager = new ResourcesManager();
     }
 
     private void FixedUpdate()
     {
-        if (Operable.GetOperableList<Collidable>() != null)
-            foreach (var o in Operable.GetOperableList<Collidable>())
-            {
-                Collidable col = o as Collidable;
-                if (col != null) col.isCollisionInFrame = false;
-            }
+        Operable.GetOperableList<Collidable>()?.Select(o => o.isCollisionInFrame = false);
     }
 
     //private void Update()
@@ -90,8 +82,6 @@ public class GameManager : MonoBehaviour
         //    ii[2] = 4;
         //    Debug.Log(CustomRandGen.Rand(ii));
         //}
-
-
     }
 
     private void OnApplicationQuit()

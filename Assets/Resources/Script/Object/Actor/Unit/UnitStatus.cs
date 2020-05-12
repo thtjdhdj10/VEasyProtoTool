@@ -46,7 +46,6 @@ public class UnitStatus : MonoBehaviour
     void Awake()
     {
         // TODO 에디터에서 찾게 수정
-
         if(owner == null) owner = gameObject.GetComponent<Unit>();
         owner.unitStatus = this;
 
@@ -110,6 +109,4 @@ public class UnitStatus : MonoBehaviour
             return VitalSign.YELLOW;
         return VitalSign.WHITE;
     }
-
-
 }

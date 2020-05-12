@@ -22,8 +22,8 @@ public class Bullet : Actor
         if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
-        TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
-        new ActionDealDamage(trgCol, damage);
-        new ActionDestroyActor(trgCol, this);
+        TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
+        new ActDealDamage(trgCol, damage);
+        new ActDestroyActor(trgCol, this);
     }
 }

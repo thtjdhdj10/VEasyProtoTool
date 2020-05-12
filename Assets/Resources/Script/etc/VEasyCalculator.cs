@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class VEasyCalculator
 {
@@ -13,16 +14,10 @@ public class VEasyCalculator
 
     public static bool TryGetKey<K, V>(Dictionary<K, V> instance, V value, out K key)
     {
-        foreach (var entry in instance)
-        {
-            if (!entry.Value.Equals(value))
-            {
-                continue;
-            }
-            key = entry.Key;
+        key = instance.Keys.FirstOrDefault(x => x.Equals(value));
+
+        if (instance.Keys.Any(x => x.Equals(value)))
             return true;
-        }
-        key = default(K);
         return false;
     }
 

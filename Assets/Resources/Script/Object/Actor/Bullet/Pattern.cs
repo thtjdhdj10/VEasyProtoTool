@@ -54,7 +54,7 @@ public abstract class Pattern
     }
 }
 
-public class PatternFire : Pattern
+public class PtnFire : Pattern
 {
     public Actor firePrefab;
 
@@ -71,8 +71,7 @@ public class PatternFire : Pattern
     public float term = 0f;
     public int distnaceFromRoot = 0;
 
-    public PatternFire(Actor _owner)
-        : base(_owner) { }
+    public PtnFire(Actor _owner) : base(_owner) { }
 
     public virtual void PreFireProcess() { }
 
@@ -117,12 +116,11 @@ public class PatternFire : Pattern
 }
 
 // update 될 수 있는 owner 방향으로 발사
-public class PatternFireDirection : PatternFire
+public class PtnFireDirection : PtnFire
 {
     public Vector2 ownerPos;
 
-    public PatternFireDirection(Actor _owner)
-        : base(_owner) { }
+    public PtnFireDirection(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -131,18 +129,16 @@ public class PatternFireDirection : PatternFire
 }
 
 // update 될 수 있는 target 위치로 발사
-public class PatternFireTarget : PatternFire
+public class PtnFireTarget : PtnFire
 {
     public Actor target;
     public Vector2 targetPos;
 
-    public PatternFireTarget(Actor _owner)
-        : base(_owner) { }
+    public PtnFireTarget(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
-        if(target == null &&
-            owner != null)
+        if(target == null && owner != null)
             target = owner.GetOperable<Targetable>().target;
 
         if (target != null) targetPos = target.transform.position;
@@ -150,17 +146,15 @@ public class PatternFireTarget : PatternFire
     }
 }
 
-public class PatternFireTarget_AngleRandom : PatternFireTarget
+public class PtnFireTarget_AngleRandom : PtnFireTarget
 {
     public float angle = 360f;
 
-    public PatternFireTarget_AngleRandom(Actor _owner)
-        : base(_owner) { }
+    public PtnFireTarget_AngleRandom(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
-        if (target == null &&
-            owner != null)
+        if (target == null && owner != null)
             target = owner.GetOperable<Targetable>().target;
 
         if (target != null) targetPos = target.transform.position;
@@ -170,12 +164,11 @@ public class PatternFireTarget_AngleRandom : PatternFireTarget
     }
 }
 
-public class PatternFireTarget_RowRandom : PatternFireTarget
+public class PtnFireTarget_RowRandom : PtnFireTarget
 {
     public float length = 3f;
 
-    public PatternFireTarget_RowRandom(Actor _owner)
-        : base(_owner) { }
+    public PtnFireTarget_RowRandom(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -187,12 +180,11 @@ public class PatternFireTarget_RowRandom : PatternFireTarget
     }
 }
 
-public class PatternFireAngleRandom : PatternFire
+public class PtnFireAngleRandom : PtnFire
 {
     public float angle = 360f;
 
-    public PatternFireAngleRandom(Actor _owner)
-        : base(_owner) { }
+    public PtnFireAngleRandom(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -202,12 +194,11 @@ public class PatternFireAngleRandom : PatternFire
     }
 }
 
-public class PatternFireRowRandom : PatternFire
+public class PtnFireRowRandom : PtnFire
 {
     public float length = 3f;
 
-    public PatternFireRowRandom(Actor _owner)
-        : base(_owner) { }
+    public PtnFireRowRandom(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -218,12 +209,11 @@ public class PatternFireRowRandom : PatternFire
     }
 }
 
-public class PatternFireCircle : PatternFire
+public class PtnFireCircle : PtnFire
 {
     public bool isClockwise = false;
 
-    public PatternFireCircle(Actor _owner)
-        : base(_owner) { }
+    public PtnFireCircle(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -236,13 +226,12 @@ public class PatternFireCircle : PatternFire
 }
 
 // 샷건처럼 방사
-public class PatternFireAngle : PatternFire
+public class PtnFireAngle : PtnFire
 {
     public float angle = 120f;
     public bool isClockwise = false;
 
-    public PatternFireAngle(Actor _owner)
-        : base(_owner) { }
+    public PtnFireAngle(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -255,13 +244,12 @@ public class PatternFireAngle : PatternFire
 }
 
 // 일렬로 발사
-public class PatternFireRow : PatternFire
+public class PtnFireRow : PtnFire
 {
     public float length = 3f;
     public bool isLeftToRight = true;
 
-    public PatternFireRow(Actor _owner)
-        : base(_owner) { }
+    public PtnFireRow(Actor _owner) : base(_owner) { }
 
     public override void PreFireProcess()
     {
@@ -271,142 +259,5 @@ public class PatternFireRow : PatternFire
         if (!isLeftToRight) fireIndex = -fireIndex;
         float deltaDistance = length * fireIndex;
         deltaPos = VEasyCalculator.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
-    }
-}
-
-//
-
-// 보고있는 방향 +-60도로 난사
-public class Pattern_Slayer_1 : Pattern
-{
-    public List<Pattern> patternList = new List<Pattern>();
-
-    private Movable move;
-
-    public Pattern_Slayer_1(Unit _owner)
-        :base(_owner)
-    {
-        postDelay = 3f;
-
-        move = _owner.GetOperable<Movable>();
-
-        PatternFireTarget_AngleRandom pattern1 = new PatternFireTarget_AngleRandom(_owner);
-
-        GameObject go = ResourcesManager<GameObject>.LoadResource(
-            ResourcesManager<GameObject>.ResourceName.Bullet_Slayer_1);
-
-        Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
-        bullet.owner = _owner;
-
-        pattern1.owner = _owner;
-
-        pattern1.firePrefab = bullet;
-
-        float duration = 5f;
-
-        pattern1.count = 80;
-        pattern1.term = duration / pattern1.count;
-        pattern1.angle = 110f;
-
-        pattern1.posRoot = _owner;
-        pattern1.dirRoot = _owner;
-
-        patternList.Add(pattern1);
-
-        PatternFire[] pattern2 = new PatternFire[2];
-        for (int i = 0; i < 2; ++i)
-        {
-            pattern2[i] = new PatternFire(_owner);
-            pattern2[i].firePrefab = bullet;
-
-            pattern2[i].count = 30;
-            pattern2[i].term = duration / pattern2[i].count;
-            if (i == 0) pattern2[i].deltaDir = -60f;
-            else pattern2[i].deltaDir = 60f;
-
-            pattern2[i].posRoot = _owner;
-            pattern2[i].dirRoot = _owner;
-
-            patternList.Add(pattern2[i]);
-        }
-    }
-
-    public override IEnumerator Fire()
-    {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
-
-        GameManager.gm.StartCoroutine(patternList[0].Fire());
-        GameManager.gm.StartCoroutine(patternList[1].Fire());
-        yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
-    }
-
-    private Actor.RotateTo originRotateTo;
-    public override IEnumerator PostFire()
-    {
-        owner.rotateTo = originRotateTo;
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
-        yield break;
-    }
-
-    public override IEnumerator PreFire()
-    {
-        originRotateTo = owner.rotateTo;
-        owner.rotateTo = Actor.RotateTo.TARGET;
-        yield break;
-    }
-}
-
-// 전방향 난사
-public class Pattern_Slayer_2 : Pattern
-{
-    public List<Pattern> patternList = new List<Pattern>();
-
-    private const int count = 100;
-    private const float duration = 5f;
-    private const float term = duration / count;
-    private PatternFireCircle[] patterns = new PatternFireCircle[count];
-    private Movable move;
-
-    public Pattern_Slayer_2(Unit _owner)
-        :base(_owner)
-    {
-        postDelay = 3f;
-
-        move = _owner.GetOperable<Movable>();
-
-        GameObject go = ResourcesManager<GameObject>.LoadResource(
-            ResourcesManager<GameObject>.ResourceName.Bullet_Slayer_2);
-
-        for (int i = 0; i < count; ++i)
-        {
-            patterns[i] = new PatternFireCircle(_owner);
-
-            patterns[i].firePrefab = go.GetComponent<Bullet>();
-
-            patterns[i].count = 6;
-            patterns[i].term = 0f;
-
-            patterns[i].posRoot = _owner;
-            patterns[i].dirRoot = null;
-            patterns[i].direction = i * 2f;
-        }
-    }
-
-    public override IEnumerator Fire()
-    {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
-
-        for (int i = 0; i < count; ++i)
-        {
-            GameManager.gm.StartCoroutine(patterns[i].Fire());
-            if (i < count - 1)
-                yield return new WaitForSeconds(term);
-        }
-    }
-
-    public override IEnumerator PostFire()
-    {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
-        yield break;
     }
 }

@@ -13,12 +13,12 @@ public class Bullet_Paralyze : BulletStraight
         if (force == Force.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
-        TriggerCollision trgCol = new TriggerCollision(this, GetOperable<Collidable>(), targetType);
-        new ActionActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, true);
-        new ActionActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, false)
+        TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
+        new ActActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, true);
+        new ActActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, false)
         { delay = duration };
-        new ActionDealDamage(trgCol, damage);
-        new ActionDestroyActor(trgCol, this);
+        new ActDealDamage(trgCol, damage);
+        new ActDestroyActor(trgCol, this);
     }
 
 

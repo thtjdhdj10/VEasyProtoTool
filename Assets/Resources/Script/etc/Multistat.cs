@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+// StateType을 키값으로 하는 복수의 상태값을 관리한다.
+// State 는 복수의 상태값과 ConditionForTrue 값에 따라 갱신된다.
+// 유닛이 하나 이상의 상태이상을 가지고 있으면 State를 False로 하는 식으로 활용할 수 있다.
 [System.Serializable]
 public class Multistat
 {
@@ -37,8 +41,8 @@ public class Multistat
     private Dictionary<StateType, bool> stateDic = new Dictionary<StateType, bool>();
 
     public delegate void UpdateDelegate(bool _state);
-    public UpdateDelegate updateDelegate = new UpdateDelegate(UpdateStateCallback);
-    public static void UpdateStateCallback(bool _state) { }
+    public UpdateDelegate updateDelegate = new UpdateDelegate(UpdateStateMethod);
+    public static void UpdateStateMethod(bool _state) { }
 
     public static bool operator ==(Multistat stateA, bool stateB)
     {
@@ -67,54 +71,22 @@ public class Multistat
         {
             case ConditionForTrue.ALL_TRUE:
                 {
-                    state = true;
-                    foreach (var v in stateDic.Values)
-                    {
-                        if (v == false)
-                        {
-                            state = false;
-                            break;
-                        }
-                    }
+                    state = stateDic.Values.All(s => s);
                 }
                 break;
             case ConditionForTrue.ONE_OR_MORE_TRUE:
                 {
-                    state = false;
-                    foreach (var v in stateDic.Values)
-                    {
-                        if(v == true)
-                        {
-                            state = true;
-                            break;
-                        }
-                    }
+                    state = stateDic.Values.Any(s => s);
                 }
                 break;
             case ConditionForTrue.ALL_FALSE:
                 {
-                    state = true;
-                    foreach (var v in stateDic.Values)
-                    {
-                        if(v == true)
-                        {
-                            state = false;
-                            break;
-                        }
-                    }
+                    state = stateDic.Values.All(s => !s);
                 }
                 break;
             case ConditionForTrue.ONE_OR_MORE_FALSE:
                 {
-                    state = false;
-                    foreach (var v in stateDic.Values)
-                    {
-                        if(v == false)
-                        {
-                            state = true;
-                            break;
-                        }
-                    }
+                    state = stateDic.Values.Any(s => !s);
                 }
                 break;
         }
@@ -147,9 +119,9 @@ public class Multistat
 
     public bool GetState(StateType type, ref bool _state) // return is success
     {
-        if (stateDic.ContainsKey(type))
+        if(stateDic.TryGetValue(type,out bool s))
         {
-            _state = stateDic[type];
+            _state = s;
             return true;
         }
 

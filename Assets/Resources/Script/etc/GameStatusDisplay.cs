@@ -18,24 +18,20 @@ public class GameStatusDisplay : MonoBehaviour
 
     void Awake()
     {
-        {
-            rectPositionCursor = new Vector2(0, 0);
+        rectPositionCursor = new Vector2(0, 0);
 
-            int w = Screen.width, h = Screen.height;
+        int w = Screen.width, h = Screen.height;
 
-            fontSize = h * 5 / 100;
+        fontSize = h * 5 / 100;
 
-            rectSize = new Vector2(w, fontSize);
+        rectSize = new Vector2(w, fontSize);
 
-            //fontAlignment = TextAnchor.UpperRight;
+        //fontAlignment = TextAnchor.UpperRight;
 
-            //fontColor = new Color(1f, 0f, 0f, 1f);
-        }
+        //fontColor = new Color(1f, 0f, 0f, 1f);
 
-        {
-            fpsText = AddText("");
-            unitCountText = AddText("");
-        }
+        fpsText = AddText("");
+        unitCountText = AddText("");
     }
 
     void Update()

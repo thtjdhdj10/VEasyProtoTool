@@ -53,13 +53,13 @@ public abstract class Trigger
 
 }
 
-public class TriggerCollision : Trigger
+public class TrgCollision : Trigger
 {
     public System.Type[] targetTypes;
     public Collidable collider;
     public Actor target;
 
-    public TriggerCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
+    public TrgCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
         : base(_owner)
     {
         collider = _collider;
@@ -90,9 +90,9 @@ public class TriggerCollision : Trigger
     }
 }
 
-public class TriggerFrame : Trigger
+public class TrgFrame : Trigger
 {
-    public TriggerFrame(Actor _owner, int _passCount)
+    public TrgFrame(Actor _owner, int _passCount)
         : base(_owner)
     {
         passCount = _passCount;
@@ -132,12 +132,12 @@ public class TriggerFrame : Trigger
 }
 
 // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
-public class TriggerKeyInput : Trigger
+public class TrgKeyInput : Trigger
 {
     private KeyManager.KeyCommand command;
     private KeyManager.KeyPressType pressType;
 
-    public TriggerKeyInput(Actor _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    public TrgKeyInput(Actor _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
         : base(_owner)
     {
         command = _command;
@@ -149,7 +149,7 @@ public class TriggerKeyInput : Trigger
         }
     }
 
-    ~TriggerKeyInput()
+    ~TrgKeyInput()
     {
         if (owner.TryGetOperable(out Controllable control))
         {
@@ -167,12 +167,12 @@ public class TriggerKeyInput : Trigger
 // TriggerKeyInput 과 달리 정해진 Object 에의 모든 키 입력에서 Activate() 호출
 // Action 내에서 명령어를 선별해서 사용.
 // 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
-public class TriggerKeyInputs : Trigger
+public class TrgKeyInputs : Trigger
 {
     public KeyManager.KeyCommand command;
     public KeyManager.KeyPressType pressType;
 
-    public TriggerKeyInputs(Actor _owner)
+    public TrgKeyInputs(Actor _owner)
         : base(_owner)
     {
         if (owner.TryGetOperable(out Controllable control))
@@ -181,7 +181,7 @@ public class TriggerKeyInputs : Trigger
         }
     }
 
-    ~TriggerKeyInputs()
+    ~TrgKeyInputs()
     {
         if (owner.TryGetOperable(out Controllable control))
         {
@@ -204,9 +204,9 @@ public class TriggerKeyInputs : Trigger
     }
 }
 
-public class TriggerTimer : Trigger
+public class TrgTimer : Trigger
 {
-    public TriggerTimer(Actor _owner, float _delay, bool _isActivateOnStart)
+    public TrgTimer(Actor _owner, float _delay, bool _isActivateOnStart)
         : base(_owner)
     {
         delay = _delay;
@@ -247,12 +247,12 @@ public class TriggerTimer : Trigger
 }
 
 // 특정한 유닛의 생성/파괴/초기화 시 Activate
-public class TriggerUnit : Trigger
+public class TrgUnitEvent : Trigger
 {
     private Unit target;
     private TriggerType type;
 
-    public TriggerUnit(Actor _owner, Unit _target, TriggerType _type)
+    public TrgUnitEvent(Actor _owner, Unit _target, TriggerType _type)
         : base(_owner)
     {
         target = _target;
@@ -272,7 +272,7 @@ public class TriggerUnit : Trigger
         }
     }
 
-    ~TriggerUnit()
+    ~TrgUnitEvent()
     {
         switch (type)
         {
@@ -297,12 +297,12 @@ public class TriggerUnit : Trigger
 }
 
 // 특정 type의 유닛 생성/파괴/초기화 시 동작
-public class TriggerUnits : Trigger
+public class TrgAnyUnitEvent : Trigger
 {
     private System.Type targetType;
     private TriggerType type;
 
-    public TriggerUnits(Actor _owner, System.Type _unitType, TriggerType _type)
+    public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, TriggerType _type)
         : base(_owner)
     {
         targetType = _unitType;
@@ -316,7 +316,7 @@ public class TriggerUnits : Trigger
         Actor.onActorAddedDel += HandleAddedUnit;
     }
 
-    ~TriggerUnits()
+    ~TrgAnyUnitEvent()
     {
         foreach(var unit in Unit.unitList)
         {

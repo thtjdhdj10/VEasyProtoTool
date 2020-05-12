@@ -25,8 +25,8 @@ public class EnemyBoss_LandSlayer : EnemyBoss
 
         PatternFireable patternFire = GetOperable<PatternFireable>();
         patternFire.phase = phase;
-        patternFire.AddPattern(phase, new Pattern_Slayer_1(this));
-        patternFire.AddPattern(phase, new Pattern_Slayer_2(this));
+        patternFire.AddPattern(phase, new Ptn_Slayer_1(this));
+        patternFire.AddPattern(phase, new Ptn_Slayer_2(this));
     }
 
 }

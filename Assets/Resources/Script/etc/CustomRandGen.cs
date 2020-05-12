@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// 오래돼서 머하려던건지 기억이안남
 public class CustomRandGen
 {
     public static float Rand(float min, float max)
@@ -18,40 +19,36 @@ public class CustomRandGen
     public static int Rand(float[] weight)
     {
         // 양수화
-        {
-            float minValue = float.MaxValue;
+        float minValue = float.MaxValue;
 
+        for (int i = 0; i < weight.Length; ++i)
+        {
+            if (weight[i] < minValue)
+                minValue = weight[i];
+        }
+
+        if (minValue < 0f)
+        {
             for (int i = 0; i < weight.Length; ++i)
             {
-                if (weight[i] < minValue)
-                    minValue = weight[i];
-            }
-
-            if (minValue < 0f)
-            {
-                for (int i = 0; i < weight.Length; ++i)
-                {
-                    weight[i] -= minValue;
-                }
+                weight[i] -= minValue;
             }
         }
 
         // 정규화, 0에서 1까지 증가하는 방식으로.
         float[] normalizedIncreasingWeight = new float[weight.Length];
+
+        float sumWeight = 0f;
+
+        for (int i = 0; i < weight.Length; ++i)
         {
-            float sumWeight = 0f;
+            sumWeight += weight[i];
+        }
 
-            for (int i = 0; i < weight.Length; ++i)
-            {
-                sumWeight += weight[i];
-            }
-
-            for (int i = 0; i < weight.Length; ++i)
-            {
-                normalizedIncreasingWeight[i] = weight[i] / sumWeight;
-                if (i > 0)
-                    normalizedIncreasingWeight[i] += normalizedIncreasingWeight[i - 1];
-            }
+        for (int i = 0; i < weight.Length; ++i)
+        {
+            normalizedIncreasingWeight[i] = weight[i] / sumWeight;
+            if (i > 0) normalizedIncreasingWeight[i] += normalizedIncreasingWeight[i - 1];
         }
 
         //
