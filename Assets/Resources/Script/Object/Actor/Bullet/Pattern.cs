@@ -101,10 +101,6 @@ public class PtnFire : Pattern
         {
             (actor as Bullet).owner = owner as Unit;
         }
-        else if(actor is Module)
-        {
-            (actor as Module).owner = owner as Unit;
-        }
 
         if (posRoot != null) position = posRoot.transform.position;
         actor.transform.position = position + deltaPos;

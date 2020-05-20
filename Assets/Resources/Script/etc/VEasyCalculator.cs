@@ -238,7 +238,7 @@ public class VEasyCalculator
         return true;
     }
 
-    static bool IntersectCircleRect(Vector2 pos1, Vector2 pos2, float scale1, Vector2 scale2, float angle)
+    public static bool IntersectCircleRect(Vector2 pos1, Vector2 pos2, float scale1, Vector2 scale2, float angle)
     {
         pos1 = GetRotatedPosition(angle, pos1);
         pos2 = GetRotatedPosition(angle, pos2);

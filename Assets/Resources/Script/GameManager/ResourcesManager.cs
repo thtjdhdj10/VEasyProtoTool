@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,46 +7,10 @@ using UnityEngine;
 using UObject = UnityEngine.Object;
 using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type>;
 
+// Resources 하위 경로에 있는 모든 폴더를 검사해서
+// RESOURCE_TYPE_ARR 에 속하는 타입의 리소스를 저장하여 관리
 public class ResourcesManager
 {
-    private static Dictionary<NameTypePair, UObject> _resNameObjDic =
-        new Dictionary<NameTypePair, UObject>();
-
-    private List<UObject> _loadedResDic = new List<UObject>();
-
-    public const string RESOURCES = "Resources";
-    public static Type[] RESOURCE_TYPE_ARR =  {
-        typeof(GameObject),
-        typeof(Sprite),
-        typeof(RuntimeAnimatorController),
-    };
-
-    public static string ResourceTypeToExtension(Type type)
-    {
-        if (type == typeof(GameObject))
-            return "*.prefab";
-        if (type == typeof(Sprite))
-            return "*.png";
-        if (type == typeof(RuntimeAnimatorController))
-            return "*.controller";
-
-        return "";
-    }
-
-    public static T LoadResource<T>(ResName resourceType) where T : UObject
-    {
-        return LoadResource<T>(resourceType.ToString());
-    }
-
-    public static T LoadResource<T>(string resourceName) where T : UObject
-    {
-        NameTypePair nameType = new NameTypePair(resourceName, typeof(GameObject));
-        if (_resNameObjDic.ContainsKey(nameType))
-            return _resNameObjDic[nameType] as T;
-
-        return default;
-    }
-
     // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
     // 모든 prefab 다 할 필요는 없고, 필요할 때 마다 추가
     public enum ResName
@@ -55,7 +18,7 @@ public class ResourcesManager
         NONE = 0,
 
         // prefab
-        
+
         Bullet_Laser,
         Bullet_Slayer_1,
         Bullet_Slayer_2,
@@ -86,6 +49,44 @@ public class ResourcesManager
         EnemyBoss_Slayer__Controller,
 
         Player_Damaged_Controller,
+    }
+
+    private static Dictionary<NameTypePair, UObject> _resNameObjDic =
+        new Dictionary<NameTypePair, UObject>();
+
+    private List<UObject> _loadedResDic = new List<UObject>();
+
+    private const string RESOURCES = "Resources";
+    private static Type[] RESOURCE_TYPE_ARR = {
+        typeof(GameObject),
+        typeof(Sprite),
+        typeof(RuntimeAnimatorController),
+    };
+
+    private static string ResourceTypeToExtension(Type type)
+    {
+        if (type == typeof(GameObject))
+            return "*.prefab";
+        if (type == typeof(Sprite))
+            return "*.png";
+        if (type == typeof(RuntimeAnimatorController))
+            return "*.controller";
+
+        return "";
+    }
+
+    public static T LoadResource<T>(ResName resourceType) where T : UObject
+    {
+        return LoadResource<T>(resourceType.ToString());
+    }
+
+    public static T LoadResource<T>(string resourceName) where T : UObject
+    {
+        NameTypePair nameType = new NameTypePair(resourceName, typeof(GameObject));
+        if (_resNameObjDic.ContainsKey(nameType))
+            return _resNameObjDic[nameType] as T;
+
+        return default;
     }
 
     public ResourcesManager()
