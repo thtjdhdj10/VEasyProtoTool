@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using DicKeyCommand = System.Collections.Generic.Dictionary<int,
+using DicKeyCodeCommand = System.Collections.Generic.Dictionary<int,
 System.Collections.Generic.Dictionary<UnityEngine.KeyCode,
     KeyManager.KeyCommand>>;
 
@@ -13,13 +13,14 @@ public class KeyManager : MonoBehaviour {
     private int keySetNumber = 0;
     private int keySetCount = 0;
 
-    public static DicKeyCommand keySettings = new DicKeyCommand();
+    public static DicKeyCodeCommand keySettings = new DicKeyCodeCommand();
 
     //
 
     private delegate bool GetKeyEachType(KeyCode kc);
     
-    private Dictionary<KeyPressType, GetKeyEachType> GetKeyFunctions = new Dictionary<KeyPressType, GetKeyEachType>();
+    private Dictionary<KeyPressType, GetKeyEachType> GetKeyFunctions =
+        new Dictionary<KeyPressType, GetKeyEachType>();
 
     public enum KeyPressType
     {

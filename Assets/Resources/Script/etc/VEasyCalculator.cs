@@ -119,9 +119,27 @@ public class VEasyCalculator
         return GameManager.Direction.NONE;
     }
 
-    public static Vector2 ScreenToWorldPos(Vector2 screenPos)
+    public static Vector2 ScreenToWorldPos(Vector2 screen)
     {
-        return Camera.main.ScreenToWorldPoint(screenPos);
+        return Camera.main.ScreenToWorldPoint(screen);
+    }
+
+    public static Vector2 WorldToScreenPos(Vector2 world)
+    {
+        return Camera.main.WorldToScreenPoint(world);
+    }
+
+    public static Vector2 ScreenToGUIPos(Vector2 screen)
+    {
+        screen.y = -screen.y;
+        return screen;
+    }
+
+    // GUI 좌표계는 스크린 좌표계와 y축이 반대임
+    public static Vector2 WorldToGUIPos(Vector2 world)
+    {
+        world.y = -world.y;
+        return Camera.main.WorldToScreenPoint(world);
     }
 
     // 움직이는 두 Unit 이 n frame 뒤에 충돌하는지 체크

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class Player : Unit
 {
@@ -68,10 +67,16 @@ public class Player : Unit
         new ActSetConditionBool(triCol, conMouseTrack, false);
         new ActSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
 
+        // 우클릭 시 테스트
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
         //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
         //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
         //ActionActivatePattern actActivatePattern =
         //    new ActionActivatePattern(trgRightClick, pattern_S1);
+    }
+
+    private void Update()
+    {
+        TextDisplay.TextUpdate(gameObject, "PLAYER HP", "HP: " + unitStatus.CurrentHp);
     }
 }

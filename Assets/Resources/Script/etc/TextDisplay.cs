@@ -1,65 +1,73 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
+// 원하는 오브젝트에 붙여서 원하는 값 출력
 public class TextDisplay : MonoBehaviour
 {
-    public Vector2 rectPosition;
-    public Vector2 rectSize;
+    const int MAX_TEXT_LENGTH = 300;
 
+    public static Dictionary<GameObject, TextDisplay> goTextDic =
+        new Dictionary<GameObject, TextDisplay>();
+
+    public Dictionary<string, string> keywordTextDic = new Dictionary<string, string>();
+    public Color fontColor = new Color(1f, 0f, 0f, 1f);
     public int fontSize;
 
-    public TextAnchor fontAlignment;
+    private Vector2 _relativePos = new Vector2(0, -30);
+    private GUIStyle _style = new GUIStyle();
 
-    public Color fontColor;
-
-    public string text = "";
-
-    GUIStyle style;
-    Rect rect;
-
-    void Awake()
+    private void Awake()
     {
-        rect = new Rect();
-        style = new GUIStyle();
-    }
-
-    public void Init(string _text, Vector2 _rectPosition, Vector2 _rectSize)
-    {
-        text = _text;
+        goTextDic.Add(gameObject, this);
 
         int w = Screen.width, h = Screen.height;
-        int size = h * 5 / 100;
 
-        rectPosition = _rectPosition;
-        rectSize = _rectSize;
+        if (fontSize == 0) fontSize = h * 3 / 100;
 
-        fontAlignment = TextAnchor.UpperRight;
-        fontSize = size;
-        fontColor = new Color(1f, 0f, 0f, 1f);
+        _style.fontSize = fontSize;
+        _style.normal.textColor = fontColor;
+        _style.alignment = TextAnchor.MiddleCenter;
     }
 
-    public void Init(string _text, Vector2 _rectPosition, Vector2 _rectSize,
-        int _fontSize, TextAnchor _fontAlignment, Color _fontColor)
+    public static bool TextUpdate(GameObject go, string keyword, string text)
     {
-        Init(_text, _rectPosition, _rectSize);
-        fontAlignment = _fontAlignment;
-        fontSize = _fontSize;
-        fontColor = _fontColor;
+        if (goTextDic.ContainsKey(go))
+        {
+            if (goTextDic[go].keywordTextDic.ContainsKey(keyword))
+            {
+                goTextDic[go].keywordTextDic[keyword] = text;
+            }
+            else
+            {
+                goTextDic[go].keywordTextDic.Add(keyword, text);
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
-        rect.x = rectPosition.x;
-        rect.y = rectPosition.y;
-        rect.width = rectSize.x;
-        rect.height = rectSize.y;
+        if (keywordTextDic.Count == 0) return;
 
-        style.alignment = fontAlignment;
-        style.fontSize = fontSize;
-        style.normal.textColor = fontColor;
+        Rect rect = new Rect();
 
-        string str = string.Format(text);
+        Vector2 size = new Vector2(MAX_TEXT_LENGTH, fontSize);
+        Vector2 position = VEasyCalculator.WorldToGUIPos(transform.position);
+        position.x = position.x - size.x / 2;
+        position.y = position.y - size.y / 2;
+        position += _relativePos;
+        rect.size = size;
+        rect.position = position;
 
-        GUI.Label(rect, str, style);
+        foreach(var text in keywordTextDic.Values)
+        {
+            Debug.Log(rect.position);
+            GUI.Label(rect, text, _style);
+            rect.y += fontSize;
+        }
     }
 }
