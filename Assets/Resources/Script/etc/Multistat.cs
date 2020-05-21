@@ -19,9 +19,9 @@ public class Multistat
     [SerializeField]
     private bool state = true;
 
-    public ConditionForTrue conditionForTrue = ConditionForTrue.ALL_FALSE;
+    public EConditionForTrue conditionForTrue = EConditionForTrue.ALL_FALSE;
 
-    public enum ConditionForTrue
+    public enum EConditionForTrue
     {
         ALL_TRUE,
         ALL_FALSE,
@@ -29,7 +29,7 @@ public class Multistat
         ONE_OR_MORE_FALSE,
     }
 
-    public enum StateType
+    public enum EStateType
     {
         NONE = 0,
         ACTIVATING_PATTERN,
@@ -38,7 +38,7 @@ public class Multistat
         CLICK,
     }
 
-    private Dictionary<StateType, bool> stateDic = new Dictionary<StateType, bool>();
+    private Dictionary<EStateType, bool> stateDic = new Dictionary<EStateType, bool>();
 
     public delegate void UpdateDelegate(bool _state);
     public UpdateDelegate updateDelegate = new UpdateDelegate(UpdateStateMethod);
@@ -69,22 +69,22 @@ public class Multistat
         bool preState = state;
         switch (conditionForTrue)
         {
-            case ConditionForTrue.ALL_TRUE:
+            case EConditionForTrue.ALL_TRUE:
                 {
                     state = stateDic.Values.All(s => s);
                 }
                 break;
-            case ConditionForTrue.ONE_OR_MORE_TRUE:
+            case EConditionForTrue.ONE_OR_MORE_TRUE:
                 {
                     state = stateDic.Values.Any(s => s);
                 }
                 break;
-            case ConditionForTrue.ALL_FALSE:
+            case EConditionForTrue.ALL_FALSE:
                 {
                     state = stateDic.Values.All(s => !s);
                 }
                 break;
-            case ConditionForTrue.ONE_OR_MORE_FALSE:
+            case EConditionForTrue.ONE_OR_MORE_FALSE:
                 {
                     state = stateDic.Values.Any(s => !s);
                 }
@@ -100,7 +100,7 @@ public class Multistat
         state = _state;
     }
 
-    public void SetState(StateType type, bool _state)
+    public void SetState(EStateType type, bool _state)
     {
         if (stateDic.ContainsKey(type))
         {
@@ -117,7 +117,7 @@ public class Multistat
         }
     }
 
-    public bool GetState(StateType type, ref bool _state) // return is success
+    public bool GetState(EStateType type, ref bool _state) // return is success
     {
         if(stateDic.TryGetValue(type,out bool s))
         {
@@ -136,7 +136,7 @@ public class Multistat
         return @bool != null &&
                state == @bool.state &&
                conditionForTrue == @bool.conditionForTrue &&
-               EqualityComparer<Dictionary<StateType, bool>>.Default.Equals(stateDic, @bool.stateDic);
+               EqualityComparer<Dictionary<EStateType, bool>>.Default.Equals(stateDic, @bool.stateDic);
     }
 
     public override int GetHashCode()
@@ -144,7 +144,7 @@ public class Multistat
         var hashCode = -325116050;
         hashCode = hashCode * -1521134295 + state.GetHashCode();
         hashCode = hashCode * -1521134295 + conditionForTrue.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<StateType, bool>>.Default.GetHashCode(stateDic);
+        hashCode = hashCode * -1521134295 + EqualityComparer<Dictionary<EStateType, bool>>.Default.GetHashCode(stateDic);
         return hashCode;
     }
 }

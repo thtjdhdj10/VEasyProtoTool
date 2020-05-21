@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Actor : MyObject
 {
-    public Force force = Force.NONE;
+    public EForce force = EForce.NONE;
 
     public bool willDestroy = false; // 바로 삭제하면 충돌처리할때 문제됨
 
@@ -18,18 +18,18 @@ public class Actor : MyObject
     public float moveDirection;
     public float targetDirection;
 
-    public RotateTo rotateTo = RotateTo.TARGET;
+    public ERotateTo rotateTo = ERotateTo.TARGET;
 
     //
 
-    public enum Force
+    public enum EForce
     {
         NONE = 0,
         A, // Player
         B, // Enemy
     }
 
-    public enum Relation
+    public enum ERelation
     {
         NONE = 0,
         ALLY,
@@ -38,21 +38,21 @@ public class Actor : MyObject
         NEUTRAL,
     }
 
-    public enum RotateTo
+    public enum ERotateTo
     {
         NONE = 0,
         TARGET,
         MOVE,
     }
 
-    public static Relation GetRelation(Force a, Force b)
+    public static ERelation GetRelation(EForce a, EForce b)
     {
-        if (a == Force.NONE ||
-            b == Force.NONE)
-            return Relation.NONE;
+        if (a == EForce.NONE ||
+            b == EForce.NONE)
+            return ERelation.NONE;
 
-        if (a == b) return Relation.ALLY;
-        else return Relation.ENEMY;
+        if (a == b) return ERelation.ALLY;
+        else return ERelation.ENEMY;
     }
 
     //
@@ -165,10 +165,10 @@ public class Actor : MyObject
         Vector3 rot = transform.eulerAngles;
         switch (rotateTo)
         {
-            case RotateTo.TARGET:
+            case ERotateTo.TARGET:
                 rot.z = targetDirection;
                 break;
-            case RotateTo.MOVE:
+            case ERotateTo.MOVE:
                 rot.z = moveDirection;
                 break;
         }

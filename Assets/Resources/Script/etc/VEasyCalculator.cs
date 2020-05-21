@@ -40,7 +40,7 @@ public class VEasyCalculator
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
 
-    public static Const.Direction CheckOutside2D(Collider2D col)
+    public static Const.EDirection CheckOutside2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
@@ -50,32 +50,32 @@ public class VEasyCalculator
             CircleCollider2D cirCol = col as CircleCollider2D;
 
             if (pos.x + cirCol.radius < rect.xMin)
-                return Const.Direction.LEFT;
+                return Const.EDirection.LEFT;
             if (pos.x - cirCol.radius > rect.xMax)
-                return Const.Direction.RIGHT;
+                return Const.EDirection.RIGHT;
             if (pos.y + cirCol.radius < rect.yMin)
-                return Const.Direction.DOWN;
+                return Const.EDirection.DOWN;
             if (pos.y - cirCol.radius > rect.yMax)
-                return Const.Direction.UP;
+                return Const.EDirection.UP;
         }
         else if (col is BoxCollider2D)
         {
             BoxCollider2D boxCol = col as BoxCollider2D;
 
             if (pos.x + boxCol.size.x < rect.xMin)
-                return Const.Direction.LEFT;
+                return Const.EDirection.LEFT;
             if (pos.x - boxCol.size.x > rect.xMax)
-                return Const.Direction.RIGHT;
+                return Const.EDirection.RIGHT;
             if (pos.y + boxCol.size.y < rect.yMin)
-                return Const.Direction.DOWN;
+                return Const.EDirection.DOWN;
             if (pos.y - boxCol.size.y > rect.yMax)
-                return Const.Direction.UP;
+                return Const.EDirection.UP;
         }
 
-        return Const.Direction.NONE;
+        return Const.EDirection.NONE;
     }
 
-    public static Const.Direction CheckTerritory2D(Collider2D col)
+    public static Const.EDirection CheckTerritory2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
@@ -85,29 +85,29 @@ public class VEasyCalculator
             CircleCollider2D cirCol = col as CircleCollider2D;
 
             if (pos.x - cirCol.radius < rect.xMin)
-                return Const.Direction.LEFT;
+                return Const.EDirection.LEFT;
             if (pos.x + cirCol.radius > rect.xMax)
-                return Const.Direction.RIGHT;
+                return Const.EDirection.RIGHT;
             if (pos.y - cirCol.radius < rect.yMin)
-                return Const.Direction.DOWN;
+                return Const.EDirection.DOWN;
             if (pos.y + cirCol.radius > rect.yMax)
-                return Const.Direction.UP;
+                return Const.EDirection.UP;
         }
         else if (col is BoxCollider2D)
         {
             BoxCollider2D boxCol = col as BoxCollider2D;
 
             if (pos.x - boxCol.size.x < rect.xMin)
-                return Const.Direction.LEFT;
+                return Const.EDirection.LEFT;
             if (pos.x + boxCol.size.x > rect.xMax)
-                return Const.Direction.RIGHT;
+                return Const.EDirection.RIGHT;
             if (pos.y - boxCol.size.y < rect.yMin)
-                return Const.Direction.DOWN;
+                return Const.EDirection.DOWN;
             if (pos.y + boxCol.size.y > rect.yMax)
-                return Const.Direction.UP;
+                return Const.EDirection.UP;
         }
 
-        return Const.Direction.NONE;
+        return Const.EDirection.NONE;
     }
 
     public static Vector2 ScreenToWorldPos(Vector2 screen)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CustomLog
 {
-    public enum WarningLevel
+    public enum EWarningLevel
     {
         NONE,
         WARN,
@@ -49,19 +49,19 @@ public class CustomLog
     [System.Diagnostics.Conditional("DEBUG")]
     public static void CompleteLog(string str)
     {
-        CompleteLog(str, WarningLevel.NONE);
+        CompleteLog(str, EWarningLevel.NONE);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
     public static void CompleteLogWarning(string str)
     {
-        CompleteLog(str, WarningLevel.WARN);
+        CompleteLog(str, EWarningLevel.WARN);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
     public static void CompleteLogError(string str)
     {
-        CompleteLog(str, WarningLevel.ERROR);
+        CompleteLog(str, EWarningLevel.ERROR);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -69,7 +69,7 @@ public class CustomLog
     {
         if (print == false) return;
 
-        CompleteLog(str, WarningLevel.NONE);
+        CompleteLog(str, EWarningLevel.NONE);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -77,7 +77,7 @@ public class CustomLog
     {
         if (print == false) return;
 
-        CompleteLog(str, WarningLevel.WARN);
+        CompleteLog(str, EWarningLevel.WARN);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -85,25 +85,25 @@ public class CustomLog
     {
         if (print == false) return;
 
-        CompleteLog(str, WarningLevel.ERROR);
+        CompleteLog(str, EWarningLevel.ERROR);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
-    static void CompleteLog(string str, WarningLevel wl)
+    static void CompleteLog(string str, EWarningLevel wl)
     {
         switch (wl)
         {
-            case WarningLevel.NONE:
+            case EWarningLevel.NONE:
                 {
                     Debug.Log(str);
                 }
                 break;
-            case WarningLevel.WARN:
+            case EWarningLevel.WARN:
                 {
                     Debug.LogWarning(str);
                 }
                 break;
-            case WarningLevel.ERROR:
+            case EWarningLevel.ERROR:
                 {
                     Debug.LogError(str);
                 }

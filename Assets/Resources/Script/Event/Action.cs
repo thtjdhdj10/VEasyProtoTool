@@ -276,12 +276,12 @@ public class ActKnockback : Action
 
         if (moves != null)
             foreach (var move in moves)
-                move.state.SetState(Multistat.StateType.KNOCKBACK, true);
+                move.state.SetState(Multistat.EStateType.KNOCKBACK, true);
 
-        Actor.RotateTo originRotateTo = target.rotateTo;
+        Actor.ERotateTo originRotateTo = target.rotateTo;
 
         MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
-        target.rotateTo = Actor.RotateTo.NONE;
+        target.rotateTo = Actor.ERotateTo.NONE;
 
         float currentSpeed = speed;
 
@@ -300,7 +300,7 @@ public class ActKnockback : Action
 
         if (moves != null)
             foreach (var move in moves)
-                move.state.SetState(Multistat.StateType.KNOCKBACK, false);
+                move.state.SetState(Multistat.EStateType.KNOCKBACK, false);
     }
 }
 
@@ -323,9 +323,9 @@ public class ActActivatePattern : Action
 public class ActActiveOperable<T> : Action where T : Operable
 {
     protected bool doActive;
-    protected Multistat.StateType stateType;
+    protected Multistat.EStateType stateType;
 
-    public ActActiveOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
+    public ActActiveOperable(Trigger trigger, Multistat.EStateType _type, bool _doActive)
         : base(trigger)
     {
         stateType = _type;
@@ -341,7 +341,7 @@ public class ActActiveOperable<T> : Action where T : Operable
 
 public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
 {
-    public ActActiveTargetOperable(Trigger trigger, Multistat.StateType _type, bool _doActive)
+    public ActActiveTargetOperable(Trigger trigger, Multistat.EStateType _type, bool _doActive)
         : base(trigger, _type, _doActive)
     {
 
@@ -500,25 +500,25 @@ public class ActVectorMoveActor : Action
 
     bool[] moveDir = new bool[4];
 
-    Dictionary<Const.Direction, KeyManager.KeyCommand> dirKeyDic =
-        new Dictionary<Const.Direction, KeyManager.KeyCommand>();
-    Dictionary<Const.Direction, Const.Direction> dirRevdirDic =
-        new Dictionary<Const.Direction, Const.Direction>();
+    Dictionary<Const.EDirection, KeyManager.EKeyCommand> dirKeyDic =
+        new Dictionary<Const.EDirection, KeyManager.EKeyCommand>();
+    Dictionary<Const.EDirection, Const.EDirection> dirRevdirDic =
+        new Dictionary<Const.EDirection, Const.EDirection>();
 
     public ActVectorMoveActor(Trigger trigger, float _speed)
         : base(trigger)
     {
         speed = _speed;
 
-        dirKeyDic[Const.Direction.LEFT] = KeyManager.KeyCommand.MOVE_LEFT;
-        dirKeyDic[Const.Direction.RIGHT] = KeyManager.KeyCommand.MOVE_RIGHT;
-        dirKeyDic[Const.Direction.UP] = KeyManager.KeyCommand.MOVE_UP;
-        dirKeyDic[Const.Direction.DOWN] = KeyManager.KeyCommand.MOVE_DOWN;
+        dirKeyDic[Const.EDirection.LEFT] = KeyManager.EKeyCommand.MOVE_LEFT;
+        dirKeyDic[Const.EDirection.RIGHT] = KeyManager.EKeyCommand.MOVE_RIGHT;
+        dirKeyDic[Const.EDirection.UP] = KeyManager.EKeyCommand.MOVE_UP;
+        dirKeyDic[Const.EDirection.DOWN] = KeyManager.EKeyCommand.MOVE_DOWN;
 
-        dirRevdirDic[Const.Direction.LEFT] = Const.Direction.RIGHT;
-        dirRevdirDic[Const.Direction.RIGHT] = Const.Direction.LEFT;
-        dirRevdirDic[Const.Direction.UP] = Const.Direction.DOWN;
-        dirRevdirDic[Const.Direction.DOWN] = Const.Direction.UP;
+        dirRevdirDic[Const.EDirection.LEFT] = Const.EDirection.RIGHT;
+        dirRevdirDic[Const.EDirection.RIGHT] = Const.EDirection.LEFT;
+        dirRevdirDic[Const.EDirection.UP] = Const.EDirection.DOWN;
+        dirRevdirDic[Const.EDirection.DOWN] = Const.EDirection.UP;
     }
 
     protected override void ActionProcess(Trigger trigger)
@@ -541,27 +541,27 @@ public class ActVectorMoveActor : Action
         vm.moveDir = moveDir;
     }
 
-    void UpdateMoveState(KeyManager.KeyCommand command, KeyManager.KeyPressType type)
+    void UpdateMoveState(KeyManager.EKeyCommand command, KeyManager.EKeyPressType type)
     {
         for (int d = 0; d < 4; ++d)
         {
-            Const.Direction dir = (Const.Direction)d;
+            Const.EDirection dir = (Const.EDirection)d;
             if (command == dirKeyDic[dir])
             {
-                if (type == KeyManager.KeyPressType.DOWN)
+                if (type == KeyManager.EKeyPressType.DOWN)
                 {
                     moveDir[(int)dir] = true;
 
                     moveDir[(int)dirRevdirDic[dir]] = false;
                 }
-                else if (type == KeyManager.KeyPressType.PRESS)
+                else if (type == KeyManager.EKeyPressType.PRESS)
                 {
                     if (moveDir[(int)dirRevdirDic[dir]] == false)
                     {
                         moveDir[(int)dir] = true;
                     }
                 }
-                else if (type == KeyManager.KeyPressType.UP)
+                else if (type == KeyManager.EKeyPressType.UP)
                 {
                     moveDir[(int)dir] = false;
                 }

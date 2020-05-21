@@ -48,7 +48,7 @@ public class Effect_Shield : Effect
         if (GameManager.isQuitting == false)
         {
             GameObject go = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.ResName.Effect_ShieldBreak));
+                ResourcesManager.EResName.Effect_ShieldBreak));
             go.transform.parent = transform.parent;
             go.transform.position = transform.position;
         }

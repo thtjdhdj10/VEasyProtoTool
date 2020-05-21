@@ -26,7 +26,7 @@ public class Ptn_Slayer_1 : Pattern_LandSlayer
         PtnFireTarget_AngleRandom pattern1 = new PtnFireTarget_AngleRandom(_owner);
 
         GameObject go = ResourcesManager.LoadResource<GameObject>(
-            ResourcesManager.ResName.Bullet_Slayer_1);
+            ResourcesManager.EResName.Bullet_Slayer_1);
 
         Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
         bullet.owner = _owner;
@@ -66,25 +66,25 @@ public class Ptn_Slayer_1 : Pattern_LandSlayer
 
     public override IEnumerator Fire()
     {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
+        move.state.SetState(Multistat.EStateType.ACTIVATING_PATTERN, true);
 
         GameManager.gm.StartCoroutine(patternList[0].Fire());
         GameManager.gm.StartCoroutine(patternList[1].Fire());
         yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
     }
 
-    private Actor.RotateTo originRotateTo;
+    private Actor.ERotateTo originRotateTo;
     public override IEnumerator PostFire()
     {
         owner.rotateTo = originRotateTo;
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
+        move.state.SetState(Multistat.EStateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 
     public override IEnumerator PreFire()
     {
         originRotateTo = owner.rotateTo;
-        owner.rotateTo = Actor.RotateTo.TARGET;
+        owner.rotateTo = Actor.ERotateTo.TARGET;
         yield break;
     }
 }
@@ -107,7 +107,7 @@ public class Ptn_Slayer_2 : Pattern_LandSlayer
         move = _owner.GetOperable<Movable>();
 
         GameObject go = ResourcesManager.LoadResource<GameObject>(
-            ResourcesManager.ResName.Bullet_Slayer_2);
+            ResourcesManager.EResName.Bullet_Slayer_2);
 
         for (int i = 0; i < count; ++i)
         {
@@ -126,7 +126,7 @@ public class Ptn_Slayer_2 : Pattern_LandSlayer
 
     public override IEnumerator Fire()
     {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, true);
+        move.state.SetState(Multistat.EStateType.ACTIVATING_PATTERN, true);
 
         for (int i = 0; i < count; ++i)
         {
@@ -138,7 +138,7 @@ public class Ptn_Slayer_2 : Pattern_LandSlayer
 
     public override IEnumerator PostFire()
     {
-        move.state.SetState(Multistat.StateType.ACTIVATING_PATTERN, false);
+        move.state.SetState(Multistat.EStateType.ACTIVATING_PATTERN, false);
         yield break;
     }
 }

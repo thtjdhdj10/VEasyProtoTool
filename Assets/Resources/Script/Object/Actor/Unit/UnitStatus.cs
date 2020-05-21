@@ -32,10 +32,10 @@ public class UnitStatus : MonoBehaviour
 
     public bool enableVitalColor; // 남은체력에따라 컬러변경
 
-    public VitalSign vital;
+    public EVitalSign vital;
     public SpriteRenderer sprite;
 
-    public enum VitalSign
+    public enum EVitalSign
     {
         RED, // 100%~80%
         ORANGE, // 80%~50%
@@ -73,22 +73,22 @@ public class UnitStatus : MonoBehaviour
 
         switch (vital)
         {
-            case VitalSign.RED:
+            case EVitalSign.RED:
                 ret.r = 1f;
                 ret.g = 0f;
                 ret.b = 0f;
                 break;
-            case VitalSign.ORANGE:
+            case EVitalSign.ORANGE:
                 ret.r = 1f;
                 ret.g = 0.4f;
                 ret.b = 0f;
                 break;
-            case VitalSign.YELLOW:
+            case EVitalSign.YELLOW:
                 ret.r = 1f;
                 ret.g = 0.85f;
                 ret.b = 0f;
                 break;
-            case VitalSign.WHITE:
+            case EVitalSign.WHITE:
                 ret.r = 1f;
                 ret.g = 1f;
                 ret.b = 1f;
@@ -98,15 +98,15 @@ public class UnitStatus : MonoBehaviour
         return ret;
     }
 
-    public VitalSign GetVitalSign()
+    public EVitalSign GetVitalSign()
     {
         float remainHpPercentage = (float)currentHp / hp;
         if (remainHpPercentage > 0.8f)
-            return VitalSign.RED;
+            return EVitalSign.RED;
         else if (remainHpPercentage > 0.5f)
-            return VitalSign.ORANGE;
+            return EVitalSign.ORANGE;
         else if (remainHpPercentage > 0.2f)
-            return VitalSign.YELLOW;
-        return VitalSign.WHITE;
+            return EVitalSign.YELLOW;
+        return EVitalSign.WHITE;
     }
 }

@@ -32,10 +32,10 @@ public abstract class Movable : Operable
     public bool _enableBounce;
     public float _bounceCooldown;
     private float _remainBounceCooldown;
-    public BounceBy _bounceBy;
-    public BounceTo _bounceTo;
+    public EBounceBy _bounceBy;
+    public EBounceTo _bounceTo;
 
-    public enum BounceBy
+    public enum EBounceBy
     {
         NONE = 0,
         ALL,
@@ -46,7 +46,7 @@ public abstract class Movable : Operable
         ALLY,
     }
     
-    public enum BounceTo
+    public enum EBounceTo
     {
         NONE = 0,
         TARGET,
@@ -70,72 +70,72 @@ public abstract class Movable : Operable
         bool isBounced = false;
         float targetDir = 0f;
 
-        if (_bounceBy == BounceBy.ALL ||
-            _bounceBy == BounceBy.BOUNDARY_TOUCH)
+        if (_bounceBy == EBounceBy.ALL ||
+            _bounceBy == EBounceBy.BOUNDARY_TOUCH)
         {
             Collidable col = owner.GetOperable<Collidable>();
-            Const.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
+            Const.EDirection bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
 
             isBounced = true;
             switch (bounceByDir)
             {
-                case Const.Direction.NONE:
+                case Const.EDirection.NONE:
                     isBounced = false;
                     break;
-                case Const.Direction.UP:
+                case Const.EDirection.UP:
                     targetDir = 90f;
                     break;
-                case Const.Direction.DOWN:
+                case Const.EDirection.DOWN:
                     targetDir = 270f;
                     break;
-                case Const.Direction.LEFT:
+                case Const.EDirection.LEFT:
                     targetDir = 180f;
                     break;
-                case Const.Direction.RIGHT:
+                case Const.EDirection.RIGHT:
                     targetDir = 0f;
                     break;
             }
         }
-        else if (_bounceBy == BounceBy.ALL ||
-            _bounceBy == BounceBy.BOUNDARY_OUT)
+        else if (_bounceBy == EBounceBy.ALL ||
+            _bounceBy == EBounceBy.BOUNDARY_OUT)
         {
             Collidable col = owner.GetOperable<Collidable>();
-            Const.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
+            Const.EDirection bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
             isBounced = true;
             switch (bounceByDir)
             {
-                case Const.Direction.NONE:
+                case Const.EDirection.NONE:
                     isBounced = false;
                     break;
-                case Const.Direction.UP:
+                case Const.EDirection.UP:
                     targetDir = 90f;
                     break;
-                case Const.Direction.DOWN:
+                case Const.EDirection.DOWN:
                     targetDir = 270f;
                     break;
-                case Const.Direction.LEFT:
+                case Const.EDirection.LEFT:
                     targetDir = 180f;
                     break;
-                case Const.Direction.RIGHT:
+                case Const.EDirection.RIGHT:
                     targetDir = 0f;
                     break;
             }
         }
-        else if (_bounceBy == BounceBy.ALL ||
-            _bounceBy == BounceBy.UNIT ||
-            _bounceBy == BounceBy.ALLY ||
-            _bounceBy == BounceBy.ENEMY)
+        else if (_bounceBy == EBounceBy.ALL ||
+            _bounceBy == EBounceBy.UNIT ||
+            _bounceBy == EBounceBy.ALLY ||
+            _bounceBy == EBounceBy.ENEMY)
         {
             if(owner.TryGetOperable(out Collidable col))
             {
-                Unit.Relation targetRelation = Unit.Relation.NONE;
-                if (_bounceBy == BounceBy.UNIT)
-                    targetRelation = Unit.Relation.NEUTRAL;
-                else if (_bounceBy == BounceBy.ALLY)
-                    targetRelation = Unit.Relation.ALLY;
-                else if (_bounceBy == BounceBy.ENEMY)
-                    targetRelation = Unit.Relation.ENEMY;
+                Unit.ERelation targetRelation = Unit.ERelation.NONE;
+                if (_bounceBy == EBounceBy.UNIT)
+                    targetRelation = Unit.ERelation.NEUTRAL;
+                else if (_bounceBy == EBounceBy.ALLY)
+                    targetRelation = Unit.ERelation.ALLY;
+                else if (_bounceBy == EBounceBy.ENEMY)
+                    targetRelation = Unit.ERelation.ENEMY;
 
                 Collidable colTarget = col.GetCollisionTarget(targetRelation)?.First();
 
@@ -151,16 +151,16 @@ public abstract class Movable : Operable
         {
             switch (_bounceTo)
             {
-                case BounceTo.TARGET:
+                case EBounceTo.TARGET:
                     owner.moveDirection = targetDir;
                     break;
-                case BounceTo.REVERSE:
+                case EBounceTo.REVERSE:
                     owner.moveDirection += 180f;
                     break;
-                case BounceTo.REFLECT:
+                case EBounceTo.REFLECT:
                     owner.moveDirection = VEasyCalculator.GetReflectedDirection(owner.moveDirection, targetDir);
                     break;
-                case BounceTo.BLOCK:
+                case EBounceTo.BLOCK:
                     Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
                         owner.moveDirection, 1f);
                     Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
@@ -174,7 +174,7 @@ public abstract class Movable : Operable
                     owner.transform.position = (Vector2)owner.transform.position + escapeVector;
                     // TODO 최적화 및 벽에서 달달달 안하게
                     break;
-                case BounceTo.DESTROY:
+                case EBounceTo.DESTROY:
                     Destroy(owner.gameObject);
                     break;
             }

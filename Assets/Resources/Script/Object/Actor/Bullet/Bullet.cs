@@ -19,7 +19,7 @@ public class Bullet : Actor
     {
         force = owner.force;
         System.Type targetType;
-        if (force == Force.A) targetType = typeof(Enemy);
+        if (force == EForce.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);

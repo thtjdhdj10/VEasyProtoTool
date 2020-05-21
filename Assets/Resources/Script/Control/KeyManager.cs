@@ -4,7 +4,7 @@ using System.Linq;
 
 using DicKeyCodeCommand = System.Collections.Generic.Dictionary<int,
 System.Collections.Generic.Dictionary<UnityEngine.KeyCode,
-    KeyManager.KeyCommand>>;
+    KeyManager.EKeyCommand>>;
 
 // TODO: 조합 키 지원
 
@@ -19,10 +19,10 @@ public class KeyManager : MonoBehaviour {
 
     private delegate bool GetKeyEachType(KeyCode kc);
     
-    private Dictionary<KeyPressType, GetKeyEachType> GetKeyFunctions =
-        new Dictionary<KeyPressType, GetKeyEachType>();
+    private Dictionary<EKeyPressType, GetKeyEachType> GetKeyFunctions =
+        new Dictionary<EKeyPressType, GetKeyEachType>();
 
-    public enum KeyPressType
+    public enum EKeyPressType
     {
         NONE = 0,
         DOWN,
@@ -32,9 +32,9 @@ public class KeyManager : MonoBehaviour {
 
     private void GetFunctionMatch()
     {
-        GetKeyFunctions[KeyPressType.DOWN] = Input.GetKeyDown;
-        GetKeyFunctions[KeyPressType.UP] = Input.GetKeyUp;
-        GetKeyFunctions[KeyPressType.PRESS] = Input.GetKey;
+        GetKeyFunctions[EKeyPressType.DOWN] = Input.GetKeyDown;
+        GetKeyFunctions[EKeyPressType.UP] = Input.GetKeyUp;
+        GetKeyFunctions[EKeyPressType.PRESS] = Input.GetKey;
     }
 
     //
@@ -81,7 +81,7 @@ public class KeyManager : MonoBehaviour {
         {
             KeyCode keyCode = keyCodeList[i];
             
-            foreach(KeyPressType type in GetKeyFunctions.Keys)
+            foreach(EKeyPressType type in GetKeyFunctions.Keys)
             {
                 if (GetKeyFunctions[type](keyCode) == false)
                     continue;
@@ -92,7 +92,7 @@ public class KeyManager : MonoBehaviour {
                     if (controler == null)
                         continue;
 
-                    KeyCommand command = keySettings[keySetNumber][keyCode];
+                    EKeyCommand command = keySettings[keySetNumber][keyCode];
 
                     controler.KeyInput(command, type);
                 }
@@ -100,7 +100,7 @@ public class KeyManager : MonoBehaviour {
         }
     }
 
-    public enum KeyCommand
+    public enum EKeyCommand
     {
         NONE = 0,
 
@@ -154,164 +154,164 @@ public class KeyManager : MonoBehaviour {
     }
 
     // DNF
-    Dictionary<KeyCode, KeyCommand> GetDefaultKeySetting0()
+    Dictionary<KeyCode, EKeyCommand> GetDefaultKeySetting0()
     {
-        var ret = new Dictionary<KeyCode, KeyCommand>();
+        var ret = new Dictionary<KeyCode, EKeyCommand>();
 
         {
-            ret[KeyCode.LeftArrow] = KeyCommand.MOVE_LEFT;
-            ret[KeyCode.RightArrow] = KeyCommand.MOVE_RIGHT;
-            ret[KeyCode.UpArrow] = KeyCommand.MOVE_UP;
-            ret[KeyCode.DownArrow] = KeyCommand.MOVE_DOWN;
+            ret[KeyCode.LeftArrow] = EKeyCommand.MOVE_LEFT;
+            ret[KeyCode.RightArrow] = EKeyCommand.MOVE_RIGHT;
+            ret[KeyCode.UpArrow] = EKeyCommand.MOVE_UP;
+            ret[KeyCode.DownArrow] = EKeyCommand.MOVE_DOWN;
 
-            ret[KeyCode.A] = KeyCommand.SKILL_01;
-            ret[KeyCode.S] = KeyCommand.SKILL_02;
-            ret[KeyCode.D] = KeyCommand.SKILL_03;
-            ret[KeyCode.F] = KeyCommand.SKILL_04;
-            ret[KeyCode.G] = KeyCommand.SKILL_05;
-            ret[KeyCode.H] = KeyCommand.SKILL_06;
-            ret[KeyCode.Q] = KeyCommand.SKILL_07;
-            ret[KeyCode.W] = KeyCommand.SKILL_08;
-            ret[KeyCode.E] = KeyCommand.SKILL_09;
-            ret[KeyCode.R] = KeyCommand.SKILL_10;
-            ret[KeyCode.T] = KeyCommand.SKILL_11;
-            ret[KeyCode.Y] = KeyCommand.SKILL_12;
+            ret[KeyCode.A] = EKeyCommand.SKILL_01;
+            ret[KeyCode.S] = EKeyCommand.SKILL_02;
+            ret[KeyCode.D] = EKeyCommand.SKILL_03;
+            ret[KeyCode.F] = EKeyCommand.SKILL_04;
+            ret[KeyCode.G] = EKeyCommand.SKILL_05;
+            ret[KeyCode.H] = EKeyCommand.SKILL_06;
+            ret[KeyCode.Q] = EKeyCommand.SKILL_07;
+            ret[KeyCode.W] = EKeyCommand.SKILL_08;
+            ret[KeyCode.E] = EKeyCommand.SKILL_09;
+            ret[KeyCode.R] = EKeyCommand.SKILL_10;
+            ret[KeyCode.T] = EKeyCommand.SKILL_11;
+            ret[KeyCode.Y] = EKeyCommand.SKILL_12;
 
-            ret[KeyCode.Alpha1] = KeyCommand.ITEM_1;
-            ret[KeyCode.Alpha2] = KeyCommand.ITEM_2;
-            ret[KeyCode.Alpha3] = KeyCommand.ITEM_3;
-            ret[KeyCode.Alpha4] = KeyCommand.ITEM_4;
-            ret[KeyCode.Alpha5] = KeyCommand.ITEM_5;
-            ret[KeyCode.Alpha6] = KeyCommand.ITEM_6;
+            ret[KeyCode.Alpha1] = EKeyCommand.ITEM_1;
+            ret[KeyCode.Alpha2] = EKeyCommand.ITEM_2;
+            ret[KeyCode.Alpha3] = EKeyCommand.ITEM_3;
+            ret[KeyCode.Alpha4] = EKeyCommand.ITEM_4;
+            ret[KeyCode.Alpha5] = EKeyCommand.ITEM_5;
+            ret[KeyCode.Alpha6] = EKeyCommand.ITEM_6;
 
-            ret[KeyCode.Z] = KeyCommand.COMMAND_SKILL;
-            ret[KeyCode.X] = KeyCommand.COMMAND_ATTACK;
-            ret[KeyCode.C] = KeyCommand.COMMAND_JUMP;
-            ret[KeyCode.Space] = KeyCommand.COMMAND_SPECIAL;
+            ret[KeyCode.Z] = EKeyCommand.COMMAND_SKILL;
+            ret[KeyCode.X] = EKeyCommand.COMMAND_ATTACK;
+            ret[KeyCode.C] = EKeyCommand.COMMAND_JUMP;
+            ret[KeyCode.Space] = EKeyCommand.COMMAND_SPECIAL;
         }
 
         return ret;
     }
 
     // FPS
-    Dictionary<KeyCode, KeyCommand> GetDefaultKeySetting1()
+    Dictionary<KeyCode, EKeyCommand> GetDefaultKeySetting1()
     {
-        var ret = new Dictionary<KeyCode, KeyCommand>();
+        var ret = new Dictionary<KeyCode, EKeyCommand>();
 
         {
-            ret[KeyCode.A] = KeyCommand.MOVE_LEFT;
-            ret[KeyCode.D] = KeyCommand.MOVE_RIGHT;
-            ret[KeyCode.W] = KeyCommand.MOVE_UP;
-            ret[KeyCode.S] = KeyCommand.MOVE_DOWN;
+            ret[KeyCode.A] = EKeyCommand.MOVE_LEFT;
+            ret[KeyCode.D] = EKeyCommand.MOVE_RIGHT;
+            ret[KeyCode.W] = EKeyCommand.MOVE_UP;
+            ret[KeyCode.S] = EKeyCommand.MOVE_DOWN;
 
-            ret[KeyCode.Space] = KeyCommand.COMMAND_JUMP;
+            ret[KeyCode.Space] = EKeyCommand.COMMAND_JUMP;
 
-            ret[KeyCode.R] = KeyCommand.COMMAND_RELOAD;
-            ret[KeyCode.Q] = KeyCommand.COMMAND_SWAP;
-            ret[KeyCode.Mouse0] = KeyCommand.COMMAND_ATTACK;
-            ret[KeyCode.Mouse1] = KeyCommand.COMMAND_ZOOM;
-            ret[KeyCode.LeftShift] = KeyCommand.COMMAND_SIT;
+            ret[KeyCode.R] = EKeyCommand.COMMAND_RELOAD;
+            ret[KeyCode.Q] = EKeyCommand.COMMAND_SWAP;
+            ret[KeyCode.Mouse0] = EKeyCommand.COMMAND_ATTACK;
+            ret[KeyCode.Mouse1] = EKeyCommand.COMMAND_ZOOM;
+            ret[KeyCode.LeftShift] = EKeyCommand.COMMAND_SIT;
 
-            ret[KeyCode.Alpha1] = KeyCommand.ITEM_1;
-            ret[KeyCode.Alpha2] = KeyCommand.ITEM_2;
-            ret[KeyCode.Alpha3] = KeyCommand.ITEM_3;
-            ret[KeyCode.Alpha4] = KeyCommand.ITEM_4;
-            ret[KeyCode.Alpha5] = KeyCommand.ITEM_5;
-            ret[KeyCode.Alpha6] = KeyCommand.ITEM_6;
+            ret[KeyCode.Alpha1] = EKeyCommand.ITEM_1;
+            ret[KeyCode.Alpha2] = EKeyCommand.ITEM_2;
+            ret[KeyCode.Alpha3] = EKeyCommand.ITEM_3;
+            ret[KeyCode.Alpha4] = EKeyCommand.ITEM_4;
+            ret[KeyCode.Alpha5] = EKeyCommand.ITEM_5;
+            ret[KeyCode.Alpha6] = EKeyCommand.ITEM_6;
         }
 
         return ret;
     }
 
     // V_CODE
-    Dictionary<KeyCode, KeyCommand> GetDefaultKeySetting2()
+    Dictionary<KeyCode, EKeyCommand> GetDefaultKeySetting2()
     {
-        var ret = new Dictionary<KeyCode, KeyCommand>();
+        var ret = new Dictionary<KeyCode, EKeyCommand>();
 
         {
-            ret[KeyCode.A] = KeyCommand.MOVE_LEFT;
-            ret[KeyCode.D] = KeyCommand.MOVE_RIGHT;
-            ret[KeyCode.W] = KeyCommand.MOVE_UP;
-            ret[KeyCode.S] = KeyCommand.MOVE_DOWN;
+            ret[KeyCode.A] = EKeyCommand.MOVE_LEFT;
+            ret[KeyCode.D] = EKeyCommand.MOVE_RIGHT;
+            ret[KeyCode.W] = EKeyCommand.MOVE_UP;
+            ret[KeyCode.S] = EKeyCommand.MOVE_DOWN;
 
-            ret[KeyCode.Mouse0] = KeyCommand.COMMAND_ATTACK;
-            ret[KeyCode.Mouse1] = KeyCommand.COMMAND_SKILL;
-            ret[KeyCode.Space] = KeyCommand.COMMAND_SPECIAL;
+            ret[KeyCode.Mouse0] = EKeyCommand.COMMAND_ATTACK;
+            ret[KeyCode.Mouse1] = EKeyCommand.COMMAND_SKILL;
+            ret[KeyCode.Space] = EKeyCommand.COMMAND_SPECIAL;
 
-            ret[KeyCode.Alpha1] = KeyCommand.ITEM_1;
-            ret[KeyCode.Alpha2] = KeyCommand.ITEM_2;
-            ret[KeyCode.Alpha3] = KeyCommand.ITEM_3;
-            ret[KeyCode.Alpha4] = KeyCommand.ITEM_4;
-            ret[KeyCode.Alpha5] = KeyCommand.ITEM_5;
-            ret[KeyCode.Alpha6] = KeyCommand.ITEM_6;
+            ret[KeyCode.Alpha1] = EKeyCommand.ITEM_1;
+            ret[KeyCode.Alpha2] = EKeyCommand.ITEM_2;
+            ret[KeyCode.Alpha3] = EKeyCommand.ITEM_3;
+            ret[KeyCode.Alpha4] = EKeyCommand.ITEM_4;
+            ret[KeyCode.Alpha5] = EKeyCommand.ITEM_5;
+            ret[KeyCode.Alpha6] = EKeyCommand.ITEM_6;
         }
 
         return ret;
     }
 
     // starcraft
-    Dictionary<KeyCode, KeyCommand> GetDefaultKeySetting4()
+    Dictionary<KeyCode, EKeyCommand> GetDefaultKeySetting4()
     {
-        var ret = new Dictionary<KeyCode, KeyCommand>();
+        var ret = new Dictionary<KeyCode, EKeyCommand>();
 
         {
-            ret[KeyCode.Space] = KeyCommand.COMMAND_VIEW_ME;
+            ret[KeyCode.Space] = EKeyCommand.COMMAND_VIEW_ME;
 
-            ret[KeyCode.R] = KeyCommand.COMMAND_RELOAD;
-            ret[KeyCode.A] = KeyCommand.COMMAND_ATTACK;
-            ret[KeyCode.M] = KeyCommand.COMMAND_MOVE;
-            ret[KeyCode.H] = KeyCommand.COMMAND_HOLD;
-            ret[KeyCode.S] = KeyCommand.COMMAND_STOP;
+            ret[KeyCode.R] = EKeyCommand.COMMAND_RELOAD;
+            ret[KeyCode.A] = EKeyCommand.COMMAND_ATTACK;
+            ret[KeyCode.M] = EKeyCommand.COMMAND_MOVE;
+            ret[KeyCode.H] = EKeyCommand.COMMAND_HOLD;
+            ret[KeyCode.S] = EKeyCommand.COMMAND_STOP;
 
-            ret[KeyCode.Mouse0] = KeyCommand.COMMAND_APPLY;
-            ret[KeyCode.Mouse1] = KeyCommand.COMMAND_MOVE_APPLY;
+            ret[KeyCode.Mouse0] = EKeyCommand.COMMAND_APPLY;
+            ret[KeyCode.Mouse1] = EKeyCommand.COMMAND_MOVE_APPLY;
 
-            ret[KeyCode.Alpha1] = KeyCommand.ITEM_1;
-            ret[KeyCode.Alpha2] = KeyCommand.ITEM_2;
-            ret[KeyCode.Alpha3] = KeyCommand.ITEM_3;
-            ret[KeyCode.Alpha4] = KeyCommand.ITEM_4;
-            ret[KeyCode.Alpha5] = KeyCommand.ITEM_5;
-            ret[KeyCode.Alpha6] = KeyCommand.ITEM_6;
-            ret[KeyCode.Alpha7] = KeyCommand.ITEM_7;
-            ret[KeyCode.Alpha8] = KeyCommand.ITEM_8;
-            ret[KeyCode.Alpha9] = KeyCommand.ITEM_9;
+            ret[KeyCode.Alpha1] = EKeyCommand.ITEM_1;
+            ret[KeyCode.Alpha2] = EKeyCommand.ITEM_2;
+            ret[KeyCode.Alpha3] = EKeyCommand.ITEM_3;
+            ret[KeyCode.Alpha4] = EKeyCommand.ITEM_4;
+            ret[KeyCode.Alpha5] = EKeyCommand.ITEM_5;
+            ret[KeyCode.Alpha6] = EKeyCommand.ITEM_6;
+            ret[KeyCode.Alpha7] = EKeyCommand.ITEM_7;
+            ret[KeyCode.Alpha8] = EKeyCommand.ITEM_8;
+            ret[KeyCode.Alpha9] = EKeyCommand.ITEM_9;
         }
 
         return ret;
     }
 
     // LOL
-    Dictionary<KeyCode, KeyCommand> GetDefaultKeySetting5()
+    Dictionary<KeyCode, EKeyCommand> GetDefaultKeySetting5()
     {
-        var ret = new Dictionary<KeyCode, KeyCommand>();
+        var ret = new Dictionary<KeyCode, EKeyCommand>();
 
         {
-            ret[KeyCode.Space] = KeyCommand.COMMAND_VIEW_ME;
+            ret[KeyCode.Space] = EKeyCommand.COMMAND_VIEW_ME;
 
-            ret[KeyCode.Q] = KeyCommand.SKILL_01;
-            ret[KeyCode.W] = KeyCommand.SKILL_02;
-            ret[KeyCode.E] = KeyCommand.SKILL_03;
-            ret[KeyCode.R] = KeyCommand.SKILL_04;
+            ret[KeyCode.Q] = EKeyCommand.SKILL_01;
+            ret[KeyCode.W] = EKeyCommand.SKILL_02;
+            ret[KeyCode.E] = EKeyCommand.SKILL_03;
+            ret[KeyCode.R] = EKeyCommand.SKILL_04;
 
-            ret[KeyCode.Alpha1] = KeyCommand.ITEM_1;
-            ret[KeyCode.Alpha2] = KeyCommand.ITEM_2;
-            ret[KeyCode.Alpha3] = KeyCommand.ITEM_3;
-            ret[KeyCode.Alpha4] = KeyCommand.ITEM_4;
-            ret[KeyCode.Alpha5] = KeyCommand.ITEM_5;
-            ret[KeyCode.Alpha6] = KeyCommand.ITEM_6;
+            ret[KeyCode.Alpha1] = EKeyCommand.ITEM_1;
+            ret[KeyCode.Alpha2] = EKeyCommand.ITEM_2;
+            ret[KeyCode.Alpha3] = EKeyCommand.ITEM_3;
+            ret[KeyCode.Alpha4] = EKeyCommand.ITEM_4;
+            ret[KeyCode.Alpha5] = EKeyCommand.ITEM_5;
+            ret[KeyCode.Alpha6] = EKeyCommand.ITEM_6;
 
-            ret[KeyCode.A] = KeyCommand.COMMAND_ATTACK;
-            ret[KeyCode.M] = KeyCommand.COMMAND_MOVE;
-            ret[KeyCode.S] = KeyCommand.COMMAND_STOP;
+            ret[KeyCode.A] = EKeyCommand.COMMAND_ATTACK;
+            ret[KeyCode.M] = EKeyCommand.COMMAND_MOVE;
+            ret[KeyCode.S] = EKeyCommand.COMMAND_STOP;
 
-            ret[KeyCode.Mouse0] = KeyCommand.COMMAND_APPLY;
-            ret[KeyCode.Mouse1] = KeyCommand.COMMAND_MOVE_APPLY;
+            ret[KeyCode.Mouse0] = EKeyCommand.COMMAND_APPLY;
+            ret[KeyCode.Mouse1] = EKeyCommand.COMMAND_MOVE_APPLY;
         }
 
         return ret;
     }
 
-    int CreateKeySettings(Dictionary<KeyCode, KeyCommand> keySet)
+    int CreateKeySettings(Dictionary<KeyCode, EKeyCommand> keySet)
     {
         keySettings[keySetCount] = keySet;
 
@@ -320,7 +320,7 @@ public class KeyManager : MonoBehaviour {
         return keySetCount - 1;
     }
 
-    void EditKeySettings(Dictionary<KeyCode, KeyCommand> keySet, int idx)
+    void EditKeySettings(Dictionary<KeyCode, EKeyCommand> keySet, int idx)
     {
         if (idx < 0 || idx >= keySetCount)
             return;

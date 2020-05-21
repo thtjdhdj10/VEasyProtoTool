@@ -130,10 +130,10 @@ public class TrgFrame : Trigger
 // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
 public class TrgKeyInput : Trigger
 {
-    private KeyManager.KeyCommand command;
-    private KeyManager.KeyPressType pressType;
+    private KeyManager.EKeyCommand command;
+    private KeyManager.EKeyPressType pressType;
 
-    public TrgKeyInput(Actor _owner, KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    public TrgKeyInput(Actor _owner, KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
         : base(_owner)
     {
         command = _command;
@@ -153,7 +153,7 @@ public class TrgKeyInput : Trigger
         }
     }
 
-    private void HandleKeyInput(KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
     {
         if (command == _command && pressType == _pressType)
             ActivateTrigger();
@@ -165,8 +165,8 @@ public class TrgKeyInput : Trigger
 // 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
 public class TrgKeyInputs : Trigger
 {
-    public KeyManager.KeyCommand command;
-    public KeyManager.KeyPressType pressType;
+    public KeyManager.EKeyCommand command;
+    public KeyManager.EKeyPressType pressType;
 
     public TrgKeyInputs(Actor _owner)
         : base(_owner)
@@ -188,11 +188,11 @@ public class TrgKeyInputs : Trigger
     public override void Init()
     {
         base.Init();
-        command = KeyManager.KeyCommand.NONE;
-        pressType = KeyManager.KeyPressType.NONE;
+        command = KeyManager.EKeyCommand.NONE;
+        pressType = KeyManager.EKeyPressType.NONE;
     }
 
-    private void HandleKeyInput(KeyManager.KeyCommand _command, KeyManager.KeyPressType _pressType)
+    private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
     {
         command = _command;
         pressType = _pressType;
@@ -246,9 +246,9 @@ public class TrgTimer : Trigger
 public class TrgUnitEvent : Trigger
 {
     private Unit target;
-    private TriggerType type;
+    private ETriggerType type;
 
-    public TrgUnitEvent(Actor _owner, Unit _target, TriggerType _type)
+    public TrgUnitEvent(Actor _owner, Unit _target, ETriggerType _type)
         : base(_owner)
     {
         target = _target;
@@ -256,13 +256,13 @@ public class TrgUnitEvent : Trigger
 
         switch (type)
         {
-            case TriggerType.AWAKE:
+            case ETriggerType.AWAKE:
                 target.awakeDel += ActivateTrigger;
                 break;
-            case TriggerType.INIT:
+            case ETriggerType.INIT:
                 target.initDel += ActivateTrigger;
                 break;
-            case TriggerType.ON_DESTROY:
+            case ETriggerType.ON_DESTROY:
                 target.onDestroyDel += ActivateTrigger;
                 break;
         }
@@ -272,19 +272,19 @@ public class TrgUnitEvent : Trigger
     {
         switch (type)
         {
-            case TriggerType.AWAKE:
+            case ETriggerType.AWAKE:
                 target.awakeDel -= ActivateTrigger;
                 break;
-            case TriggerType.INIT:
+            case ETriggerType.INIT:
                 target.initDel -= ActivateTrigger;
                 break;
-            case TriggerType.ON_DESTROY:
+            case ETriggerType.ON_DESTROY:
                 target.onDestroyDel -= ActivateTrigger;
                 break;
         }
     }
 
-    public enum TriggerType
+    public enum ETriggerType
     {
         AWAKE,
         INIT,
@@ -296,9 +296,9 @@ public class TrgUnitEvent : Trigger
 public class TrgAnyUnitEvent : Trigger
 {
     private System.Type targetType;
-    private TriggerType type;
+    private ETriggerType type;
 
-    public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, TriggerType _type)
+    public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, ETriggerType _type)
         : base(_owner)
     {
         targetType = _unitType;
@@ -324,15 +324,15 @@ public class TrgAnyUnitEvent : Trigger
     {
         switch (type)
         {
-            case TriggerType.AWAKE:
+            case ETriggerType.AWAKE:
                 if(isAdd) unit.awakeDel += ActivateTrigger;
                 else unit.awakeDel -= ActivateTrigger;
                 break;
-            case TriggerType.INIT:
+            case ETriggerType.INIT:
                 if(isAdd) unit.initDel += ActivateTrigger;
                 else unit.initDel -= ActivateTrigger;
                 break;
-            case TriggerType.ON_DESTROY:
+            case ETriggerType.ON_DESTROY:
                 if(isAdd) unit.onDestroyDel += ActivateTrigger;
                 else unit.onDestroyDel -= ActivateTrigger;
                 break;
@@ -351,7 +351,7 @@ public class TrgAnyUnitEvent : Trigger
         }
     }
 
-    public enum TriggerType
+    public enum ETriggerType
     {
         AWAKE,
         INIT,

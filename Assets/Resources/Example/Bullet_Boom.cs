@@ -8,7 +8,7 @@ public class Bullet_Boom : Bullet
     {
         force = owner.force;
         System.Type targetType;
-        if (force == Force.A) targetType = typeof(Enemy);
+        if (force == EForce.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         // TODO

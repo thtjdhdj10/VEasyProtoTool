@@ -13,7 +13,7 @@ public class ResourcesManager
 {
     // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
     // 모든 prefab 다 할 필요는 없고, 필요할 때 마다 추가
-    public enum ResName
+    public enum EResName
     {
         NONE = 0,
 
@@ -53,9 +53,7 @@ public class ResourcesManager
 
     private static Dictionary<NameTypePair, UObject> _resNameObjDic =
         new Dictionary<NameTypePair, UObject>();
-
     private List<UObject> _loadedResDic = new List<UObject>();
-
     private const string RESOURCES = "Resources";
     private static Type[] RESOURCE_TYPE_ARR = {
         typeof(GameObject),
@@ -75,7 +73,7 @@ public class ResourcesManager
         return "";
     }
 
-    public static T LoadResource<T>(ResName resourceType) where T : UObject
+    public static T LoadResource<T>(EResName resourceType) where T : UObject
     {
         return LoadResource<T>(resourceType.ToString());
     }

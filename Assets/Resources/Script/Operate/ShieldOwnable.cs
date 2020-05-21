@@ -39,7 +39,7 @@ public class ShieldOwnable : Operable
         for (int i = 0; i < ShieldCount; ++i)
         {
             GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.ResName.Effect_Shield));
+                ResourcesManager.EResName.Effect_Shield));
             shield.transform.position = transform.position;
             shield.transform.parent = transform;
             _shieldList.Add(shield);
@@ -62,7 +62,7 @@ public class ShieldOwnable : Operable
                 ++_shieldCount;
 
                 GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                    ResourcesManager.ResName.Effect_Shield));
+                    ResourcesManager.EResName.Effect_Shield));
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
                 _shieldList.Add(shield);

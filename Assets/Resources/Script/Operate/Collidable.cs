@@ -45,10 +45,10 @@ public class Collidable : Operable
             isCollisionInFrame == true)
             return;
 
-        GetCollisionTarget(Unit.Relation.ENEMY)?.ForEach(t => Hit(t));
+        GetCollisionTarget(Unit.ERelation.ENEMY)?.ForEach(t => Hit(t));
     }
 
-    public virtual List<Collidable> GetCollisionTarget(Unit.Relation targetRelation)
+    public virtual List<Collidable> GetCollisionTarget(Unit.ERelation targetRelation)
     {
         List<Collidable> ret = _allOperableListDic[typeof(Collidable)].
             ConvertAll(t => t as Collidable);

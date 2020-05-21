@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class Controllable : Operable
 {
-    public delegate void KeyInputDel(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType);
+    public delegate void KeyInputDel(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType);
     public KeyInputDel keyInputDel = new KeyInputDel(EmptyMethod);
-    public static void EmptyMethod(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType) { }
+    public static void EmptyMethod(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType) { }
 
-    public virtual void KeyInput(KeyManager.KeyCommand command, KeyManager.KeyPressType pressType)
+    public virtual void KeyInput(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType)
     {
         if (state == false) return;
         keyInputDel(command, pressType);

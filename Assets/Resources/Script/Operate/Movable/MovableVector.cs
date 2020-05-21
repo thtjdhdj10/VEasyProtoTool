@@ -32,19 +32,19 @@ public class MovableVector : Movable
         }
 
         Vector2 delta = new Vector2(0f, 0f);
-        if (moveDir[(int)Const.Direction.LEFT] == true)
+        if (moveDir[(int)Const.EDirection.LEFT] == true)
         {
             delta.x -= moveDelta;
         }
-        else if (moveDir[(int)Const.Direction.RIGHT] == true)
+        else if (moveDir[(int)Const.EDirection.RIGHT] == true)
         {
             delta.x += moveDelta;
         }
-        if (moveDir[(int)Const.Direction.UP] == true)
+        if (moveDir[(int)Const.EDirection.UP] == true)
         {
             delta.y += moveDelta;
         }
-        else if (moveDir[(int)Const.Direction.DOWN] == true)
+        else if (moveDir[(int)Const.EDirection.DOWN] == true)
         {
             delta.y -= moveDelta;
         }

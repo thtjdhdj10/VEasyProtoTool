@@ -10,12 +10,12 @@ public class Bullet_Paralyze : BulletStraight
     {
         force = owner.force;
         System.Type targetType;
-        if (force == Force.A) targetType = typeof(Enemy);
+        if (force == EForce.A) targetType = typeof(Enemy);
         else targetType = typeof(Player);
 
         TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
-        new ActActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, true);
-        new ActActiveTargetOperable<Movable>(trgCol, Multistat.StateType.STURN, false)
+        new ActActiveTargetOperable<Movable>(trgCol, Multistat.EStateType.STURN, true);
+        new ActActiveTargetOperable<Movable>(trgCol, Multistat.EStateType.STURN, false)
         { delay = duration };
         new ActDealDamage(trgCol, damage);
         new ActDestroyActor(trgCol, this);

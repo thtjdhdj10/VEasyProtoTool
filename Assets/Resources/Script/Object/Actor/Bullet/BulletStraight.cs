@@ -12,7 +12,7 @@ public class BulletStraight : Bullet
         if (GameManager.isQuitting == false)
         {
             GameObject effectPrefab = ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.ResName.Effect_Bullet);
+                ResourcesManager.EResName.Effect_Bullet);
 
             GameObject effect = Instantiate(effectPrefab);
 
