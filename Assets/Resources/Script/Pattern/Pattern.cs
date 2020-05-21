@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// PatternFireable과 함께 사용
+// 보스 유닛 등에 붙여서 다양한 행동 패턴 반복 수행 가능
 public abstract class Pattern
 {
     public Actor owner;

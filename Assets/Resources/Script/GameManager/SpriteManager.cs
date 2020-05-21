@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-// TODO
-// Awake 가 아니라 에디터 이용해서 하도록 수정
+// TODO: Awake 가 아니라 에디터 이용해서 LoadSprite() 하도록 수정
 
+// 단순히 파일을 불러서 적재하기만 하는 resource manager와 달리
+// sprite 파일을 불러서 해당 파일의 이름을 파싱,
+// 파일 이름을 카테고리, 이름, 상태, 프레임 네 단계로 구분하여 관리
+
+// 파일 이름 관리가 강제된다는 단점이 있음
 using TypeSpriteDictionary =
 System.Collections.Generic.Dictionary<string,
 System.Collections.Generic.Dictionary<string,
@@ -15,7 +19,7 @@ public class SpriteManager : MonoBehaviour
 
     public int countLoadSprite;
 
-    public static float spriteDefaultRotation = -90f;
+    public static float spriteDefaultRotation = 0f;
 
     public static int spriteDefaultFramePerSec = 12;
 
@@ -188,7 +192,6 @@ public class SpriteManager : MonoBehaviour
 
         return "";
     }
-
 
     string[] GetSplitName(string name)
     {

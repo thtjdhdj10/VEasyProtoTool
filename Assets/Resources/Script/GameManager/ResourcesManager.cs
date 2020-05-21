@@ -9,6 +9,7 @@ using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type
 
 // Resources 하위 경로에 있는 모든 폴더를 검사해서
 // RESOURCE_TYPE_ARR 에 속하는 타입의 리소스를 저장하여 관리
+// LoadResource() 로 적재된 리소스를 불러올 수 있다
 public class ResourcesManager
 {
     // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
@@ -53,25 +54,14 @@ public class ResourcesManager
 
     private static Dictionary<NameTypePair, UObject> _resNameObjDic =
         new Dictionary<NameTypePair, UObject>();
+
     private List<UObject> _loadedResDic = new List<UObject>();
-    private const string RESOURCES = "Resources";
     private static Type[] RESOURCE_TYPE_ARR = {
         typeof(GameObject),
         typeof(Sprite),
         typeof(RuntimeAnimatorController),
     };
-
-    private static string ResourceTypeToExtension(Type type)
-    {
-        if (type == typeof(GameObject))
-            return "*.prefab";
-        if (type == typeof(Sprite))
-            return "*.png";
-        if (type == typeof(RuntimeAnimatorController))
-            return "*.controller";
-
-        return "";
-    }
+    private const string RESOURCES = "Resources";
 
     public static T LoadResource<T>(EResName resourceType) where T : UObject
     {
@@ -85,6 +75,18 @@ public class ResourcesManager
             return _resNameObjDic[nameType] as T;
 
         return default;
+    }
+
+    private static string ResourceTypeToExtension(Type type)
+    {
+        if (type == typeof(GameObject))
+            return "*.prefab";
+        if (type == typeof(Sprite))
+            return "*.png";
+        if (type == typeof(RuntimeAnimatorController))
+            return "*.controller";
+
+        return "";
     }
 
     public ResourcesManager()
