@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class LayerManager : MonoBehaviour {
-    
+// 개발 중단됨
+public class LayerManager : MonoBehaviour
+{
+
+    static Dictionary<string, int> layerNameNumber = new Dictionary<string, int>();
+
     public const int MaxLayerCount = 32;
 
     void Awake()
@@ -17,8 +21,6 @@ public class LayerManager : MonoBehaviour {
             }
         }
     }
-
-    static Dictionary<string, int> layerNameNumber = new Dictionary<string, int>();
 
     static public bool CheckLayer(int layer, string name)
     {
@@ -176,10 +178,9 @@ public class LayerManager : MonoBehaviour {
         int rightMask = -1;
         int leftMask = -1;
 
-        rightMask = LogicalRightShift(rightMask, sizeof(int) * 8 - number -1);
+        rightMask = LogicalRightShift(rightMask, sizeof(int) * 8 - number - 1);
         leftMask = leftMask << number;
 
         return rightMask & leftMask;
     }
-
 }

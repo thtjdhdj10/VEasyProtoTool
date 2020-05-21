@@ -65,7 +65,6 @@ public class TextDisplay : MonoBehaviour
 
         foreach(var text in keywordTextDic.Values)
         {
-            Debug.Log(rect.position);
             GUI.Label(rect, text, _style);
             rect.y += fontSize;
         }

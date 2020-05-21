@@ -74,24 +74,24 @@ public abstract class Movable : Operable
             _bounceBy == BounceBy.BOUNDARY_TOUCH)
         {
             Collidable col = owner.GetOperable<Collidable>();
-            GameManager.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
+            Const.Direction bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
 
             isBounced = true;
             switch (bounceByDir)
             {
-                case GameManager.Direction.NONE:
+                case Const.Direction.NONE:
                     isBounced = false;
                     break;
-                case GameManager.Direction.UP:
+                case Const.Direction.UP:
                     targetDir = 90f;
                     break;
-                case GameManager.Direction.DOWN:
+                case Const.Direction.DOWN:
                     targetDir = 270f;
                     break;
-                case GameManager.Direction.LEFT:
+                case Const.Direction.LEFT:
                     targetDir = 180f;
                     break;
-                case GameManager.Direction.RIGHT:
+                case Const.Direction.RIGHT:
                     targetDir = 0f;
                     break;
             }
@@ -100,24 +100,24 @@ public abstract class Movable : Operable
             _bounceBy == BounceBy.BOUNDARY_OUT)
         {
             Collidable col = owner.GetOperable<Collidable>();
-            GameManager.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
+            Const.Direction bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
             isBounced = true;
             switch (bounceByDir)
             {
-                case GameManager.Direction.NONE:
+                case Const.Direction.NONE:
                     isBounced = false;
                     break;
-                case GameManager.Direction.UP:
+                case Const.Direction.UP:
                     targetDir = 90f;
                     break;
-                case GameManager.Direction.DOWN:
+                case Const.Direction.DOWN:
                     targetDir = 270f;
                     break;
-                case GameManager.Direction.LEFT:
+                case Const.Direction.LEFT:
                     targetDir = 180f;
                     break;
-                case GameManager.Direction.RIGHT:
+                case Const.Direction.RIGHT:
                     targetDir = 0f;
                     break;
             }

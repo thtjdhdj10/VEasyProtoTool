@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class Trigger
 {
@@ -11,8 +12,8 @@ public abstract class Trigger
     public Actor owner;
 
     // Option
-    public bool isDisposableTrigger = false; // Trigger 가 작동할 때까지 존재.
-    public bool isDisposableAction = false; // Action 이 한 번 실행될 때까지 존재.
+    public bool isDisposableTrigger = false; // Trigger 가 작동할 때 까지 존재.
+    public bool isDisposableAction = false; // Action 이 한 번 실행될 때 까지 존재.
 
     public Trigger(Actor _owner)
     {
@@ -27,25 +28,20 @@ public abstract class Trigger
 
     public virtual void Init()
     {
-        for (int i = 0; i < actionList.Count; ++i)
-            actionList[i].Init();
-        for (int i = 0; i < conditionList.Count; ++i)
-            conditionList[i].Init();
+        actionList.ForEach(a => a.Init());
+        conditionList.ForEach(c => c.Init());
     }
 
     public virtual void ActivateTrigger()
     {
-        for (int i = 0; i < conditionList.Count; ++i)
-            if (conditionList[i].CheckCondition() == false)
-                return;
+        if (conditionList.Any(c => c.CheckCondition() == false)) return;
 
-        for (int i = 0; i < actionList.Count;++i )
+        actionList.ForEach(a =>
         {
-            actionList[i].Activate(this);
-
-            if (isDisposableAction == true)
+            a.Activate(this);
+            if (isDisposableAction)
                 owner.triggerList.Remove(this);
-        }
+        });
 
         if (isDisposableTrigger == true)
             owner.triggerList.Remove(this);

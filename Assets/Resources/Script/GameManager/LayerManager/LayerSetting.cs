@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-using System.Runtime.Serialization;
-
-
+// 유니티 기본 지원 기능인 레이어 설정을 대체할 수 있는 커스텀 레이어 설정
+// 한 오브젝트가 복수의 레이어를 가질 수 있게 하고 인스펙터에서 커스텀 가능하게 할 예정
+// 개발 중단됨
 public class LayerSetting : MonoBehaviour {
 
     public int layerMask = 0;
@@ -20,7 +20,8 @@ public class LayerSetting : MonoBehaviour {
 
     public bool[] layers = new bool[LayerManager.MaxLayerCount];
 
-    public KeyValuePair<int, bool>[] layerNumberNState = new KeyValuePair<int, bool>[LayerManager.MaxLayerCount];
+    public KeyValuePair<int, bool>[] layerNumberNState =
+        new KeyValuePair<int, bool>[LayerManager.MaxLayerCount];
     
     void Start()
     {

@@ -12,15 +12,6 @@ public class VEasyCalculator
         dic[toKey] = value;
     }
 
-    public static bool TryGetKey<K, V>(Dictionary<K, V> instance, V value, out K key)
-    {
-        key = instance.Keys.FirstOrDefault(x => x.Equals(value));
-
-        if (instance.Keys.Any(x => x.Equals(value)))
-            return true;
-        return false;
-    }
-
     //
 
     public static float Inner(Vector2 posA, Vector2 posB)
@@ -49,7 +40,7 @@ public class VEasyCalculator
         return GetDeltaPosition(a, b).SqrMagnitude();
     }
 
-    public static GameManager.Direction CheckOutside2D(Collider2D col)
+    public static Const.Direction CheckOutside2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
@@ -59,32 +50,32 @@ public class VEasyCalculator
             CircleCollider2D cirCol = col as CircleCollider2D;
 
             if (pos.x + cirCol.radius < rect.xMin)
-                return GameManager.Direction.LEFT;
+                return Const.Direction.LEFT;
             if (pos.x - cirCol.radius > rect.xMax)
-                return GameManager.Direction.RIGHT;
+                return Const.Direction.RIGHT;
             if (pos.y + cirCol.radius < rect.yMin)
-                return GameManager.Direction.DOWN;
+                return Const.Direction.DOWN;
             if (pos.y - cirCol.radius > rect.yMax)
-                return GameManager.Direction.UP;
+                return Const.Direction.UP;
         }
         else if (col is BoxCollider2D)
         {
             BoxCollider2D boxCol = col as BoxCollider2D;
 
             if (pos.x + boxCol.size.x < rect.xMin)
-                return GameManager.Direction.LEFT;
+                return Const.Direction.LEFT;
             if (pos.x - boxCol.size.x > rect.xMax)
-                return GameManager.Direction.RIGHT;
+                return Const.Direction.RIGHT;
             if (pos.y + boxCol.size.y < rect.yMin)
-                return GameManager.Direction.DOWN;
+                return Const.Direction.DOWN;
             if (pos.y - boxCol.size.y > rect.yMax)
-                return GameManager.Direction.UP;
+                return Const.Direction.UP;
         }
 
-        return GameManager.Direction.NONE;
+        return Const.Direction.NONE;
     }
 
-    public static GameManager.Direction CheckTerritory2D(Collider2D col)
+    public static Const.Direction CheckTerritory2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
         Rect rect = CameraManager.manager.GetLogicalRect();
@@ -94,29 +85,29 @@ public class VEasyCalculator
             CircleCollider2D cirCol = col as CircleCollider2D;
 
             if (pos.x - cirCol.radius < rect.xMin)
-                return GameManager.Direction.LEFT;
+                return Const.Direction.LEFT;
             if (pos.x + cirCol.radius > rect.xMax)
-                return GameManager.Direction.RIGHT;
+                return Const.Direction.RIGHT;
             if (pos.y - cirCol.radius < rect.yMin)
-                return GameManager.Direction.DOWN;
+                return Const.Direction.DOWN;
             if (pos.y + cirCol.radius > rect.yMax)
-                return GameManager.Direction.UP;
+                return Const.Direction.UP;
         }
         else if (col is BoxCollider2D)
         {
             BoxCollider2D boxCol = col as BoxCollider2D;
 
             if (pos.x - boxCol.size.x < rect.xMin)
-                return GameManager.Direction.LEFT;
+                return Const.Direction.LEFT;
             if (pos.x + boxCol.size.x > rect.xMax)
-                return GameManager.Direction.RIGHT;
+                return Const.Direction.RIGHT;
             if (pos.y - boxCol.size.y < rect.yMin)
-                return GameManager.Direction.DOWN;
+                return Const.Direction.DOWN;
             if (pos.y + boxCol.size.y > rect.yMax)
-                return GameManager.Direction.UP;
+                return Const.Direction.UP;
         }
 
-        return GameManager.Direction.NONE;
+        return Const.Direction.NONE;
     }
 
     public static Vector2 ScreenToWorldPos(Vector2 screen)

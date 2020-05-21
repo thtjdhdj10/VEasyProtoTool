@@ -500,25 +500,25 @@ public class ActVectorMoveActor : Action
 
     bool[] moveDir = new bool[4];
 
-    Dictionary<GameManager.Direction, KeyManager.KeyCommand> dirKeyDic =
-        new Dictionary<GameManager.Direction, KeyManager.KeyCommand>();
-    Dictionary<GameManager.Direction, GameManager.Direction> dirRevdirDic =
-        new Dictionary<GameManager.Direction, GameManager.Direction>();
+    Dictionary<Const.Direction, KeyManager.KeyCommand> dirKeyDic =
+        new Dictionary<Const.Direction, KeyManager.KeyCommand>();
+    Dictionary<Const.Direction, Const.Direction> dirRevdirDic =
+        new Dictionary<Const.Direction, Const.Direction>();
 
     public ActVectorMoveActor(Trigger trigger, float _speed)
         : base(trigger)
     {
         speed = _speed;
 
-        dirKeyDic[GameManager.Direction.LEFT] = KeyManager.KeyCommand.MOVE_LEFT;
-        dirKeyDic[GameManager.Direction.RIGHT] = KeyManager.KeyCommand.MOVE_RIGHT;
-        dirKeyDic[GameManager.Direction.UP] = KeyManager.KeyCommand.MOVE_UP;
-        dirKeyDic[GameManager.Direction.DOWN] = KeyManager.KeyCommand.MOVE_DOWN;
+        dirKeyDic[Const.Direction.LEFT] = KeyManager.KeyCommand.MOVE_LEFT;
+        dirKeyDic[Const.Direction.RIGHT] = KeyManager.KeyCommand.MOVE_RIGHT;
+        dirKeyDic[Const.Direction.UP] = KeyManager.KeyCommand.MOVE_UP;
+        dirKeyDic[Const.Direction.DOWN] = KeyManager.KeyCommand.MOVE_DOWN;
 
-        dirRevdirDic[GameManager.Direction.LEFT] = GameManager.Direction.RIGHT;
-        dirRevdirDic[GameManager.Direction.RIGHT] = GameManager.Direction.LEFT;
-        dirRevdirDic[GameManager.Direction.UP] = GameManager.Direction.DOWN;
-        dirRevdirDic[GameManager.Direction.DOWN] = GameManager.Direction.UP;
+        dirRevdirDic[Const.Direction.LEFT] = Const.Direction.RIGHT;
+        dirRevdirDic[Const.Direction.RIGHT] = Const.Direction.LEFT;
+        dirRevdirDic[Const.Direction.UP] = Const.Direction.DOWN;
+        dirRevdirDic[Const.Direction.DOWN] = Const.Direction.UP;
     }
 
     protected override void ActionProcess(Trigger trigger)
@@ -545,7 +545,7 @@ public class ActVectorMoveActor : Action
     {
         for (int d = 0; d < 4; ++d)
         {
-            GameManager.Direction dir = (GameManager.Direction)d;
+            Const.Direction dir = (Const.Direction)d;
             if (command == dirKeyDic[dir])
             {
                 if (type == KeyManager.KeyPressType.DOWN)
