@@ -32,21 +32,21 @@ public abstract class Action
     }
 }
 
-public class ActSetConditionBool : Action
+public class ActSetRefValue<T> : Action where T : struct
 {
-    public CndEnable target;
-    public bool state;
+    public RefValue<T> target;
+    public T value;
 
-    public ActSetConditionBool(Trigger trigger, CndEnable _target, bool _state)
+    public ActSetRefValue(Trigger trigger, RefValue<T> _target, T _value)
         : base(trigger)
     {
-        state = _state;
         target = _target;
+        value = _value;
     }
 
     protected override void ActionProcess(Trigger trigger)
     {
-        target.state = state;
+        target.value = value;
     }
 }
 

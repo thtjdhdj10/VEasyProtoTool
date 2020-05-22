@@ -20,9 +20,9 @@ public abstract class Condition
 
 public class CndEnable : Condition
 {
-    public bool state;
+    public RefValue<bool> state;
 
-    public CndEnable(Trigger trigger, bool _state)
+    public CndEnable(Trigger trigger, RefValue<bool> _state)
         : base(trigger)
     {
         state = _state;
@@ -30,6 +30,6 @@ public class CndEnable : Condition
 
     public override bool CheckCondition()
     {
-        return state;
+        return state.value;
     }
 }

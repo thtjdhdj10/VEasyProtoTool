@@ -10,7 +10,7 @@ public abstract class Movable : Operable
     public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
     public EBounceTo _bounceTo;
 
-    private float _remainBounceCooldown; // 트리거 자체에 쿨타임을 넣기?
+    private RefValue<bool> _enableBounceRef = new RefValue<bool>(false);
 
     protected Vector2 _targetPos;
 
@@ -44,6 +44,8 @@ public abstract class Movable : Operable
                 _targetPos = ownerTarget.target.transform.position;
         }
 
+        _enableBounceRef.value = _enableBounce;
+
         // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
         SetTriggerAction();
 
@@ -69,6 +71,10 @@ public abstract class Movable : Operable
                     break;
             }
 
+            if (trigger == null) return;
+
+            new CndEnable(trigger, _enableBounceRef);
+
             switch (_bounceTo)
             {
                 case EBounceTo.REVERSE:
@@ -88,12 +94,6 @@ public abstract class Movable : Operable
                     break;
             }
         }
-    }
-
-    protected virtual void BounceProcessing()
-    {
-        // TODO condition으로 관리하도록 수정
-        if (_enableBounce == false) return;
     }
 }
 

@@ -15,9 +15,10 @@ public class Player : Unit
         TrgKeyInputs triKeyInput = new TrgKeyInputs(this);
         new ActVectorMoveActor(triKeyInput, 2f);
 
-        TrgFrame triAllways = new TrgFrame(this, 0);
-        CndEnable conMouseTrack = new CndEnable(triAllways, true);
-        new ActDirectionToMouse(triAllways, this);
+        RefValue<bool> doTrackMouse = new RefValue<bool>(true);
+        TrgFrame TrgAllways = new TrgFrame(this, 0);
+        new CndEnable(TrgAllways, doTrackMouse);
+        new ActDirectionToMouse(TrgAllways, this);
 
         // 플레이어 공격 처리
         GetOperable<Shootable>().state.SetState(Multistat.EStateType.CLICK, false);
@@ -64,8 +65,8 @@ public class Player : Unit
         new ActSetController(triCol, gameObject, null) { delay = knockbackTime };
         new ActSetAnimatorSpeed(triCol, gameObject, 0.8f);
 
-        new ActSetConditionBool(triCol, conMouseTrack, false);
-        new ActSetConditionBool(triCol, conMouseTrack, true) { delay = knockbackTime };
+        new ActSetRefValue<bool>(triCol, doTrackMouse, false);
+        new ActSetRefValue<bool>(triCol, doTrackMouse, true) { delay = knockbackTime };
 
         // 우클릭 시 테스트
         //TriggerKeyInput trgRightClick = new TriggerKeyInput(
