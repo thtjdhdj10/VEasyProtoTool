@@ -10,6 +10,7 @@ public abstract class Operable : MonoBehaviour
 
     public Multistat state = new Multistat();
 
+    // key: operable의 직속 하위클래스. GetOperableOriginType() 로 확인
     protected static Dictionary<Type, List<Operable>> _allOperableListDic
         = new Dictionary<Type, List<Operable>>();
 
@@ -27,6 +28,7 @@ public abstract class Operable : MonoBehaviour
         if (_allOperableListDic.TryGetValue(originType, out List<Operable> operableList))
         {
             operableList?.Add(this);
+
             // Note: UnityEngine.Object인 GameObject, Componenet에 대해 ?? 연산자가 동작하지 않음
             // _allOperableListDic[originType] ??= new List<Operable>() { this };
             if (_allOperableListDic[originType] == null)
@@ -37,6 +39,7 @@ public abstract class Operable : MonoBehaviour
         if (owner.operableListDic.TryGetValue(originType, out List<Operable> ownerOperableList))
         {
             ownerOperableList?.Add(this);
+
             if (owner.operableListDic[originType] == null)
                 owner.operableListDic[originType] = new List<Operable>() { this };
         }
@@ -97,6 +100,6 @@ public abstract class Operable : MonoBehaviour
 
     protected virtual void HandleUpdateState(bool _state)
     {
-        Init();
+
     }
 }

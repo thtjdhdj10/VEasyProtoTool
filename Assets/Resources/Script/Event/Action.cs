@@ -469,7 +469,7 @@ public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operabl
 public class ActCreateActor : Action
 {
     public Actor target;
-    public Vector2 pos;
+    public Vector2 position;
     public bool isMovingActor;
     public float direction;
     public float speed;
@@ -478,7 +478,7 @@ public class ActCreateActor : Action
         : base(trigger)
     {
         target = _target;
-        pos = _pos;
+        position = _pos;
 
         isMovingActor = false;
     }
@@ -487,7 +487,7 @@ public class ActCreateActor : Action
         : base(trigger)
     {
         target = _target;
-        pos = _pos;
+        position = _pos;
 
         isMovingActor = true;
 
@@ -497,8 +497,8 @@ public class ActCreateActor : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        Actor actor = GameObject.Instantiate(target);
-        actor.transform.position = pos;
+        Actor actor = Object.Instantiate(target);
+        actor.transform.position = position;
 
         if (isMovingActor)
         {
@@ -506,6 +506,29 @@ public class ActCreateActor : Action
             move.owner.moveDir = direction;
             move.speed = speed;
         }
+    }
+}
+
+public class ActCreateObject : Action
+{
+    public GameObject prefab;
+    public Vector2 position;
+    public float direction;
+
+    public ActCreateObject(Trigger trigger, GameObject _prefab, Vector2 _position, float _direction)
+        : base(trigger)
+    {
+        prefab = _prefab;
+        position = _position;
+        direction = _direction;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        GameObject effect = Object.Instantiate(prefab);
+
+        effect.transform.position = position;
+        effect.transform.rotation = Quaternion.Euler(0, 0, direction);
     }
 }
 

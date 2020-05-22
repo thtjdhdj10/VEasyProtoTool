@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MovableVector : Movable
 {
@@ -7,8 +8,12 @@ public class MovableVector : Movable
 
     public override void Init()
     {
-        base.Init();
-        moveDir = new bool[4];
+        moveDir.Select(b => b = false);
+    }
+
+    protected override void HandleUpdateState(bool _state)
+    {
+        Init();
     }
 
     protected override void MoveFrame()

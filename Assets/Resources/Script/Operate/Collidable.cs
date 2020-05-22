@@ -38,6 +38,7 @@ public class Collidable : Operable
     protected virtual void FixedUpdate()
     {
         if (state == false) return;
+
         CollisionCheckFrame();
     }
 

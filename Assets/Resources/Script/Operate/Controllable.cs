@@ -10,6 +10,7 @@ public class Controllable : Operable
     public virtual void KeyInput(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType)
     {
         if (state == false) return;
+
         keyInputDel(command, pressType);
     }
 }

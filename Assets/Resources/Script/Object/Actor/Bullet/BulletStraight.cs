@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 맵 나가면 삭제
 public class BulletStraight : Bullet
 {
-    protected override void OnDestroy()
+    protected override void SetDefaultBulletSetting()
     {
-        base.OnDestroy();
+        force = owner.force;
+        System.Type targetType;
+        if (force == EForce.A) targetType = typeof(Enemy);
+        else targetType = typeof(Player);
 
-        if (GameManager.isQuitting == false)
-        {
-            GameObject effectPrefab = ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.EResName.Effect_Bullet);
+        GameObject effectPrefab = ResourcesManager.LoadResource<GameObject>(
+            ResourcesManager.EResName.Effect_Bullet);
 
-            GameObject effect = Instantiate(effectPrefab);
-
-            effect.transform.position = transform.position;
-            effect.transform.rotation = transform.rotation;
-        }
+        TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
+        new ActDealDamage(trgCol, damage);
+        new ActDestroyActor(trgCol, this);
+        new ActCreateObject(trgCol, effectPrefab, transform.position, moveDir);
     }
 }
