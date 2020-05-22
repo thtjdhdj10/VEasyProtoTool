@@ -4,13 +4,11 @@ using System.Collections.Generic;
 public abstract class Movable : Operable
 {
     public float speed = 1f;
-    public bool _enableBounce;
     public float _bounceCooldown;
 
+    public RefBoolean _enableBounceRef = new RefBoolean(false);
     public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
     public EBounceTo _bounceTo;
-
-    private RefValue<bool> _enableBounceRef = new RefValue<bool>(false);
 
     protected Vector2 _targetPos;
 
@@ -43,8 +41,6 @@ public abstract class Movable : Operable
             if (ownerTarget.target != null)
                 _targetPos = ownerTarget.target.transform.position;
         }
-
-        _enableBounceRef.value = _enableBounce;
 
         // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
         SetTriggerAction();

@@ -5,6 +5,11 @@ public class UnitStatus : MonoBehaviour
 {
     public Unit owner;
 
+    public bool enableVitalColor; // 남은체력에따라 컬러변경
+    public bool enableHPDisplay;
+    public EVitalSign vital;
+    public SpriteRenderer sprite;
+
     public int hp;
     [SerializeField]
     private int currentHp;
@@ -30,11 +35,6 @@ public class UnitStatus : MonoBehaviour
         }
     }
 
-    public bool enableVitalColor; // 남은체력에따라 컬러변경
-
-    public EVitalSign vital;
-    public SpriteRenderer sprite;
-
     public enum EVitalSign
     {
         RED, // 100%~80%
@@ -43,7 +43,7 @@ public class UnitStatus : MonoBehaviour
         WHITE, // 20%~0%
     }
 
-    void Awake()
+    private void Awake()
     {
         // TODO 에디터에서 찾게 수정
         if(owner == null) owner = gameObject.GetComponent<Unit>();
@@ -53,7 +53,13 @@ public class UnitStatus : MonoBehaviour
             sprite = GetComponent<SpriteRenderer>();
     }
 
-    void Start()
+    private void Update()
+    {
+        if (enableHPDisplay)
+            TextDisplay.TextUpdate(gameObject, "HP", "HP: " + CurrentHp);
+    }
+
+    private void Start()
     {
         Init();
     }

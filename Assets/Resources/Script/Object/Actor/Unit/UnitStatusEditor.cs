@@ -11,6 +11,7 @@ public class UnitStatusEditor : Editor
     SerializedProperty hpProp;
     SerializedProperty currentHpProp;
     SerializedProperty enableVitalColorProp;
+    SerializedProperty enableHPDisplayProp;
     SerializedProperty vitalProp;
     SerializedProperty spriteProp;
 
@@ -25,6 +26,7 @@ public class UnitStatusEditor : Editor
         hpProp = serializedObject.FindProperty("hp");
         currentHpProp = serializedObject.FindProperty("currentHp");
         enableVitalColorProp = serializedObject.FindProperty("enableVitalColor");
+        enableHPDisplayProp = serializedObject.FindProperty("enableHPDisplay");
         vitalProp = serializedObject.FindProperty("vital");
         spriteProp = serializedObject.FindProperty("sprite");
     }
@@ -45,6 +47,7 @@ public class UnitStatusEditor : Editor
         EditorGUILayout.PropertyField(hpProp);
         EditorGUILayout.PropertyField(currentHpProp);
         EditorGUILayout.PropertyField(enableVitalColorProp);
+        EditorGUILayout.PropertyField(enableHPDisplayProp);
 
         if(obj.enableVitalColor)
         {

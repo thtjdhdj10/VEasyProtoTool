@@ -15,7 +15,7 @@ public class Player : Unit
         TrgKeyInputs triKeyInput = new TrgKeyInputs(this);
         new ActVectorMoveActor(triKeyInput, 2f);
 
-        RefValue<bool> doTrackMouse = new RefValue<bool>(true);
+        RefBoolean doTrackMouse = new RefBoolean(true);
         TrgFrame TrgAllways = new TrgFrame(this, 0);
         new CndEnable(TrgAllways, doTrackMouse);
         new ActDirectionToMouse(TrgAllways, this);
@@ -74,10 +74,5 @@ public class Player : Unit
         //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
         //ActionActivatePattern actActivatePattern =
         //    new ActionActivatePattern(trgRightClick, pattern_S1);
-    }
-
-    private void Update()
-    {
-        TextDisplay.TextUpdate(gameObject, "PLAYER HP", "HP: " + unitStatus.CurrentHp);
     }
 }
