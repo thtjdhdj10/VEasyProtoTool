@@ -16,7 +16,7 @@ public class Player : Unit
         new ActVectorMoveActor(triKeyInput, 2f);
 
         TrgFrame triAllways = new TrgFrame(this, 0);
-        ConditionBool conMouseTrack = new ConditionBool(triAllways, true);
+        CndEnable conMouseTrack = new CndEnable(triAllways, true);
         new ActDirectionToMouse(triAllways, this);
 
         // 플레이어 공격 처리

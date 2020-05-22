@@ -39,7 +39,7 @@ public class Bullet_Laser : Bullet
         {
             bodies[i] = Instantiate(laserBody);
             bodies[i].transform.rotation = transform.rotation;
-            Vector2 bodyPos = VEasyCalculator.GetRotatedPosition(direction, (i + 1) * scale);
+            Vector2 bodyPos = VEasyCalc.GetRotatedPosition(direction, (i + 1) * scale);
             bodies[i].transform.position = bodyPos;
             bodies[i].GetComponent<EffectAnimDestroy>().duration = duration;
         }

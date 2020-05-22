@@ -79,7 +79,7 @@ public class PtnFire : Pattern
     public override IEnumerator Fire()
     {
         if (posRoot != null) position = posRoot.transform.position;
-        if (dirRoot != null) direction = dirRoot.targetDirection;
+        if (dirRoot != null) direction = dirRoot.targetDir;
 
         for (int i = 0; i < count; ++i)
         {
@@ -106,9 +106,9 @@ public class PtnFire : Pattern
         if (posRoot != null) position = posRoot.transform.position;
         actor.transform.position = position + deltaPos;
 
-        if (dirRoot != null) direction = dirRoot.targetDirection;
-        actor.targetDirection = direction + deltaDir;
-        actor.moveDirection = direction + deltaDir;
+        if (dirRoot != null) direction = dirRoot.targetDir;
+        actor.targetDir = direction + deltaDir;
+        actor.moveDir = direction + deltaDir;
     }
 }
 
@@ -121,7 +121,7 @@ public class PtnFireDirection : PtnFire
 
     public override void PreFireProcess()
     {
-        if (owner != null) direction = owner.targetDirection;
+        if (owner != null) direction = owner.targetDir;
     }
 }
 
@@ -139,7 +139,7 @@ public class PtnFireTarget : PtnFire
             target = owner.GetOperable<Targetable>().target;
 
         if (target != null) targetPos = target.transform.position;
-        direction = VEasyCalculator.GetDirection(position, targetPos);
+        direction = VEasyCalc.GetDirection(position, targetPos);
     }
 }
 
@@ -155,7 +155,7 @@ public class PtnFireTarget_AngleRandom : PtnFireTarget
             target = owner.GetOperable<Targetable>().target;
 
         if (target != null) targetPos = target.transform.position;
-        direction = VEasyCalculator.GetDirection(position, targetPos);
+        direction = VEasyCalc.GetDirection(position, targetPos);
 
         deltaDir = angle * (Random.Range(0f, 1f) - 0.5f);
     }
@@ -170,10 +170,10 @@ public class PtnFireTarget_RowRandom : PtnFireTarget
     public override void PreFireProcess()
     {
         if (target != null) targetPos = target.transform.position;
-        direction = VEasyCalculator.GetDirection(position, targetPos);
+        direction = VEasyCalc.GetDirection(position, targetPos);
 
         float deltaDistance = length * (Random.Range(0f, 1f) - 0.5f);
-        deltaPos = VEasyCalculator.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
+        deltaPos = VEasyCalc.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
     }
 }
 
@@ -202,7 +202,7 @@ public class PtnFireRowRandom : PtnFire
         if (count == 1) return;
 
         float deltaDistance = length * (Random.Range(0f, 1f) - 0.5f);
-        deltaPos = VEasyCalculator.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
+        deltaPos = VEasyCalc.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
     }
 }
 
@@ -255,6 +255,6 @@ public class PtnFireRow : PtnFire
         float fireIndex = (float)firedCount / (count - 1) - 0.5f;
         if (!isLeftToRight) fireIndex = -fireIndex;
         float deltaDistance = length * fireIndex;
-        deltaPos = VEasyCalculator.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
+        deltaPos = VEasyCalc.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
     }
 }

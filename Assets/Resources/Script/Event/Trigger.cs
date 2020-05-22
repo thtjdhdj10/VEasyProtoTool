@@ -86,6 +86,80 @@ public class TrgCollision : Trigger
     }
 }
 
+public class TrgBoundaryTouch : Trigger
+{
+    public float bounceTo;
+
+    public TrgBoundaryTouch(Actor _owner)
+        :base(_owner)
+    {
+        _owner.fixedUpdateDel += HandleFixedUpdate;
+    }
+
+    private void HandleFixedUpdate()
+    {
+        Collidable col = owner.GetOperable<Collidable>();
+        Const.EDirection bounceByDir = VEasyCalc.CheckTerritory2D(col.collider);
+
+        switch (bounceByDir)
+        {
+            case Const.EDirection.UP:
+                bounceTo = 90f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.DOWN:
+                bounceTo = 270f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.LEFT:
+                bounceTo = 180f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.RIGHT:
+                bounceTo = 0f;
+                ActivateTrigger();
+                break;
+        }
+    }
+}
+
+public class TrgBoundaryOut : Trigger
+{
+    public float bounceTo;
+
+    public TrgBoundaryOut(Actor _owner)
+        : base(_owner)
+    {
+        _owner.fixedUpdateDel += HandleFixedUpdate;
+    }
+
+    private void HandleFixedUpdate()
+    {
+        Collidable col = owner.GetOperable<Collidable>();
+        Const.EDirection bounceByDir = VEasyCalc.CheckOutside2D(col.collider);
+
+        switch (bounceByDir)
+        {
+            case Const.EDirection.UP:
+                bounceTo = 90f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.DOWN:
+                bounceTo = 270f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.LEFT:
+                bounceTo = 180f;
+                ActivateTrigger();
+                break;
+            case Const.EDirection.RIGHT:
+                bounceTo = 0f;
+                ActivateTrigger();
+                break;
+        }
+    }
+}
+
 public class TrgFrame : Trigger
 {
     public TrgFrame(Actor _owner, int _passCount)

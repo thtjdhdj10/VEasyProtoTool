@@ -24,7 +24,7 @@ public class Targetable : Operable
         if (enableTargetUpdate) TargetUpdate();
 
         if (target != null)
-            owner.targetDirection = VEasyCalculator.GetDirection(owner, target);
+            owner.targetDir = VEasyCalc.GetDirection(owner, target);
     }
 
     //
@@ -35,11 +35,11 @@ public class Targetable : Operable
 
         units = (from target in units
                      where target.force != owner.force
-                     where isRangeless || VEasyCalculator.GetSqrDistance(owner, target) < range * range
+                     where isRangeless || VEasyCalc.GetSqrDistance(owner, target) < range * range
                      select target).ToList();
 
-        target = units.FirstOrDefault(x => VEasyCalculator.GetSqrDistance(owner, x) ==
-            units.Min(y => VEasyCalculator.GetSqrDistance(owner, y)));
+        target = units.FirstOrDefault(x => VEasyCalc.GetSqrDistance(owner, x) ==
+            units.Min(y => VEasyCalc.GetSqrDistance(owner, y)));
         // TODO 해당 코드가 자동으로 최적화되는지 확인
     }
 }

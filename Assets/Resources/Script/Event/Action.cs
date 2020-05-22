@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class Action
 {
@@ -33,10 +34,10 @@ public abstract class Action
 
 public class ActSetConditionBool : Action
 {
-    public ConditionBool target;
+    public CndEnable target;
     public bool state;
 
-    public ActSetConditionBool(Trigger trigger, ConditionBool _target, bool _state)
+    public ActSetConditionBool(Trigger trigger, CndEnable _target, bool _state)
         : base(trigger)
     {
         state = _state;
@@ -61,8 +62,8 @@ public class ActDirectionToMouse : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        Vector2 mouseWorldPos = VEasyCalculator.ScreenToWorldPos(Input.mousePosition);
-        target.targetDirection = VEasyCalculator.GetDirection(target.transform.position, mouseWorldPos);
+        Vector2 mouseWorldPos = VEasyCalc.ScreenToWorldPos(Input.mousePosition);
+        target.targetDir = VEasyCalc.GetDirection(target.transform.position, mouseWorldPos);
     }
 }
 
@@ -80,7 +81,7 @@ public class ActDirectionToTarget : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        from.targetDirection = VEasyCalculator.GetDirection(from, to);
+        from.targetDir = VEasyCalc.GetDirection(from, to);
     }
 }
 
@@ -259,17 +260,18 @@ public class ActKnockback : Action
             TrgCollision triggerCol = trigger as TrgCollision;
             if (triggerCol.target != null)
             {
-                target.moveDirection = VEasyCalculator.GetDirection(triggerCol.target, target);
+                target.moveDir = VEasyCalc.GetDirection(triggerCol.target, target);
             }
         }
         else
         {
-            target.moveDirection += 180f;
+            target.moveDir += 180f;
         }
 
         GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
     }
 
+    // 기존 Movable 일시 중지, 새로운 Movable 생성해서 넉백 이동
     private IEnumerator DecelerationProcess(Trigger trigger)
     {
         List<Movable> moves = target.GetOperableList<Movable>();
@@ -301,6 +303,92 @@ public class ActKnockback : Action
         if (moves != null)
             foreach (var move in moves)
                 move.state.SetState(Multistat.EStateType.KNOCKBACK, false);
+    }
+}
+
+public class ActBlockMove : Action
+{
+    public float escapeSpeed = 1f;
+
+    public ActBlockMove(Trigger trigger, float _escapeSpeed)
+        :base(trigger)
+    {
+        escapeSpeed = _escapeSpeed;
+    }
+
+    // TODO 최적화 필요
+    protected override void ActionProcess(Trigger trigger)
+    {
+        float targetDir = 0f;
+
+        if (trigger is TrgCollision)
+        {
+            Actor target = (trigger as TrgCollision).target;
+            targetDir = VEasyCalc.GetDirection(trigger.owner, target);
+        }
+        else if (trigger is TrgBoundaryTouch)
+        {
+            targetDir = (trigger as TrgBoundaryTouch).bounceTo;
+        }
+        else if (trigger is TrgBoundaryOut)
+        {
+            targetDir = (trigger as TrgBoundaryOut).bounceTo;
+        }
+        else return;
+
+        Vector2 moveVector = VEasyCalc.GetRotatedPosition(trigger.owner.moveDir, 1f);
+        Vector2 targetVector = VEasyCalc.GetRotatedPosition(targetDir, 1f);
+
+        float inner = VEasyCalc.Inner(moveVector, targetVector);
+
+        Vector3 escapeVector = VEasyCalc.GetRotatedPosition(
+            targetDir + 180f, inner * escapeSpeed * Time.fixedDeltaTime);
+
+        trigger.owner.transform.position += escapeVector;
+    }
+}
+
+public class ActTurnReverse : Action
+{
+    public ActTurnReverse(Trigger trigger)
+        : base(trigger)
+    {
+
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        trigger.owner.moveDir += 180f;
+    }
+}
+
+public class ActTurnReflect : Action
+{
+    public ActTurnReflect(Trigger trigger)
+        : base(trigger)
+    {
+
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        Actor owner = trigger?.owner;
+
+        owner.moveDir = VEasyCalc.GetReflectedDirection(owner.moveDir, owner.targetDir);
+    }
+}
+
+public class ActTurnTarget : Action
+{
+    public ActTurnTarget(Trigger trigger)
+        : base(trigger)
+    {
+
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        trigger.owner.moveDir = trigger.owner.targetDir;
     }
 }
 
@@ -341,7 +429,8 @@ public class ActActiveOperable<T> : Action where T : Operable
 
 public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
 {
-    public ActActiveTargetOperable(Trigger trigger, Multistat.EStateType _type, bool _doActive)
+    public ActActiveTargetOperable(TrgCollision trigger,
+        Multistat.EStateType _type, bool _doActive)
         : base(trigger, _type, _doActive)
     {
 
@@ -362,20 +451,20 @@ public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operabl
     }
 }
 
-public class ActAddOperable : Action
-{
-    public ActAddOperable(Trigger trigger)
-        : base(trigger)
-    {
+//public class ActAddOperable : Action
+//{
+//    public ActAddOperable(Trigger trigger)
+//        : base(trigger)
+//    {
 
-    }
+//    }
 
-    protected override void ActionProcess(Trigger trigger)
-    {
-        // TODO
+//    protected override void ActionProcess(Trigger trigger)
+//    {
+//        // TODO
 
-    }
-}
+//    }
+//}
 
 public class ActCreateActor : Action
 {
@@ -414,7 +503,7 @@ public class ActCreateActor : Action
         if (isMovingActor)
         {
             Movable move = actor.GetOperable<Movable>();
-            move.owner.moveDirection = direction;
+            move.owner.moveDir = direction;
             move.speed = speed;
         }
     }
@@ -424,7 +513,7 @@ public class ActDealDamage : Action
 {
     public int damage;
 
-    public ActDealDamage(Trigger trigger, int _damage)
+    public ActDealDamage(TrgCollision trigger, int _damage)
         : base(trigger)
     {
         damage = _damage;

@@ -18,11 +18,11 @@ public abstract class Condition
 
 }
 
-public class ConditionBool : Condition
+public class CndEnable : Condition
 {
     public bool state;
 
-    public ConditionBool(Trigger trigger, bool _state)
+    public CndEnable(Trigger trigger, bool _state)
         : base(trigger)
     {
         state = _state;

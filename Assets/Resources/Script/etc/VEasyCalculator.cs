@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class VEasyCalculator
+public class VEasyCalc
 {
     public static void ChangeKey<TKey, TValue>(
         Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
@@ -16,7 +16,7 @@ public class VEasyCalculator
 
     public static float Inner(Vector2 posA, Vector2 posB)
     {
-        float leftExpression = posA.x * posB.x + posA.y + posB.y;
+        float leftExpression = posA.x * posB.x + posA.y * posB.y;
         return leftExpression / (posA.magnitude * posB.magnitude);
     }
 
@@ -400,7 +400,7 @@ public class VEasyCalculator
 
     public static Vector2 GetRotatedPosition(float degrees, Vector2 pos)
     {
-        float prevDegrees = VEasyCalculator.GetDirection(new Vector2(0f, 0f), pos);
+        float prevDegrees = VEasyCalc.GetDirection(new Vector2(0f, 0f), pos);
 
         float distance = Vector2.Distance(new Vector2(0f, 0f), pos);
 

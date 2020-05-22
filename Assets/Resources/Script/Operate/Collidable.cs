@@ -6,8 +6,10 @@ public class Collidable : Operable
 {
     public new Collider2D collider;
 
+    public List<Actor.ERelation> colRelationList = new List<Actor.ERelation>();
+
     // canCollideSeveral: true면 한 프레임에 1번만 충돌 가능
-    // collideInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
+    // isCollisionInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
     public bool canCollisionSeveralInFrame = false;
     public bool isCollisionInFrame = false;
 
@@ -45,23 +47,25 @@ public class Collidable : Operable
             isCollisionInFrame == true)
             return;
 
-        GetCollisionTarget(Unit.ERelation.ENEMY)?.ForEach(t => Hit(t));
+        // TODO target relation 설정 가능하게 수정
+        GetCollisionTarget()?.ForEach(t => Hit(t));
     }
 
-    public virtual List<Collidable> GetCollisionTarget(Unit.ERelation targetRelation)
+    public virtual List<Collidable> GetCollisionTarget()
     {
         List<Collidable> ret = _allOperableListDic[typeof(Collidable)].
             ConvertAll(t => t as Collidable);
 
         return (from target in ret
-               where target != null
-               where target.gameObject.activeInHierarchy == true 
-               where target.state == true
-               where target.canCollisionSeveralInFrame == true ||
-                    target.isCollisionInFrame == false
-               where targetRelation == Unit.GetRelation(owner.force, target.owner.force)
-               where IsCollision(target)
-               select target).ToList();
+                where target != null
+                where target.gameObject.activeInHierarchy == true
+                where target.state == true
+                where target.canCollisionSeveralInFrame == true ||
+                     target.isCollisionInFrame == false
+                where colRelationList.Contains(
+                    Actor.GetRelation(owner.force, target.owner.force))
+                where IsCollision(target)
+                select target).ToList();
     }
 
     public virtual bool IsCollision(Collidable target)

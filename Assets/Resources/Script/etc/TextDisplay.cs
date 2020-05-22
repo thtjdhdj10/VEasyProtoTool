@@ -56,7 +56,7 @@ public class TextDisplay : MonoBehaviour
         Rect rect = new Rect();
 
         Vector2 size = new Vector2(MAX_TEXT_LENGTH, fontSize);
-        Vector2 position = VEasyCalculator.WorldToGUIPos(transform.position);
+        Vector2 position = VEasyCalc.WorldToGUIPos(transform.position);
         position.x = position.x - size.x / 2;
         position.y = position.y - size.y / 2;
         position += _relativePos;

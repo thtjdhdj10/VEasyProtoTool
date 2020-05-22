@@ -15,8 +15,8 @@ public class Actor : MyObject
 
     public List<Trigger> triggerList = new List<Trigger>();
 
-    public float moveDirection;
-    public float targetDirection;
+    public float moveDir;
+    public float targetDir;
 
     public ERotateTo rotateTo = ERotateTo.TARGET;
 
@@ -166,10 +166,10 @@ public class Actor : MyObject
         switch (rotateTo)
         {
             case ERotateTo.TARGET:
-                rot.z = targetDirection;
+                rot.z = targetDir;
                 break;
             case ERotateTo.MOVE:
-                rot.z = moveDirection;
+                rot.z = moveDir;
                 break;
         }
         transform.eulerAngles = rot;

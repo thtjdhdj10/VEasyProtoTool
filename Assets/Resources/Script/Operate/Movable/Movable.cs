@@ -1,49 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public abstract class Movable : Operable
 {
     public float speed = 1f;
+    public bool _enableBounce;
+    public float _bounceCooldown;
+
+    public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
+    public EBounceTo _bounceTo;
+
+    private float _remainBounceCooldown; // 트리거 자체에 쿨타임을 넣기?
 
     protected Vector2 _targetPos;
 
-    protected virtual void FixedUpdate()
-    {
-        if (state == false) return;
-
-        if(owner.TryGetOperable(out Targetable ownerTarget))
-        {
-            if (ownerTarget.target != null)
-                _targetPos = ownerTarget.target.transform.position;
-        }
-
-        // TODO bounce랑 충돌 동시에 되면 동시에 수행이 안되고 하나가 먼저됨
-        // 그거땜에 다른 하나가 동작안할때가있음
-        // hit 충돌처리할때 다른 하나가 이미 destroy 됐을수도 있음
-
-        MoveFrame();
-
-        BounceProcessing();
-    }
-
     protected abstract void MoveFrame();
 
-    public bool _enableBounce;
-    public float _bounceCooldown;
-    private float _remainBounceCooldown;
-    public EBounceBy _bounceBy;
-    public EBounceTo _bounceTo;
-
-    public enum EBounceBy
+    public enum EBounceTrigger
     {
         NONE = 0,
-        ALL,
         BOUNDARY_TOUCH,
         BOUNDARY_OUT,
-        UNIT,
-        ENEMY,
-        ALLY,
+        COLLISION,
     }
     
     public enum EBounceTo
@@ -56,129 +34,66 @@ public abstract class Movable : Operable
         DESTROY,
     }
 
-    protected virtual void BounceProcessing()
+    protected virtual void FixedUpdate()
     {
-        if (_enableBounce == false) return;
+        if (state == false) return;
 
-        if (_remainBounceCooldown > 0f)
+        if (owner.TryGetOperable(out Targetable ownerTarget))
         {
-            _remainBounceCooldown -= Time.fixedDeltaTime;
-            return;
+            if (ownerTarget.target != null)
+                _targetPos = ownerTarget.target.transform.position;
         }
-        else _remainBounceCooldown = _bounceCooldown;
 
-        bool isBounced = false;
-        float targetDir = 0f;
+        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
+        SetTriggerAction();
 
-        if (_bounceBy == EBounceBy.ALL ||
-            _bounceBy == EBounceBy.BOUNDARY_TOUCH)
+        MoveFrame();
+    }
+
+    protected virtual void SetTriggerAction()
+    {
+        foreach(var bt in _bounceTriggerList)
         {
-            Collidable col = owner.GetOperable<Collidable>();
-            Const.EDirection bounceByDir = VEasyCalculator.CheckTerritory2D(col.collider);
-
-            isBounced = true;
-            switch (bounceByDir)
+            Trigger trigger = null;
+            switch (bt)
             {
-                case Const.EDirection.NONE:
-                    isBounced = false;
+                case EBounceTrigger.BOUNDARY_TOUCH:
+                    trigger = new TrgBoundaryTouch(owner);
                     break;
-                case Const.EDirection.UP:
-                    targetDir = 90f;
+                case EBounceTrigger.BOUNDARY_OUT:
+                    trigger = new TrgBoundaryOut(owner);
                     break;
-                case Const.EDirection.DOWN:
-                    targetDir = 270f;
-                    break;
-                case Const.EDirection.LEFT:
-                    targetDir = 180f;
-                    break;
-                case Const.EDirection.RIGHT:
-                    targetDir = 0f;
+                case EBounceTrigger.COLLISION:
+                    Collidable col = owner.GetOperable<Collidable>();
+                    trigger = new TrgCollision(owner, col, typeof(Unit));
                     break;
             }
-        }
-        else if (_bounceBy == EBounceBy.ALL ||
-            _bounceBy == EBounceBy.BOUNDARY_OUT)
-        {
-            Collidable col = owner.GetOperable<Collidable>();
-            Const.EDirection bounceByDir = VEasyCalculator.CheckOutside2D(col.collider);
 
-            isBounced = true;
-            switch (bounceByDir)
-            {
-                case Const.EDirection.NONE:
-                    isBounced = false;
-                    break;
-                case Const.EDirection.UP:
-                    targetDir = 90f;
-                    break;
-                case Const.EDirection.DOWN:
-                    targetDir = 270f;
-                    break;
-                case Const.EDirection.LEFT:
-                    targetDir = 180f;
-                    break;
-                case Const.EDirection.RIGHT:
-                    targetDir = 0f;
-                    break;
-            }
-        }
-        else if (_bounceBy == EBounceBy.ALL ||
-            _bounceBy == EBounceBy.UNIT ||
-            _bounceBy == EBounceBy.ALLY ||
-            _bounceBy == EBounceBy.ENEMY)
-        {
-            if(owner.TryGetOperable(out Collidable col))
-            {
-                Unit.ERelation targetRelation = Unit.ERelation.NONE;
-                if (_bounceBy == EBounceBy.UNIT)
-                    targetRelation = Unit.ERelation.NEUTRAL;
-                else if (_bounceBy == EBounceBy.ALLY)
-                    targetRelation = Unit.ERelation.ALLY;
-                else if (_bounceBy == EBounceBy.ENEMY)
-                    targetRelation = Unit.ERelation.ENEMY;
-
-                Collidable colTarget = col.GetCollisionTarget(targetRelation)?.First();
-
-                if (colTarget != null)
-                {
-                    isBounced = true;
-                    targetDir = VEasyCalculator.GetDirection(owner.transform.position, _targetPos);
-                }
-            }
-        }
-
-        if(isBounced)
-        {
             switch (_bounceTo)
             {
-                case EBounceTo.TARGET:
-                    owner.moveDirection = targetDir;
-                    break;
                 case EBounceTo.REVERSE:
-                    owner.moveDirection += 180f;
+                    new ActTurnReverse(trigger);
                     break;
                 case EBounceTo.REFLECT:
-                    owner.moveDirection = VEasyCalculator.GetReflectedDirection(owner.moveDirection, targetDir);
+                    new ActTurnReflect(trigger);
+                    break;
+                case EBounceTo.TARGET:
+                    new ActTurnTarget(trigger);
                     break;
                 case EBounceTo.BLOCK:
-                    Vector2 moveVector = VEasyCalculator.GetRotatedPosition(
-                        owner.moveDirection, 1f);
-                    Vector2 targetVector = VEasyCalculator.GetRotatedPosition(
-                        targetDir, 1f);
-
-                    float inner = VEasyCalculator.Inner(moveVector, targetVector);
-
-                    Vector2 escapeVector = VEasyCalculator.GetRotatedPosition(
-                        targetDir + 180f, inner * speed * Time.fixedDeltaTime);
-
-                    owner.transform.position = (Vector2)owner.transform.position + escapeVector;
-                    // TODO 최적화 및 벽에서 달달달 안하게
+                    new ActBlockMove(trigger, speed);
                     break;
                 case EBounceTo.DESTROY:
-                    Destroy(owner.gameObject);
+                    new ActDestroyActor(trigger, owner);
                     break;
             }
         }
+    }
+
+    protected virtual void BounceProcessing()
+    {
+        // TODO condition으로 관리하도록 수정
+        if (_enableBounce == false) return;
     }
 }
 
@@ -197,7 +112,7 @@ public abstract class Movable : Operable
 //
 
 // 엔터더건전 쥐갈공명 참고
-// TODO: 미구현
+// TODO
 //protected virtual void DodgeMove()
 //{
 //    List<Unit> bulletList = new List<Unit>();
