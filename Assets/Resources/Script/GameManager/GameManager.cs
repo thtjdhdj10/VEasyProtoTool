@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Operable.GetOperableList<Collidable>()?.Select(o => o.isCollisionInFrame = false);
+        Operable.GetOperableList<Collidable>()?.ForEach(o => o.isCollisionInFrame = false);
     }
 
     private void OnApplicationQuit()

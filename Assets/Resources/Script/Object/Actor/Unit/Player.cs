@@ -57,8 +57,7 @@ public class Player : Unit
                 ResourcesManager.EResName.Player_Damaged_strip5));
         new ActSetSprite(triCol, sprite,
             ResourcesManager.LoadResource<Sprite>(
-                ResourcesManager.EResName.Player))
-        { delay = dodgeTime };
+                ResourcesManager.EResName.Player)) { delay = dodgeTime };
         new ActSetController(triCol, gameObject,
             ResourcesManager.LoadResource<RuntimeAnimatorController>(
                 ResourcesManager.EResName.Player_Damaged_Controller));

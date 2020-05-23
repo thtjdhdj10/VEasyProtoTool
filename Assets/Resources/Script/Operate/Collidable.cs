@@ -49,25 +49,32 @@ public class Collidable : Operable
             isCollisionInFrame == true)
             return;
 
-        // TODO target relation 설정 가능하게 수정
-        GetCollisionTarget()?.ForEach(t => Hit(t));
+        // TODO: can collision several in frame: true 면 first 조건 없이 충돌 확인
+        Collidable col = GetFirstCollision();
+        if (col != null) Hit(col);
     }
 
-    public virtual List<Collidable> GetCollisionTarget()
+    // TODO: collidable을 bullet, unit 등 카테고리를 나눠서 충돌 처리 최적화
+    // relation 확인 코드 수정 필요
+    // foreach 대신 for 사용
+    public virtual Collidable GetFirstCollision()
     {
-        List<Collidable> ret = _allOperableListDic[typeof(Collidable)].
-            ConvertAll(t => t as Collidable);
+        foreach (var operable in _allOperableListDic[typeof(Collidable)])
+        {
+            Collidable col = operable as Collidable;
 
-        return (from target in ret
-                where target != null
-                where target.gameObject.activeInHierarchy == true
-                where target.state == true
-                where target.canCollisionSeveralInFrame == true ||
-                     target.isCollisionInFrame == false
-                where colRelationList.Contains(
-                    Actor.GetRelation(owner.force, target.owner.force))
-                where IsCollision(target)
-                select target).ToList();
+            if (col != null &&
+                col.gameObject.activeInHierarchy &&
+                col.state == true &&
+                (col.canCollisionSeveralInFrame || !col.isCollisionInFrame) &&
+                colRelationList.Contains(Actor.GetRelation(owner.force, col.owner.force)) &&
+                IsCollision(col))
+            {
+                return col;
+            }
+        }
+
+        return null;
     }
 
     public virtual bool IsCollision(Collidable target)

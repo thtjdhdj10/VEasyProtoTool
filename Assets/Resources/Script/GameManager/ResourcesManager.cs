@@ -8,7 +8,6 @@ using UObject = UnityEngine.Object;
 using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type>;
 
 // Resources 하위 경로에 있는 모든 폴더를 검사해서
-// RESOURCE_TYPE_ARR 에 속하는 타입의 리소스를 저장하여 관리
 // LoadResource() 로 적재된 리소스를 불러올 수 있다
 public class ResourcesManager
 {
@@ -56,11 +55,6 @@ public class ResourcesManager
         new Dictionary<NameTypePair, UObject>();
 
     private List<UObject> _loadedResDic = new List<UObject>();
-    private static Type[] RESOURCE_TYPE_ARR = {
-        typeof(GameObject),
-        typeof(Sprite),
-        typeof(RuntimeAnimatorController),
-    };
     private const string RESOURCES = "Resources";
 
     public static T LoadResource<T>(EResName resourceType) where T : UObject
@@ -68,17 +62,21 @@ public class ResourcesManager
         return LoadResource<T>(resourceType.ToString());
     }
 
+    // Note: Sprite 를 UnityEngine.Object 로 캐스팅이 안됨
     public static T LoadResource<T>(string resourceName) where T : UObject
     {
-        NameTypePair nameType = new NameTypePair(resourceName, typeof(GameObject));
+        NameTypePair nameType = new NameTypePair(resourceName, typeof(T));
         if (_resNameObjDic.ContainsKey(nameType))
+        {
             return _resNameObjDic[nameType] as T;
+        }
 
         return default;
     }
 
     private static string ResourceTypeToExtension(Type type)
     {
+        // TODO 리소스 타입이 추가될 때 마다 수정 1
         if (type == typeof(GameObject))
             return "*.prefab";
         if (type == typeof(Sprite))
@@ -100,27 +98,32 @@ public class ResourcesManager
 
         string dataPath = Application.dataPath;
 
-        foreach (var resType in RESOURCE_TYPE_ARR)
+        List<string> subDirectories = Directory.GetDirectories(
+            dataPath + "/" + RESOURCES, "*", SearchOption.AllDirectories).ToList();
+
+        // TODO 리소스 타입이 추가될 때 마다 수정 2
+        LoadResources<GameObject>(subDirectories);
+        LoadResources<Sprite>(subDirectories);
+        LoadResources<RuntimeAnimatorController>(subDirectories);
+    }
+
+    private void LoadResources<T>(List<string> subDirectories) where T : UObject
+    {
+        List<string> resNameWithPathList = new List<string>();
+
+        string extension = ResourceTypeToExtension(typeof(T));
+
+        // 하위 경로의 파일명 로딩
+        subDirectories.ForEach(subPath =>
+            resNameWithPathList.AddRange(Directory.GetFiles(subPath, extension)));
+
+        resNameWithPathList.ForEach(resourcePath =>
         {
-            string[] subDirectories = Directory.GetDirectories(
-                dataPath + "/" + RESOURCES, "*", SearchOption.AllDirectories);
-
-            List<string> resNameWithPathList = new List<string>();
-
-            string extension = ResourceTypeToExtension(resType);
-
-            // 하위 경로의 파일명 로딩
-            subDirectories.ToList().ForEach(subPath =>
-                resNameWithPathList.AddRange(Directory.GetFiles(subPath, extension)));
-
-            resNameWithPathList.ForEach(resourcePath =>
-            {
-                UObject resource = Resources.Load<UObject>(GetLoadingName(resourcePath));
-                _resNameObjDic.Add(new NameTypePair(
-                    GetResourceName(resourcePath), resType), resource);
-                _loadedResDic.Add(resource);
-            });
-        }
+            T resource = Resources.Load<T>(GetLoadingName(resourcePath));
+            _resNameObjDic.Add(new NameTypePair(
+                GetResourceName(resourcePath), typeof(T)), resource);
+            _loadedResDic.Add(resource);
+        });
     }
 
     private string GetResourceName(string fullName)
