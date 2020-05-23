@@ -4,6 +4,7 @@ using System.Linq;
 
 public class MovableVector : Movable
 {
+    [System.NonSerialized]
     public bool[] moveDir = new bool[4];
 
     public override void Init()
@@ -40,18 +41,22 @@ public class MovableVector : Movable
         if (moveDir[(int)Const.EDirection.LEFT] == true)
         {
             delta.x -= moveDelta;
+            owner.moveDir = 180f;
         }
         else if (moveDir[(int)Const.EDirection.RIGHT] == true)
         {
             delta.x += moveDelta;
+            owner.moveDir = 0f;
         }
         if (moveDir[(int)Const.EDirection.UP] == true)
         {
             delta.y += moveDelta;
+            owner.moveDir = 90f;
         }
         else if (moveDir[(int)Const.EDirection.DOWN] == true)
         {
             delta.y -= moveDelta;
+            owner.moveDir = 270f;
         }
 
         Vector2 v2Pos = owner.transform.position;

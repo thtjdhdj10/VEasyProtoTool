@@ -88,6 +88,7 @@ public class TrgCollision : Trigger
 
 public class TrgBoundaryTouch : Trigger
 {
+    public Vector2 targetPos;
     public float bounceTo;
 
     public TrgBoundaryTouch(Actor _owner)
@@ -104,18 +105,22 @@ public class TrgBoundaryTouch : Trigger
         switch (bounceByDir)
         {
             case Const.EDirection.UP:
+                targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
                 bounceTo = 90f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.DOWN:
+                targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
                 bounceTo = 270f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.LEFT:
+                targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
                 bounceTo = 180f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.RIGHT:
+                targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
                 bounceTo = 0f;
                 ActivateTrigger();
                 break;
@@ -125,6 +130,7 @@ public class TrgBoundaryTouch : Trigger
 
 public class TrgBoundaryOut : Trigger
 {
+    public Vector2 targetPos;
     public float bounceTo;
 
     public TrgBoundaryOut(Actor _owner)
@@ -141,18 +147,22 @@ public class TrgBoundaryOut : Trigger
         switch (bounceByDir)
         {
             case Const.EDirection.UP:
+                targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
                 bounceTo = 90f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.DOWN:
+                targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
                 bounceTo = 270f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.LEFT:
+                targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
                 bounceTo = 180f;
                 ActivateTrigger();
                 break;
             case Const.EDirection.RIGHT:
+                targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
                 bounceTo = 0f;
                 ActivateTrigger();
                 break;

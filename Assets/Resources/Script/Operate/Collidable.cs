@@ -11,6 +11,7 @@ public class Collidable : Operable
     // canCollideSeveral: true면 한 프레임에 1번만 충돌 가능
     // isCollisionInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
     public bool canCollisionSeveralInFrame = false;
+    [System.NonSerialized]
     public bool isCollisionInFrame = false;
 
     public delegate void OnHitDelegate(Actor from, Actor to);

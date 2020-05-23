@@ -255,12 +255,11 @@ public class ActKnockback : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        if (trigger is TrgCollision)
+        if (Const.TryCast(trigger, out TrgCollision trgCol))
         {
-            TrgCollision triggerCol = trigger as TrgCollision;
-            if (triggerCol.target != null)
+            if (trgCol.target != null)
             {
-                target.moveDir = VEasyCalc.GetDirection(triggerCol.target, target);
+                target.moveDir = VEasyCalc.GetDirection(trgCol.target, target);
             }
         }
         else
@@ -308,43 +307,55 @@ public class ActKnockback : Action
 
 public class ActBlockMove : Action
 {
-    public float escapeSpeed = 1f;
-
-    public ActBlockMove(Trigger trigger, float _escapeSpeed)
+    public ActBlockMove(Trigger trigger)
         :base(trigger)
     {
-        escapeSpeed = _escapeSpeed;
+
     }
 
-    // TODO 최적화 필요
     protected override void ActionProcess(Trigger trigger)
     {
-        float targetDir = 0f;
+        Vector2 targetPos;
+        float targetDir;
+        float distance = 0f;
 
-        if (trigger is TrgCollision)
+        Collidable col = trigger.owner.GetOperable<Collidable>();
+
+        if (Const.TryCast(trigger, out TrgCollision trgCol))
         {
-            Actor target = (trigger as TrgCollision).target;
+            Actor target = trgCol.target;
+            targetPos = target.transform.position;
             targetDir = VEasyCalc.GetDirection(trigger.owner, target);
+
+            // TODO 유닛간 block 처리 구현
+            // Contact, Raycast 등 활용?
         }
-        else if (trigger is TrgBoundaryTouch)
+        else if (Const.TryCast(trigger, out TrgBoundaryTouch trgBndTch))
         {
-            targetDir = (trigger as TrgBoundaryTouch).bounceTo;
+            targetPos = trgBndTch.targetPos;
+            targetDir = trgBndTch.bounceTo;
+
+            if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+            {
+                distance = circleCol.radius;
+            }
+            // TODO box collider 처리
         }
-        else if (trigger is TrgBoundaryOut)
+        else if (Const.TryCast(trigger, out TrgBoundaryOut regBndOut))
         {
-            targetDir = (trigger as TrgBoundaryOut).bounceTo;
+            targetPos = regBndOut.targetPos;
+            targetDir = regBndOut.bounceTo;
+
+            if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+            {
+                distance = circleCol.radius;
+            }
         }
         else return;
 
-        Vector2 moveVector = VEasyCalc.GetRotatedPosition(trigger.owner.moveDir, 1f);
-        Vector2 targetVector = VEasyCalc.GetRotatedPosition(targetDir, 1f);
+        Vector2 delta = VEasyCalc.GetRotatedPosition(targetDir + 180f, distance);
 
-        float inner = VEasyCalc.Inner(moveVector, targetVector);
-
-        Vector3 escapeVector = VEasyCalc.GetRotatedPosition(
-            targetDir + 180f, inner * escapeSpeed * Time.fixedDeltaTime);
-
-        trigger.owner.transform.position += escapeVector;
+        trigger.owner.transform.position = targetPos + delta;
     }
 }
 

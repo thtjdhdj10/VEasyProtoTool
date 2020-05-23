@@ -4,17 +4,7 @@ using System.Linq;
 
 public class VEasyCalc
 {
-    public static void ChangeKey<TKey, TValue>(
-        Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
-    {
-        TValue value = dic[fromKey];
-        dic.Remove(fromKey);
-        dic[toKey] = value;
-    }
-
-    //
-
-    public static float Inner(Vector2 posA, Vector2 posB)
+    public static float Inner(Vector2 posA, Vector2 posB) // 내적
     {
         float leftExpression = posA.x * posB.x + posA.y * posB.y;
         return leftExpression / (posA.magnitude * posB.magnitude);
@@ -43,25 +33,21 @@ public class VEasyCalc
     public static Const.EDirection CheckOutside2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
-        Rect rect = CameraManager.manager.GetLogicalRect();
+        Rect rect = Const.GetWorldSize();
 
-        if (col is CircleCollider2D)
+        if (Const.TryCast(col, out CircleCollider2D circleCol))
         {
-            CircleCollider2D cirCol = col as CircleCollider2D;
-
-            if (pos.x + cirCol.radius < rect.xMin)
+            if (pos.x + circleCol.radius < rect.xMin)
                 return Const.EDirection.LEFT;
-            if (pos.x - cirCol.radius > rect.xMax)
+            if (pos.x - circleCol.radius > rect.xMax)
                 return Const.EDirection.RIGHT;
-            if (pos.y + cirCol.radius < rect.yMin)
+            if (pos.y + circleCol.radius < rect.yMin)
                 return Const.EDirection.DOWN;
-            if (pos.y - cirCol.radius > rect.yMax)
+            if (pos.y - circleCol.radius > rect.yMax)
                 return Const.EDirection.UP;
         }
-        else if (col is BoxCollider2D)
+        else if (Const.TryCast(col, out BoxCollider2D boxCol))
         {
-            BoxCollider2D boxCol = col as BoxCollider2D;
-
             if (pos.x + boxCol.size.x < rect.xMin)
                 return Const.EDirection.LEFT;
             if (pos.x - boxCol.size.x > rect.xMax)
@@ -78,25 +64,21 @@ public class VEasyCalc
     public static Const.EDirection CheckTerritory2D(Collider2D col)
     {
         Vector2 pos = col.transform.position;
-        Rect rect = CameraManager.manager.GetLogicalRect();
+        Rect rect = Const.GetWorldSize();
 
-        if (col is CircleCollider2D)
+        if (Const.TryCast(col, out CircleCollider2D circleCol))
         {
-            CircleCollider2D cirCol = col as CircleCollider2D;
-
-            if (pos.x - cirCol.radius < rect.xMin)
+            if (pos.x - circleCol.radius < rect.xMin)
                 return Const.EDirection.LEFT;
-            if (pos.x + cirCol.radius > rect.xMax)
+            if (pos.x + circleCol.radius > rect.xMax)
                 return Const.EDirection.RIGHT;
-            if (pos.y - cirCol.radius < rect.yMin)
+            if (pos.y - circleCol.radius < rect.yMin)
                 return Const.EDirection.DOWN;
-            if (pos.y + cirCol.radius > rect.yMax)
+            if (pos.y + circleCol.radius > rect.yMax)
                 return Const.EDirection.UP;
         }
-        else if (col is BoxCollider2D)
+        else if (Const.TryCast(col, out BoxCollider2D boxCol))
         {
-            BoxCollider2D boxCol = col as BoxCollider2D;
-
             if (pos.x - boxCol.size.x < rect.xMin)
                 return Const.EDirection.LEFT;
             if (pos.x + boxCol.size.x > rect.xMax)

@@ -19,7 +19,7 @@ public class Multistat
     [SerializeField]
     private bool state = true;
 
-    public EConditionForTrue conditionForTrue = EConditionForTrue.ALL_FALSE;
+    public EConditionForTrue conditionForTrue;
 
     public enum EConditionForTrue
     {

@@ -32,6 +32,14 @@ public abstract class Movable : Operable
         DESTROY,
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
+        SetTriggerAction();
+    }
+
     protected virtual void FixedUpdate()
     {
         if (state == false) return;
@@ -41,9 +49,6 @@ public abstract class Movable : Operable
             if (ownerTarget.target != null)
                 _targetPos = ownerTarget.target.transform.position;
         }
-
-        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
-        SetTriggerAction();
 
         MoveFrame();
     }
@@ -83,7 +88,7 @@ public abstract class Movable : Operable
                     new ActTurnTarget(trigger);
                     break;
                 case EBounceTo.BLOCK:
-                    new ActBlockMove(trigger, speed);
+                    new ActBlockMove(trigger);
                     break;
                 case EBounceTo.DESTROY:
                     new ActDestroyActor(trigger, owner);

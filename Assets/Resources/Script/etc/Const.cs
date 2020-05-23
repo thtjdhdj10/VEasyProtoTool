@@ -1,4 +1,5 @@
-﻿
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Const
 {
@@ -15,5 +16,39 @@ public class Const
         BACK,
 
         NONE,
+    }
+
+    public static float worldWidthHalf;
+    public static float worldHeightHalf;
+
+    public static Rect GetWorldSize()
+    {
+        return new Rect()
+        {
+            xMin = -worldWidthHalf,
+            xMax = worldWidthHalf,
+            yMin = -worldHeightHalf,
+            yMax = worldHeightHalf,
+        };
+    }
+
+    public static bool TryCast<T>(object o, out T result) where T : class
+    {
+        if(o is T)
+        {
+            result = o as T;
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    public static void ChangeKey<TKey, TValue>(
+        Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
+    {
+        TValue value = dic[fromKey];
+        dic.Remove(fromKey);
+        dic[toKey] = value;
     }
 }
