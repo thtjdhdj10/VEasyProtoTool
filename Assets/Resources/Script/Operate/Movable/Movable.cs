@@ -55,46 +55,46 @@ public abstract class Movable : Operable
 
     protected virtual void SetTriggerAction()
     {
-        //foreach(var ta in _bounceActionList)
-        //{
-        //    Trigger trigger = null;
-        //    switch (ta.Key)
-        //    {
-        //        case EBounceTrigger.BOUNDARY_TOUCH:
-        //            trigger = new TrgBoundaryTouch(owner);
-        //            break;
-        //        case EBounceTrigger.BOUNDARY_OUT:
-        //            trigger = new TrgBoundaryOut(owner);
-        //            break;
-        //        case EBounceTrigger.COLLISION:
-        //            Collidable col = owner.GetOperable<Collidable>();
-        //            trigger = new TrgCollision(owner, col, typeof(Unit));
-        //            break;
-        //    }
+        for(int i = 0; i < _bounceTriggerList.Count; ++i)
+        {
+            Trigger trigger = null;
+            switch (_bounceTriggerList[i])
+            {
+                case EBounceTrigger.BOUNDARY_TOUCH:
+                    trigger = new TrgBoundaryTouch(owner);
+                    break;
+                case EBounceTrigger.BOUNDARY_OUT:
+                    trigger = new TrgBoundaryOut(owner);
+                    break;
+                case EBounceTrigger.COLLISION:
+                    Collidable col = owner.GetOperable<Collidable>();
+                    trigger = new TrgCollision(owner, col, typeof(Unit));
+                    break;
+            }
 
-        //    if (trigger == null) return;
+            if (trigger == null) return;
 
-        //    new CndEnable(trigger, _enableBounceRef);
+            new CndEnable(trigger, _enableBounceRef);
 
-        //    switch (ta.Value)
-        //    {
-        //        case EBounceAction.REVERSE:
-        //            new ActTurnReverse(trigger);
-        //            break;
-        //        case EBounceAction.REFLECT:
-        //            new ActTurnReflect(trigger);
-        //            break;
-        //        case EBounceAction.TARGET:
-        //            new ActTurnTarget(trigger);
-        //            break;
-        //        case EBounceAction.BLOCK:
-        //            new ActBlockMove(trigger);
-        //            break;
-        //        case EBounceAction.DESTROY:
-        //            new ActDestroyActor(trigger, owner);
-        //            break;
-        //    }
-        //}
+            switch (_bounceActionList[i])
+            {
+                case EBounceAction.REVERSE:
+                    new ActTurnReverse(trigger);
+                    break;
+                case EBounceAction.REFLECT:
+                    new ActTurnReflect(trigger);
+                    break;
+                case EBounceAction.TARGET:
+                    new ActTurnTarget(trigger);
+                    break;
+                case EBounceAction.BLOCK:
+                    new ActBlockMove(trigger);
+                    break;
+                case EBounceAction.DESTROY:
+                    new ActDestroyActor(trigger, owner);
+                    break;
+            }
+        }
     }
 }
 

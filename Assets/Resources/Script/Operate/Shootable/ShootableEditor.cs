@@ -40,7 +40,9 @@ public class ShootableEditor : Editor
     protected virtual void ContentsUpdate()
     {
         EditorGUI.BeginDisabledGroup(true);
+        GUI.color = new Color(0.7f, 0.7f, 1f);
         EditorGUILayout.PropertyField(scriptProp);
+        GUI.color = Color.white;
         EditorGUI.EndDisabledGroup();
 
         fold = EditorGUILayout.BeginFoldoutHeaderGroup(fold, "Active");

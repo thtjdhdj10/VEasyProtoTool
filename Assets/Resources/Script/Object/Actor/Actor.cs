@@ -10,8 +10,8 @@ public class Actor : MyObject
 
     public bool willDestroy = false; // 바로 삭제하면 충돌처리할때 문제됨
 
-    public Dictionary<Type, List<Operable>> operableListDic
-        = new Dictionary<Type, List<Operable>>();
+    public Dictionary<Type, List<Operable>> operableListDic =
+        new Dictionary<Type, List<Operable>>();
 
     public List<Trigger> triggerList = new List<Trigger>();
 
@@ -59,42 +59,42 @@ public class Actor : MyObject
 
     public static void EmptyMethod() { }
     public delegate void AwakeDel();
-    public AwakeDel awakeDel = new AwakeDel(EmptyMethod);
+    public AwakeDel awakeDlg = new AwakeDel(EmptyMethod);
 
     public delegate void OnDestroyDel();
-    public OnDestroyDel onDestroyDel = new OnDestroyDel(EmptyMethod);
+    public OnDestroyDel onDestroyDlg = new OnDestroyDel(EmptyMethod);
 
     public delegate void InitDel();
-    public InitDel initDel = new InitDel(EmptyMethod);
+    public InitDel initDlg = new InitDel(EmptyMethod);
 
     public delegate void FixedUpdateDel();
-    public FixedUpdateDel fixedUpdateDel = new FixedUpdateDel(EmptyMethod);
+    public FixedUpdateDel fixedUpdateDlg = new FixedUpdateDel(EmptyMethod);
 
     public static void EmptyMethod(Actor actor) { }
     public delegate void OnActorAddedDel(Actor actor);
-    public static OnActorAddedDel onActorAddedDel = new OnActorAddedDel(EmptyMethod);
+    public static OnActorAddedDel onActorAddedDlg = new OnActorAddedDel(EmptyMethod);
 
     //
 
     protected virtual void Awake()
     {
-        awakeDel();
+        awakeDlg();
     }
 
     protected virtual void Start()
     {
-        onActorAddedDel(this);
+        onActorAddedDlg(this);
         Init();
     }
 
     protected virtual void OnDestroy()
     {
-        onDestroyDel();
+        onDestroyDlg();
     }
 
     protected virtual void FixedUpdate()
     {
-        fixedUpdateDel();
+        fixedUpdateDlg();
 
         SetSpriteAngle();
 
@@ -103,7 +103,7 @@ public class Actor : MyObject
 
     public virtual void Init()
     {
-        initDel();
+        initDlg();
     }
 
     //

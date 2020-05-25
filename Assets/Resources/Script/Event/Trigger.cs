@@ -62,7 +62,7 @@ public class TrgCollision : Trigger
         collider = _collider;
         targetTypes = _targetTypes;
 
-        collider.onHitDelegate += HandleOnHit;
+        collider.onHitDlg += HandleOnHit;
     }
 
     public override void Init()
@@ -95,7 +95,7 @@ public class TrgBoundaryTouch : Trigger
     public TrgBoundaryTouch(Actor _owner)
         :base(_owner)
     {
-        _owner.fixedUpdateDel += HandleFixedUpdate;
+        _owner.fixedUpdateDlg += HandleFixedUpdate;
     }
 
     private void HandleFixedUpdate()
@@ -137,7 +137,7 @@ public class TrgBoundaryOut : Trigger
     public TrgBoundaryOut(Actor _owner)
         : base(_owner)
     {
-        _owner.fixedUpdateDel += HandleFixedUpdate;
+        _owner.fixedUpdateDlg += HandleFixedUpdate;
     }
 
     private void HandleFixedUpdate()
@@ -178,7 +178,7 @@ public class TrgFrame : Trigger
     {
         passCount = _passCount;
 
-        _owner.fixedUpdateDel += HandleFixedUpdate;
+        _owner.fixedUpdateDlg += HandleFixedUpdate;
     }
 
     public int passCount = 0;
@@ -226,7 +226,7 @@ public class TrgKeyInput : Trigger
 
         if(owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDel += HandleKeyInput;
+            control.keyInputDlg += HandleKeyInput;
         }
     }
 
@@ -234,7 +234,7 @@ public class TrgKeyInput : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDel -= HandleKeyInput;
+            control.keyInputDlg -= HandleKeyInput;
         }
     }
 
@@ -258,7 +258,7 @@ public class TrgKeyInputs : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDel += HandleKeyInput;
+            control.keyInputDlg += HandleKeyInput;
         }
     }
 
@@ -266,7 +266,7 @@ public class TrgKeyInputs : Trigger
     {
         if (owner.TryGetOperable(out Controllable control))
         {
-            control.keyInputDel -= HandleKeyInput;
+            control.keyInputDlg -= HandleKeyInput;
         }
     }
 
@@ -293,7 +293,7 @@ public class TrgTimer : Trigger
         delay = _delay;
         isActivateOnStart = _isActivateOnStart;
 
-        _owner.fixedUpdateDel += HandleFixedUpdate;
+        _owner.fixedUpdateDlg += HandleFixedUpdate;
 
         if (isActivateOnStart == true)
             remainDelay = delay;
@@ -342,13 +342,13 @@ public class TrgUnitEvent : Trigger
         switch (type)
         {
             case ETriggerType.AWAKE:
-                target.awakeDel += ActivateTrigger;
+                target.awakeDlg += ActivateTrigger;
                 break;
             case ETriggerType.INIT:
-                target.initDel += ActivateTrigger;
+                target.initDlg += ActivateTrigger;
                 break;
             case ETriggerType.ON_DESTROY:
-                target.onDestroyDel += ActivateTrigger;
+                target.onDestroyDlg += ActivateTrigger;
                 break;
         }
     }
@@ -358,13 +358,13 @@ public class TrgUnitEvent : Trigger
         switch (type)
         {
             case ETriggerType.AWAKE:
-                target.awakeDel -= ActivateTrigger;
+                target.awakeDlg -= ActivateTrigger;
                 break;
             case ETriggerType.INIT:
-                target.initDel -= ActivateTrigger;
+                target.initDlg -= ActivateTrigger;
                 break;
             case ETriggerType.ON_DESTROY:
-                target.onDestroyDel -= ActivateTrigger;
+                target.onDestroyDlg -= ActivateTrigger;
                 break;
         }
     }
@@ -394,7 +394,7 @@ public class TrgAnyUnitEvent : Trigger
             LinkEventHandle(unit, true);
         }
 
-        Actor.onActorAddedDel += HandleAddedUnit;
+        Actor.onActorAddedDlg += HandleAddedUnit;
     }
 
     ~TrgAnyUnitEvent()
@@ -410,16 +410,16 @@ public class TrgAnyUnitEvent : Trigger
         switch (type)
         {
             case ETriggerType.AWAKE:
-                if(isAdd) unit.awakeDel += ActivateTrigger;
-                else unit.awakeDel -= ActivateTrigger;
+                if(isAdd) unit.awakeDlg += ActivateTrigger;
+                else unit.awakeDlg -= ActivateTrigger;
                 break;
             case ETriggerType.INIT:
-                if(isAdd) unit.initDel += ActivateTrigger;
-                else unit.initDel -= ActivateTrigger;
+                if(isAdd) unit.initDlg += ActivateTrigger;
+                else unit.initDlg -= ActivateTrigger;
                 break;
             case ETriggerType.ON_DESTROY:
-                if(isAdd) unit.onDestroyDel += ActivateTrigger;
-                else unit.onDestroyDel -= ActivateTrigger;
+                if(isAdd) unit.onDestroyDlg += ActivateTrigger;
+                else unit.onDestroyDlg -= ActivateTrigger;
                 break;
         }
     }

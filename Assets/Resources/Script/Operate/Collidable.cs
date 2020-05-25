@@ -6,7 +6,7 @@ public class Collidable : Operable
 {
     public new Collider2D collider;
 
-    public List<Actor.ERelation> colRelationList = new List<Actor.ERelation>();
+    public Actor.ERelation targetRelation = Actor.ERelation.ENEMY;
 
     // canCollideSeveral: true면 한 프레임에 1번만 충돌 가능
     // isCollisionInFrame: 각 Collidable의 충돌처리 여부 상태를 매 프레임 시작 전에 초기화
@@ -15,7 +15,7 @@ public class Collidable : Operable
     public bool isCollisionInFrame = false;
 
     public delegate void OnHitDelegate(Actor from, Actor to);
-    public OnHitDelegate onHitDelegate = new OnHitDelegate(OnHitMethod);
+    public OnHitDelegate onHitDlg = new OnHitDelegate(OnHitMethod);
     public static void OnHitMethod(Actor from, Actor to) { }
 
     protected override void Awake()
@@ -29,8 +29,8 @@ public class Collidable : Operable
 
     protected virtual void Hit(Collidable target)
     {
-        onHitDelegate(owner, target.owner);
-        target.onHitDelegate(target.owner, owner);
+        onHitDlg(owner, target.owner);
+        target.onHitDlg(target.owner, owner);
 
         isCollisionInFrame = true;
         target.isCollisionInFrame = true;
@@ -54,20 +54,17 @@ public class Collidable : Operable
         if (col != null) Hit(col);
     }
 
-    // TODO: collidable을 bullet, unit 등 카테고리를 나눠서 충돌 처리 최적화
-    // relation 확인 코드 수정 필요
-    // foreach 대신 for 사용
     public virtual Collidable GetFirstCollision()
     {
-        foreach (var operable in _allOperableListDic[typeof(Collidable)])
+        for(int i = 0; i < _allOperableListDic[typeof(Collidable)].Count;++i)
         {
-            Collidable col = operable as Collidable;
+            Collidable col = _allOperableListDic[typeof(Collidable)][i] as Collidable;
 
             if (col != null &&
                 col.gameObject.activeInHierarchy &&
                 col.state == true &&
                 (col.canCollisionSeveralInFrame || !col.isCollisionInFrame) &&
-                colRelationList.Contains(Actor.GetRelation(owner.force, col.owner.force)) &&
+                targetRelation == Actor.GetRelation(owner.force, col.owner.force) &&
                 IsCollision(col))
             {
                 return col;
