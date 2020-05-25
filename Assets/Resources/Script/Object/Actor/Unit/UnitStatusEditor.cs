@@ -42,7 +42,10 @@ public class UnitStatusEditor : Editor
 
     protected virtual void ContentsUpdate()
     {
+        EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(scriptProp);
+        EditorGUI.EndDisabledGroup();
+
         EditorGUILayout.PropertyField(ownerProp);
         EditorGUILayout.PropertyField(hpProp);
         EditorGUILayout.PropertyField(currentHpProp);
@@ -55,6 +58,4 @@ public class UnitStatusEditor : Editor
             EditorGUILayout.PropertyField(spriteProp);
         }
     }
-
-
 }

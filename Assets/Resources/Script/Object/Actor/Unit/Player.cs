@@ -16,9 +16,9 @@ public class Player : Unit
         new ActVectorMoveActor(triKeyInput, 2f);
 
         RefBoolean doTrackMouse = new RefBoolean(true);
-        TrgFrame TrgAllways = new TrgFrame(this, 0);
-        new CndEnable(TrgAllways, doTrackMouse);
-        new ActDirectionToMouse(TrgAllways, this);
+        TrgFrame TrgAlways = new TrgFrame(this, 0);
+        new CndEnable(TrgAlways, doTrackMouse);
+        new ActDirectionToMouse(TrgAlways, this);
 
         // 플레이어 공격 처리
         GetOperable<Shootable>().state.SetState(Multistat.EStateType.CLICK, false);

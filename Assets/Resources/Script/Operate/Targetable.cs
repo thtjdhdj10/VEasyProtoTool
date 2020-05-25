@@ -15,8 +15,6 @@ public class Targetable : Operable
 
     // TODO target update delay 기능 추가
 
-    //
-
     private void FixedUpdate()
     {
         if (state == false) return;

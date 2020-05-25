@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public abstract class Movable : Operable
 {
     public float speed = 1f;
-    public float _bounceCooldown;
-
     public RefBoolean _enableBounceRef = new RefBoolean(false);
+
+    // KeyValuePair 를 쓰면 Custom Editor 적용 불가
+    // SetDirty 해도 저장이 안되고, FindProperty() 가 null을 리턴함
     public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
-    public EBounceTo _bounceTo;
+    public List<EBounceAction> _bounceActionList = new List<EBounceAction>();
 
     protected Vector2 _targetPos;
 
@@ -21,8 +23,8 @@ public abstract class Movable : Operable
         BOUNDARY_OUT,
         COLLISION,
     }
-    
-    public enum EBounceTo
+
+    public enum EBounceAction
     {
         NONE = 0,
         TARGET,
@@ -32,11 +34,9 @@ public abstract class Movable : Operable
         DESTROY,
     }
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
-        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리
+        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리 필요
         SetTriggerAction();
     }
 
@@ -55,46 +55,46 @@ public abstract class Movable : Operable
 
     protected virtual void SetTriggerAction()
     {
-        foreach(var bt in _bounceTriggerList)
-        {
-            Trigger trigger = null;
-            switch (bt)
-            {
-                case EBounceTrigger.BOUNDARY_TOUCH:
-                    trigger = new TrgBoundaryTouch(owner);
-                    break;
-                case EBounceTrigger.BOUNDARY_OUT:
-                    trigger = new TrgBoundaryOut(owner);
-                    break;
-                case EBounceTrigger.COLLISION:
-                    Collidable col = owner.GetOperable<Collidable>();
-                    trigger = new TrgCollision(owner, col, typeof(Unit));
-                    break;
-            }
+        //foreach(var ta in _bounceActionList)
+        //{
+        //    Trigger trigger = null;
+        //    switch (ta.Key)
+        //    {
+        //        case EBounceTrigger.BOUNDARY_TOUCH:
+        //            trigger = new TrgBoundaryTouch(owner);
+        //            break;
+        //        case EBounceTrigger.BOUNDARY_OUT:
+        //            trigger = new TrgBoundaryOut(owner);
+        //            break;
+        //        case EBounceTrigger.COLLISION:
+        //            Collidable col = owner.GetOperable<Collidable>();
+        //            trigger = new TrgCollision(owner, col, typeof(Unit));
+        //            break;
+        //    }
 
-            if (trigger == null) return;
+        //    if (trigger == null) return;
 
-            new CndEnable(trigger, _enableBounceRef);
+        //    new CndEnable(trigger, _enableBounceRef);
 
-            switch (_bounceTo)
-            {
-                case EBounceTo.REVERSE:
-                    new ActTurnReverse(trigger);
-                    break;
-                case EBounceTo.REFLECT:
-                    new ActTurnReflect(trigger);
-                    break;
-                case EBounceTo.TARGET:
-                    new ActTurnTarget(trigger);
-                    break;
-                case EBounceTo.BLOCK:
-                    new ActBlockMove(trigger);
-                    break;
-                case EBounceTo.DESTROY:
-                    new ActDestroyActor(trigger, owner);
-                    break;
-            }
-        }
+        //    switch (ta.Value)
+        //    {
+        //        case EBounceAction.REVERSE:
+        //            new ActTurnReverse(trigger);
+        //            break;
+        //        case EBounceAction.REFLECT:
+        //            new ActTurnReflect(trigger);
+        //            break;
+        //        case EBounceAction.TARGET:
+        //            new ActTurnTarget(trigger);
+        //            break;
+        //        case EBounceAction.BLOCK:
+        //            new ActBlockMove(trigger);
+        //            break;
+        //        case EBounceAction.DESTROY:
+        //            new ActDestroyActor(trigger, owner);
+        //            break;
+        //    }
+        //}
     }
 }
 

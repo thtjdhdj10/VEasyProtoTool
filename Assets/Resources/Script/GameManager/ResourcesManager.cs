@@ -7,6 +7,7 @@ using UnityEngine;
 using UObject = UnityEngine.Object;
 using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type>;
 
+// TODO: scriptable object 등을 이용해서 awake 시점이 아닌 에디터 시점에서 리소스 불러오게 하기
 // Resources 하위 경로에 있는 모든 폴더를 검사해서
 // LoadResource() 로 적재된 리소스를 불러올 수 있다
 public class ResourcesManager

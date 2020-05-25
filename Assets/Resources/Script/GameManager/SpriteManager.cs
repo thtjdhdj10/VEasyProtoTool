@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-// TODO: Awake 가 아니라 에디터 이용해서 LoadSprite() 하도록 수정
+// resourcesmanager로 기능 대체됨
 
 // 단순히 파일을 불러서 적재하기만 하는 resource manager와 달리
 // sprite 파일을 불러서 해당 파일의 이름을 파싱,

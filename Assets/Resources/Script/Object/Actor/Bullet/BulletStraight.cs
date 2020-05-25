@@ -17,6 +17,6 @@ public class BulletStraight : Bullet
         TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
         new ActDealDamage(trgCol, damage);
         new ActDestroyActor(trgCol, this);
-        new ActCreateObject(trgCol, effectPrefab, transform.position, moveDir);
+        new ActCreateObjectDynamic(trgCol, effectPrefab, transform);
     }
 }

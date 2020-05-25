@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public abstract class Action
 {
@@ -508,7 +509,7 @@ public class ActCreateActor : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        Actor actor = Object.Instantiate(target);
+        Actor actor = UnityEngine.Object.Instantiate(target);
         actor.transform.position = position;
 
         if (isMovingActor)
@@ -536,10 +537,45 @@ public class ActCreateObject : Action
 
     protected override void ActionProcess(Trigger trigger)
     {
-        GameObject effect = Object.Instantiate(prefab);
+        try
+        {
+            GameObject go = UnityEngine.Object.Instantiate(prefab);
 
-        effect.transform.position = position;
-        effect.transform.rotation = Quaternion.Euler(0, 0, direction);
+            go.transform.position = position;
+            go.transform.rotation = Quaternion.Euler(0, 0, direction);
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning(e);
+        }
+    }
+}
+
+public class ActCreateObjectDynamic : Action
+{
+    public GameObject prefab;
+    public Transform transform;
+
+    public ActCreateObjectDynamic(Trigger trigger, GameObject _prefab, Transform _transform)
+        : base(trigger)
+    {
+        prefab = _prefab;
+        transform = _transform;
+    }
+
+    protected override void ActionProcess(Trigger trigger)
+    {
+        try
+        {
+            GameObject go = UnityEngine.Object.Instantiate(prefab);
+
+            go.transform.position = transform.position;
+            go.transform.rotation = transform.rotation;
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
 }
 

@@ -2,17 +2,17 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(ShootableProjectile))]
+[CustomEditor(typeof(MovableTurnRegular))]
 [CanEditMultipleObjects]
-public class ShootableProjectileEditor : ShootableEditor
+public class MovableTurnRegularEditor : MovableEditor
 {
-    SerializedProperty projectileProp;
+    SerializedProperty turnFactorProp;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        projectileProp = serializedObject.FindProperty("projectile");
+        turnFactorProp = serializedObject.FindProperty("turnFactor");
     }
 
     protected override void ContentsUpdate()
@@ -21,6 +21,6 @@ public class ShootableProjectileEditor : ShootableEditor
 
         EditorGUILayout.Space();
 
-        EditorGUILayout.PropertyField(projectileProp);
+        EditorGUILayout.PropertyField(turnFactorProp);
     }
 }
