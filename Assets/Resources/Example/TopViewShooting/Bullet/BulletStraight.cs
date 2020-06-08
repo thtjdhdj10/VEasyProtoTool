@@ -14,9 +14,9 @@ namespace VEPT
             else targetType = typeof(Player);
 
             GameObject effectPrefab = ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.EResName.Effect_Bullet);
+                EResourceName.Effect_Bullet);
 
-            TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
+            TrgCollision trgCol = new TrgCollision(this, targetType);
             new ActDealDamage(trgCol, damage);
             new ActDestroyActor(trgCol, this);
             new ActCreateObjectDynamic(trgCol, effectPrefab, transform);

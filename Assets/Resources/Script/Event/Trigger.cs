@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace VEPT
 {
     public abstract class Trigger
     {
+        public Actor owner;
+
         // 검사하기 쉬운 조건을 먼저 Add 할 것.
         public List<Condition> conditionList = new List<Condition>();
         public List<Action> actionList = new List<Action>();
-
-        public Actor owner;
 
         // Option
         public bool isDisposableTrigger = false; // Trigger 가 작동할 때 까지 존재.
@@ -52,17 +53,22 @@ namespace VEPT
 
     public class TrgCollision : Trigger
     {
-        public System.Type[] targetTypes;
-        public Collidable collider;
+        public Type[] targetTypes;
         public Actor target;
 
-        public TrgCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
+        public TrgCollision(Actor _owner, params Type[] _targetTypes)
             : base(_owner)
         {
-            collider = _collider;
-            targetTypes = _targetTypes;
+            if (owner.TryGetOperable(out Collidable collidable))
+            {
+                collidable.onHitDlg += HandleOnHit;
+            }
+            else
+            {
+                Debug.LogWarning(owner + " doesn't have collidable");
+            }
 
-            collider.onHitDlg += HandleOnHit;
+            targetTypes = _targetTypes;
         }
 
         public override void Init()
@@ -101,27 +107,27 @@ namespace VEPT
         private void HandleFixedUpdate()
         {
             Collidable col = owner.GetOperable<Collidable>();
-            Const.EDirection bounceByDir = VEasyCalc.CheckTerritory2D(col.collider);
+            EDirection bounceByDir = VEasyCalc.CheckTerritory2D(col.collider);
 
             switch (bounceByDir)
             {
-                case Const.EDirection.UP:
-                    targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
+                case EDirection.UP:
+                    targetPos = new Vector2(owner.transform.position.x, CameraManager.worldHeightHalf);
                     bounceTo = 90f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.DOWN:
-                    targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
+                case EDirection.DOWN:
+                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.worldHeightHalf);
                     bounceTo = 270f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.LEFT:
-                    targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
+                case EDirection.LEFT:
+                    targetPos = new Vector2(-CameraManager.worldWidthHalf, owner.transform.position.y);
                     bounceTo = 180f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.RIGHT:
-                    targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
+                case EDirection.RIGHT:
+                    targetPos = new Vector2(CameraManager.worldWidthHalf, owner.transform.position.y);
                     bounceTo = 0f;
                     ActivateTrigger();
                     break;
@@ -143,27 +149,27 @@ namespace VEPT
         private void HandleFixedUpdate()
         {
             Collidable col = owner.GetOperable<Collidable>();
-            Const.EDirection bounceByDir = VEasyCalc.CheckOutside2D(col.collider);
+            EDirection bounceByDir = VEasyCalc.CheckOutside2D(col.collider);
 
             switch (bounceByDir)
             {
-                case Const.EDirection.UP:
-                    targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
+                case EDirection.UP:
+                    targetPos = new Vector2(owner.transform.position.x, CameraManager.worldHeightHalf);
                     bounceTo = 90f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.DOWN:
-                    targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
+                case EDirection.DOWN:
+                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.worldHeightHalf);
                     bounceTo = 270f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.LEFT:
-                    targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
+                case EDirection.LEFT:
+                    targetPos = new Vector2(-CameraManager.worldWidthHalf, owner.transform.position.y);
                     bounceTo = 180f;
                     ActivateTrigger();
                     break;
-                case Const.EDirection.RIGHT:
-                    targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
+                case EDirection.RIGHT:
+                    targetPos = new Vector2(CameraManager.worldWidthHalf, owner.transform.position.y);
                     bounceTo = 0f;
                     ActivateTrigger();
                     break;
@@ -212,7 +218,7 @@ namespace VEPT
         }
     }
 
-    // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
+    // TrgKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
     public class TrgKeyInput : Trigger
     {
         private KeyManager.EKeyCommand command;
@@ -227,6 +233,10 @@ namespace VEPT
             if (owner.TryGetOperable(out Controllable control))
             {
                 control.keyInputDlg += HandleKeyInput;
+            }
+            else
+            {
+                Debug.LogWarning(owner + " doesn't have controllable");
             }
         }
 
@@ -245,7 +255,7 @@ namespace VEPT
         }
     }
 
-    // TriggerKeyInput 과 달리 정해진 Object 에의 모든 키 입력에서 Activate() 호출
+    // TrKeyInputs 는 정해진 대상 actor의  Activate() 호출
     // Action 내에서 명령어를 선별해서 사용.
     // 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
     public class TrgKeyInputs : Trigger
@@ -259,6 +269,10 @@ namespace VEPT
             if (owner.TryGetOperable(out Controllable control))
             {
                 control.keyInputDlg += HandleKeyInput;
+            }
+            else
+            {
+                Debug.LogWarning(owner + " doesn't have controllable");
             }
         }
 
@@ -380,10 +394,10 @@ namespace VEPT
     // 특정 type의 유닛 생성/파괴/초기화 시 동작
     public class TrgAnyUnitEvent : Trigger
     {
-        private System.Type targetType;
+        private Type targetType;
         private ETriggerType type;
 
-        public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, ETriggerType _type)
+        public TrgAnyUnitEvent(Actor _owner, Type _unitType, ETriggerType _type)
             : base(_owner)
         {
             targetType = _unitType;

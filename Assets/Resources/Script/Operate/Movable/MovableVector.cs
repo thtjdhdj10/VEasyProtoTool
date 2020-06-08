@@ -41,22 +41,22 @@ namespace VEPT
             }
 
             Vector2 delta = new Vector2(0f, 0f);
-            if (moveVector[(int)Const.EDirection.LEFT])
+            if (moveVector[(int)EDirection.LEFT])
             {
                 delta.x -= moveDelta;
                 owner.moveDir = 180f;
             }
-            else if (moveVector[(int)Const.EDirection.RIGHT])
+            else if (moveVector[(int)EDirection.RIGHT])
             {
                 delta.x += moveDelta;
                 owner.moveDir = 0f;
             }
-            if (moveVector[(int)Const.EDirection.UP])
+            if (moveVector[(int)EDirection.UP])
             {
                 delta.y += moveDelta;
                 owner.moveDir = 90f;
             }
-            else if (moveVector[(int)Const.EDirection.DOWN])
+            else if (moveVector[(int)EDirection.DOWN])
             {
                 delta.y -= moveDelta;
                 owner.moveDir = 270f;

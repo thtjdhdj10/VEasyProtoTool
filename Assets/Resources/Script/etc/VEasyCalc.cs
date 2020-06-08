@@ -6,6 +6,26 @@ namespace VEPT
 {
     public class VEasyCalc
     {
+        public static bool TryCast<T>(object o, out T result) where T : class
+        {
+            if (o is T)
+            {
+                result = o as T;
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+
+        public static void ChangeKey<TKey, TValue>(
+            Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
+        {
+            TValue value = dic[fromKey];
+            dic.Remove(fromKey);
+            dic[toKey] = value;
+        }
+
         public static float Inner(Vector2 posA, Vector2 posB) // 내적
         {
             float leftExpression = posA.x * posB.x + posA.y * posB.y;
@@ -32,66 +52,66 @@ namespace VEPT
             return GetDeltaPosition(a, b).SqrMagnitude();
         }
 
-        public static Const.EDirection CheckOutside2D(Collider2D col)
+        public static EDirection CheckOutside2D(Collider2D col)
         {
             Vector2 pos = col.transform.position;
-            Rect rect = Const.GetWorldSize();
+            Rect rect = CameraManager.GetWorldSize();
 
-            if (Const.TryCast(col, out CircleCollider2D circleCol))
+            if (TryCast(col, out CircleCollider2D circleCol))
             {
                 if (pos.x + circleCol.radius < rect.xMin)
-                    return Const.EDirection.LEFT;
+                    return EDirection.LEFT;
                 if (pos.x - circleCol.radius > rect.xMax)
-                    return Const.EDirection.RIGHT;
+                    return EDirection.RIGHT;
                 if (pos.y + circleCol.radius < rect.yMin)
-                    return Const.EDirection.DOWN;
+                    return EDirection.DOWN;
                 if (pos.y - circleCol.radius > rect.yMax)
-                    return Const.EDirection.UP;
+                    return EDirection.UP;
             }
-            else if (Const.TryCast(col, out BoxCollider2D boxCol))
+            else if (TryCast(col, out BoxCollider2D boxCol))
             {
                 if (pos.x + boxCol.size.x < rect.xMin)
-                    return Const.EDirection.LEFT;
+                    return EDirection.LEFT;
                 if (pos.x - boxCol.size.x > rect.xMax)
-                    return Const.EDirection.RIGHT;
+                    return EDirection.RIGHT;
                 if (pos.y + boxCol.size.y < rect.yMin)
-                    return Const.EDirection.DOWN;
+                    return EDirection.DOWN;
                 if (pos.y - boxCol.size.y > rect.yMax)
-                    return Const.EDirection.UP;
+                    return EDirection.UP;
             }
 
-            return Const.EDirection.NONE;
+            return EDirection.NONE;
         }
 
-        public static Const.EDirection CheckTerritory2D(Collider2D col)
+        public static EDirection CheckTerritory2D(Collider2D col)
         {
             Vector2 pos = col.transform.position;
-            Rect rect = Const.GetWorldSize();
+            Rect rect = CameraManager.GetWorldSize();
 
-            if (Const.TryCast(col, out CircleCollider2D circleCol))
+            if (TryCast(col, out CircleCollider2D circleCol))
             {
                 if (pos.x - circleCol.radius < rect.xMin)
-                    return Const.EDirection.LEFT;
+                    return EDirection.LEFT;
                 if (pos.x + circleCol.radius > rect.xMax)
-                    return Const.EDirection.RIGHT;
+                    return EDirection.RIGHT;
                 if (pos.y - circleCol.radius < rect.yMin)
-                    return Const.EDirection.DOWN;
+                    return EDirection.DOWN;
                 if (pos.y + circleCol.radius > rect.yMax)
-                    return Const.EDirection.UP;
+                    return EDirection.UP;
             }
-            else if (Const.TryCast(col, out BoxCollider2D boxCol))
+            else if (TryCast(col, out BoxCollider2D boxCol))
             {
                 if (pos.x - boxCol.size.x < rect.xMin)
-                    return Const.EDirection.LEFT;
+                    return EDirection.LEFT;
                 if (pos.x + boxCol.size.x > rect.xMax)
-                    return Const.EDirection.RIGHT;
+                    return EDirection.RIGHT;
                 if (pos.y - boxCol.size.y < rect.yMin)
-                    return Const.EDirection.DOWN;
+                    return EDirection.DOWN;
                 if (pos.y + boxCol.size.y > rect.yMax)
-                    return Const.EDirection.UP;
+                    return EDirection.UP;
             }
 
-            return Const.EDirection.NONE;
+            return EDirection.NONE;
         }
 
         public static Vector2 ScreenToWorldPos(Vector2 screen)

@@ -9,9 +9,23 @@ namespace VEPT
     {
         public static CameraManager manager;
 
+        public static float worldWidthHalf;
+        public static float worldHeightHalf;
+
         void Awake()
         {
             manager = this;
+        }
+
+        public static Rect GetWorldSize()
+        {
+            return new Rect()
+            {
+                xMin = -worldWidthHalf,
+                xMax = worldWidthHalf,
+                yMin = -worldHeightHalf,
+                yMax = worldHeightHalf,
+            };
         }
     }
 }

@@ -16,51 +16,13 @@ namespace VEPT
     {
         // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
         // 모든 prefab 다 할 필요는 없고, 필요할 때 마다 추가
-        public enum EResName
-        {
-            NONE = 0,
-
-            // prefab
-
-            Bullet_Laser,
-            Bullet_Slayer_1,
-            Bullet_Slayer_2,
-            Bullet_Straight_1,
-            Bullet_Straight_2,
-
-            Effect_Bullet,
-            Effect_LaserBody,
-            Effect_LaserRoot,
-            Effect_Shield,
-            Effect_ShieldBreak,
-            Effect_Shockwave,
-
-            Enemy_Wing,
-            EnemyBoss_Slayer,
-
-            Player,
-
-            // sprite
-
-            Player_Damaged_strip5,
-
-            // controller
-
-            Effect_Laser_Column_Controller,
-            Effect_Laser_Root__Controller,
-
-            EnemyBoss_Slayer__Controller,
-
-            Player_Damaged_Controller,
-        }
-
         private static Dictionary<NameTypePair, UObject> _resNameObjDic =
             new Dictionary<NameTypePair, UObject>();
 
         private List<UObject> _loadedResDic = new List<UObject>();
         private const string RESOURCES = "Resources";
 
-        public static T LoadResource<T>(EResName resourceType) where T : UObject
+        public static T LoadResource<T>(EResourceName resourceType) where T : UObject
         {
             return LoadResource<T>(resourceType.ToString());
         }
@@ -69,12 +31,16 @@ namespace VEPT
         public static T LoadResource<T>(string resourceName) where T : UObject
         {
             NameTypePair nameType = new NameTypePair(resourceName, typeof(T));
-            if (_resNameObjDic.ContainsKey(nameType))
+
+            try
             {
                 return _resNameObjDic[nameType] as T;
             }
-
-            return default;
+            catch (KeyNotFoundException e)
+            {
+                Debug.LogError(e);
+                return default;
+            }
         }
 
         private static string ResourceTypeToExtension(Type type)
@@ -122,10 +88,20 @@ namespace VEPT
 
             resNameWithPathList.ForEach(resourcePath =>
             {
+                NameTypePair nameType = new NameTypePair(
+                    GetResourceName(resourcePath), typeof(T));
+
                 T resource = Resources.Load<T>(GetLoadingName(resourcePath));
-                _resNameObjDic.Add(new NameTypePair(
-                    GetResourceName(resourcePath), typeof(T)), resource);
-                _loadedResDic.Add(resource);
+
+                try
+                {
+                    _resNameObjDic.Add(nameType, resource);
+                    _loadedResDic.Add(resource);
+                }
+                catch(ArgumentException e)
+                {
+                    Debug.LogError(e);
+                }
             });
         }
 

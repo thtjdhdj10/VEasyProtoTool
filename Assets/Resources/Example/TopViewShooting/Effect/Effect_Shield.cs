@@ -50,7 +50,7 @@ namespace VEPT
             if (GameManager.isQuitting == false)
             {
                 GameObject go = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                    ResourcesManager.EResName.Effect_ShieldBreak));
+                    EResourceName.Effect_ShieldBreak));
                 go.transform.parent = transform.parent;
                 go.transform.position = transform.position;
             }

@@ -1,57 +1,55 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-
-namespace VEPT
+﻿namespace VEPT
 {
-    public class Const
+    public enum EResourceName
     {
-        // 순서를 바꾸지 말 것.
-        // index 로 사용할 수 있도록 NONE 을 맨 뒤로 했음
-        public enum EDirection
-        {
-            LEFT = 0,
-            RIGHT,
-            UP,
-            DOWN,
+        NONE = 0,
 
-            FRONT,
-            BACK,
+        // prefab
 
-            NONE,
-        }
+        Bullet_Laser,
+        Bullet_Slayer_1,
+        Bullet_Slayer_2,
+        Bullet_Straight_1,
+        Bullet_Straight_2,
 
-        public static float worldWidthHalf;
-        public static float worldHeightHalf;
+        Effect_Bullet,
+        Effect_LaserBody,
+        Effect_LaserRoot,
+        Effect_Shield,
+        Effect_ShieldBreak,
+        Effect_Shockwave,
 
-        public static Rect GetWorldSize()
-        {
-            return new Rect()
-            {
-                xMin = -worldWidthHalf,
-                xMax = worldWidthHalf,
-                yMin = -worldHeightHalf,
-                yMax = worldHeightHalf,
-            };
-        }
+        Enemy_Wing,
+        EnemyBoss_Slayer,
 
-        public static bool TryCast<T>(object o, out T result) where T : class
-        {
-            if (o is T)
-            {
-                result = o as T;
-                return true;
-            }
+        Player,
 
-            result = null;
-            return false;
-        }
+        // sprite
 
-        public static void ChangeKey<TKey, TValue>(
-            Dictionary<TKey, TValue> dic, TKey fromKey, TKey toKey)
-        {
-            TValue value = dic[fromKey];
-            dic.Remove(fromKey);
-            dic[toKey] = value;
-        }
+        Player_Damaged_strip5,
+
+        // controller
+
+        Effect_Laser_Column_Controller,
+        Effect_Laser_Root__Controller,
+
+        EnemyBoss_Slayer__Controller,
+
+        Player_Damaged_Controller,
+    }
+
+    // 순서를 바꾸지 말 것.
+    // index 로 사용할 수 있도록 NONE 을 맨 뒤로 했음
+    public enum EDirection
+    {
+        LEFT = 0,
+        RIGHT,
+        UP,
+        DOWN,
+
+        FRONT,
+        BACK,
+
+        NONE,
     }
 }

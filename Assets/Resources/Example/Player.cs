@@ -37,7 +37,7 @@ namespace VEPT
             float knockbackTime = 0.38f;
             float dodgeTime = 1.3f;
 
-            TrgCollision triCol = new TrgCollision(this, GetOperable<Collidable>(), typeof(Bullet), typeof(Enemy));
+            TrgCollision triCol = new TrgCollision(this, typeof(Bullet), typeof(Enemy));
             new ActInitTrigger(triCol, triKeyInput);
 
             new ActKnockback(triCol, this, 8f, 20f);
@@ -56,14 +56,14 @@ namespace VEPT
             new ActSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
             new ActSetSprite(triCol, sprite,
                 ResourcesManager.LoadResource<Sprite>(
-                    ResourcesManager.EResName.Player_Damaged_strip5));
+                    EResourceName.Player_Damaged_strip5));
             new ActSetSprite(triCol, sprite,
                 ResourcesManager.LoadResource<Sprite>(
-                    ResourcesManager.EResName.Player))
+                    EResourceName.Player))
             { delay = dodgeTime };
             new ActSetController(triCol, gameObject,
                 ResourcesManager.LoadResource<RuntimeAnimatorController>(
-                    ResourcesManager.EResName.Player_Damaged_Controller));
+                    EResourceName.Player_Damaged_Controller));
             new ActSetController(triCol, gameObject, null) { delay = knockbackTime };
             new ActSetAnimatorSpeed(triCol, gameObject, 0.8f);
 

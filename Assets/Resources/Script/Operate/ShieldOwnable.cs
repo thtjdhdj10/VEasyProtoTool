@@ -41,7 +41,7 @@ namespace VEPT
             for (int i = 0; i < ShieldCount; ++i)
             {
                 GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                    ResourcesManager.EResName.Effect_Shield));
+                    EResourceName.Effect_Shield));
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
                 _shieldList.Add(shield);
@@ -64,7 +64,7 @@ namespace VEPT
                     ++_shieldCount;
 
                     GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                        ResourcesManager.EResName.Effect_Shield));
+                        EResourceName.Effect_Shield));
                     shield.transform.position = transform.position;
                     shield.transform.parent = transform;
                     _shieldList.Add(shield);

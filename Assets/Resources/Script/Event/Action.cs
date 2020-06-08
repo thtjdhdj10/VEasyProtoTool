@@ -258,7 +258,7 @@ namespace VEPT
 
         protected override void ActionProcess(Trigger trigger)
         {
-            if (Const.TryCast(trigger, out TrgCollision trgCol))
+            if (VEasyCalc.TryCast(trigger, out TrgCollision trgCol))
             {
                 if (trgCol.target != null)
                 {
@@ -324,7 +324,7 @@ namespace VEPT
 
             Collidable col = trigger.owner.GetOperable<Collidable>();
 
-            if (Const.TryCast(trigger, out TrgCollision trgCol))
+            if (VEasyCalc.TryCast(trigger, out TrgCollision trgCol))
             {
                 Actor target = trgCol.target;
                 targetPos = target.transform.position;
@@ -333,23 +333,23 @@ namespace VEPT
                 // TODO 유닛간 block 처리 구현
                 // Contact, Raycast 등 활용?
             }
-            else if (Const.TryCast(trigger, out TrgBoundaryTouch trgBndTch))
+            else if (VEasyCalc.TryCast(trigger, out TrgBoundaryTouch trgBndTch))
             {
                 targetPos = trgBndTch.targetPos;
                 targetDir = trgBndTch.bounceTo;
 
-                if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+                if (VEasyCalc.TryCast(col?.collider, out CircleCollider2D circleCol))
                 {
                     distance = circleCol.radius;
                 }
                 // TODO box collider 처리
             }
-            else if (Const.TryCast(trigger, out TrgBoundaryOut regBndOut))
+            else if (VEasyCalc.TryCast(trigger, out TrgBoundaryOut regBndOut))
             {
                 targetPos = regBndOut.targetPos;
                 targetDir = regBndOut.bounceTo;
 
-                if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+                if (VEasyCalc.TryCast(col?.collider, out CircleCollider2D circleCol))
                 {
                     distance = circleCol.radius;
                 }
@@ -574,7 +574,7 @@ namespace VEPT
                 go.transform.position = transform.position;
                 go.transform.rotation = transform.rotation;
             }
-            catch (Exception e)
+            catch (NullReferenceException e)
             {
                 Debug.LogError(e);
             }
@@ -660,32 +660,32 @@ namespace VEPT
 
         bool[] moveVector = new bool[4];
 
-        Dictionary<Const.EDirection, KeyManager.EKeyCommand> dirKeyDic =
-            new Dictionary<Const.EDirection, KeyManager.EKeyCommand>();
-        Dictionary<Const.EDirection, Const.EDirection> dirRevdirDic =
-            new Dictionary<Const.EDirection, Const.EDirection>();
+        Dictionary<EDirection, KeyManager.EKeyCommand> dirKeyDic =
+            new Dictionary<EDirection, KeyManager.EKeyCommand>();
+        Dictionary<EDirection, EDirection> dirRevdirDic =
+            new Dictionary<EDirection, EDirection>();
 
         public ActVectorMoveActor(TrgKeyInputs trigger, float _speed)
             : base(trigger)
         {
             speed = _speed;
 
-            dirKeyDic[Const.EDirection.LEFT] = KeyManager.EKeyCommand.MOVE_LEFT;
-            dirKeyDic[Const.EDirection.RIGHT] = KeyManager.EKeyCommand.MOVE_RIGHT;
-            dirKeyDic[Const.EDirection.UP] = KeyManager.EKeyCommand.MOVE_UP;
-            dirKeyDic[Const.EDirection.DOWN] = KeyManager.EKeyCommand.MOVE_DOWN;
+            dirKeyDic[EDirection.LEFT] = KeyManager.EKeyCommand.MOVE_LEFT;
+            dirKeyDic[EDirection.RIGHT] = KeyManager.EKeyCommand.MOVE_RIGHT;
+            dirKeyDic[EDirection.UP] = KeyManager.EKeyCommand.MOVE_UP;
+            dirKeyDic[EDirection.DOWN] = KeyManager.EKeyCommand.MOVE_DOWN;
 
-            dirRevdirDic[Const.EDirection.LEFT] = Const.EDirection.RIGHT;
-            dirRevdirDic[Const.EDirection.RIGHT] = Const.EDirection.LEFT;
-            dirRevdirDic[Const.EDirection.UP] = Const.EDirection.DOWN;
-            dirRevdirDic[Const.EDirection.DOWN] = Const.EDirection.UP;
+            dirRevdirDic[EDirection.LEFT] = EDirection.RIGHT;
+            dirRevdirDic[EDirection.RIGHT] = EDirection.LEFT;
+            dirRevdirDic[EDirection.UP] = EDirection.DOWN;
+            dirRevdirDic[EDirection.DOWN] = EDirection.UP;
         }
 
         protected override void ActionProcess(Trigger trigger)
         {
-            if (Const.TryCast(trigger, out TrgKeyInputs inpputs))
+            if (VEasyCalc.TryCast(trigger, out TrgKeyInputs inpputs))
             {
-
+                // TODO
             }
 
             TrgKeyInputs inputs = (TrgKeyInputs)trigger;
@@ -707,7 +707,7 @@ namespace VEPT
         {
             for (int d = 0; d < 4; ++d)
             {
-                Const.EDirection dir = (Const.EDirection)d;
+                EDirection dir = (EDirection)d;
                 if (command == dirKeyDic[dir])
                 {
                     if (type == KeyManager.EKeyPressType.DOWN)

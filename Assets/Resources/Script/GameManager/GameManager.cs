@@ -21,8 +21,8 @@ namespace VEPT
         {
             float widthRatio = (float)Screen.width / Screen.height;
 
-            Const.worldHeightHalf = Camera.main.orthographicSize;
-            Const.worldWidthHalf = Const.worldHeightHalf * widthRatio;
+            CameraManager.worldHeightHalf = Camera.main.orthographicSize;
+            CameraManager.worldWidthHalf = CameraManager.worldHeightHalf * widthRatio;
         }
 
         private void FixedUpdate()

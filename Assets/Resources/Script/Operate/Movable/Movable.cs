@@ -69,8 +69,7 @@ namespace VEPT
                         trigger = new TrgBoundaryOut(owner);
                         break;
                     case EBounceTrigger.COLLISION:
-                        Collidable col = owner.GetOperable<Collidable>();
-                        trigger = new TrgCollision(owner, col, typeof(Unit));
+                        trigger = new TrgCollision(owner, typeof(Unit));
                         break;
                 }
 

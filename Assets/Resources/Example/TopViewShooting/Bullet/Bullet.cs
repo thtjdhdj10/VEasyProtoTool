@@ -24,7 +24,7 @@ namespace VEPT
             if (force == EForce.A) targetType = typeof(Enemy);
             else targetType = typeof(Player);
 
-            TrgCollision trgCol = new TrgCollision(this, GetOperable<Collidable>(), targetType);
+            TrgCollision trgCol = new TrgCollision(this, targetType);
             new ActDealDamage(trgCol, damage);
             new ActDestroyActor(trgCol, this);
         }

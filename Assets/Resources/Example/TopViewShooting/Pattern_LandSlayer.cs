@@ -28,7 +28,7 @@ namespace VEPT
             PtnFireTarget_AngleRandom pattern1 = new PtnFireTarget_AngleRandom(_owner);
 
             GameObject go = ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.EResName.Bullet_Slayer_1);
+                EResourceName.Bullet_Slayer_1);
 
             Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
             bullet.owner = _owner;
@@ -109,7 +109,7 @@ namespace VEPT
             move = _owner.GetOperable<Movable>();
 
             GameObject go = ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.EResName.Bullet_Slayer_2);
+                EResourceName.Bullet_Slayer_2);
 
             for (int i = 0; i < count; ++i)
             {
