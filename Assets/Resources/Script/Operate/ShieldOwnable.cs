@@ -2,86 +2,89 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldOwnable : Operable
+namespace VEPT
 {
-    public bool enableShield = true;
-
-    public int maxShieldCount = 1;
-    public int ShieldCount
+    public class ShieldOwnable : Operable
     {
-        get
+        public bool enableShield = true;
+
+        public int maxShieldCount = 1;
+        public int ShieldCount
         {
-            return _shieldCount;
-        }
-        set
-        {
-            _shieldCount = value;
-            if (_shieldCount > 0) enableShield = true;
-            else enableShield = false;
-        }
-    }
-    [SerializeField]
-    private int _shieldCount = 1;
-
-    public float shieldRegenDelay;
-    private float _regenProgress;
-
-    private List<GameObject> _shieldList = new List<GameObject>();
-
-    //
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        enableShield = false;
-
-        for (int i = 0; i < ShieldCount; ++i)
-        {
-            GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                ResourcesManager.EResName.Effect_Shield));
-            shield.transform.position = transform.position;
-            shield.transform.parent = transform;
-            _shieldList.Add(shield);
-
-            enableShield = true;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if(_shieldCount < maxShieldCount)
-        {
-            if(_regenProgress < shieldRegenDelay)
+            get
             {
-                _regenProgress += Time.fixedDeltaTime;
+                return _shieldCount;
             }
-            else
+            set
             {
-                _regenProgress = 0f;
-                ++_shieldCount;
+                _shieldCount = value;
+                if (_shieldCount > 0) enableShield = true;
+                else enableShield = false;
+            }
+        }
+        [SerializeField]
+        private int _shieldCount = 1;
 
+        public float shieldRegenDelay;
+        private float _regenProgress;
+
+        private List<GameObject> _shieldList = new List<GameObject>();
+
+        //
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            enableShield = false;
+
+            for (int i = 0; i < ShieldCount; ++i)
+            {
                 GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
                     ResourcesManager.EResName.Effect_Shield));
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
                 _shieldList.Add(shield);
+
+                enableShield = true;
             }
         }
-    }
 
-    public bool ShieldBreak()
-    {
-        if (_shieldCount > 0)
+        private void FixedUpdate()
         {
-            --_shieldCount;
+            if (_shieldCount < maxShieldCount)
+            {
+                if (_regenProgress < shieldRegenDelay)
+                {
+                    _regenProgress += Time.fixedDeltaTime;
+                }
+                else
+                {
+                    _regenProgress = 0f;
+                    ++_shieldCount;
 
-            GameObject shield = _shieldList[_shieldList.Count - 1];
-            _shieldList.Remove(shield);
-            Destroy(shield);
-
-            return true;
+                    GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
+                        ResourcesManager.EResName.Effect_Shield));
+                    shield.transform.position = transform.position;
+                    shield.transform.parent = transform;
+                    _shieldList.Add(shield);
+                }
+            }
         }
-        else return false;
+
+        public bool ShieldBreak()
+        {
+            if (_shieldCount > 0)
+            {
+                --_shieldCount;
+
+                GameObject shield = _shieldList[_shieldList.Count - 1];
+                _shieldList.Remove(shield);
+                Destroy(shield);
+
+                return true;
+            }
+            else return false;
+        }
     }
 }

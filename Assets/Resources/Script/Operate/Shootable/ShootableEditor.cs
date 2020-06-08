@@ -2,61 +2,64 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(Shootable))]
-[CanEditMultipleObjects]
-public class ShootableEditor : Editor
+namespace VEPT
 {
-    SerializedProperty scriptProp;
-    SerializedProperty stateProp;
-    SerializedProperty conditionProp;
-    SerializedProperty attackDelayProp;
-    SerializedProperty remainAttackDelayProp;
-    SerializedProperty loadOnDeactiveProp;
-
-    Shootable obj = null;
-
-    protected virtual void OnEnable()
+    [CustomEditor(typeof(Shootable))]
+    [CanEditMultipleObjects]
+    public class ShootableEditor : Editor
     {
-        obj = target as Shootable;
+        SerializedProperty scriptProp;
+        SerializedProperty stateProp;
+        SerializedProperty conditionProp;
+        SerializedProperty attackDelayProp;
+        SerializedProperty remainAttackDelayProp;
+        SerializedProperty loadOnDeactiveProp;
 
-        scriptProp = serializedObject.FindProperty("m_Script");
-        stateProp = serializedObject.FindProperty("state.state");
-        conditionProp = serializedObject.FindProperty("state.conditionForTrue");
-        attackDelayProp = serializedObject.FindProperty("attackDelay");
-        remainAttackDelayProp = serializedObject.FindProperty("remainAttackDelay");
-        loadOnDeactiveProp = serializedObject.FindProperty("loadOnDeactive");
-    }
+        Shootable obj = null;
 
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-
-        ContentsUpdate();
-
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    private bool fold = true;
-    protected virtual void ContentsUpdate()
-    {
-        EditorGUI.BeginDisabledGroup(true);
-        GUI.color = new Color(0.7f, 0.7f, 1f);
-        EditorGUILayout.PropertyField(scriptProp);
-        GUI.color = Color.white;
-        EditorGUI.EndDisabledGroup();
-
-        fold = EditorGUILayout.BeginFoldoutHeaderGroup(fold, "Active");
-        if (fold)
+        protected virtual void OnEnable()
         {
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(stateProp);
-            EditorGUILayout.PropertyField(conditionProp);
-            EditorGUI.indentLevel -= 1;
-        }
-        EditorGUILayout.EndFoldoutHeaderGroup();
+            obj = target as Shootable;
 
-        EditorGUILayout.PropertyField(attackDelayProp);
-        EditorGUILayout.PropertyField(remainAttackDelayProp);
-        EditorGUILayout.PropertyField(loadOnDeactiveProp);
+            scriptProp = serializedObject.FindProperty("m_Script");
+            stateProp = serializedObject.FindProperty("state.state");
+            conditionProp = serializedObject.FindProperty("state.conditionForTrue");
+            attackDelayProp = serializedObject.FindProperty("attackDelay");
+            remainAttackDelayProp = serializedObject.FindProperty("remainAttackDelay");
+            loadOnDeactiveProp = serializedObject.FindProperty("loadOnDeactive");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            ContentsUpdate();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private bool fold = true;
+        protected virtual void ContentsUpdate()
+        {
+            EditorGUI.BeginDisabledGroup(true);
+            GUI.color = new Color(0.7f, 0.7f, 1f);
+            EditorGUILayout.PropertyField(scriptProp);
+            GUI.color = Color.white;
+            EditorGUI.EndDisabledGroup();
+
+            fold = EditorGUILayout.BeginFoldoutHeaderGroup(fold, "Active");
+            if (fold)
+            {
+                EditorGUI.indentLevel += 1;
+                EditorGUILayout.PropertyField(stateProp);
+                EditorGUILayout.PropertyField(conditionProp);
+                EditorGUI.indentLevel -= 1;
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            EditorGUILayout.PropertyField(attackDelayProp);
+            EditorGUILayout.PropertyField(remainAttackDelayProp);
+            EditorGUILayout.PropertyField(loadOnDeactiveProp);
+        }
     }
 }

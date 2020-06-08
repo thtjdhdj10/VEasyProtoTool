@@ -1,47 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Shootable : Operable
+namespace VEPT
 {
-    public float attackDelay;
-    public float remainAttackDelay;
-    public bool loadOnDeactive; // 비활성 중 장전 여부
-
-    void FixedUpdate()
+    public class Shootable : Operable
     {
-        if (AttackDelayCheck() == true)
+        public float attackDelay;
+        public float remainAttackDelay;
+        public bool loadOnDeactive; // 비활성 중 장전 여부
+
+        void FixedUpdate()
         {
-            Shoot();
+            if (AttackDelayCheck() == true)
+            {
+                Shoot();
+            }
         }
-    }
 
-    protected virtual void Shoot()
-    {
-
-    }
-
-    bool AttackDelayCheck()
-    {
-        if (state == false)
+        protected virtual void Shoot()
         {
-            if(remainAttackDelay > 0f &&
-                loadOnDeactive == true)
+
+        }
+
+        bool AttackDelayCheck()
+        {
+            if (state == false)
+            {
+                if (remainAttackDelay > 0f &&
+                    loadOnDeactive == true)
+                    remainAttackDelay -= Time.fixedDeltaTime;
+
+                return false;
+            }
+
+            if (remainAttackDelay > 0f)
+            {
                 remainAttackDelay -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                remainAttackDelay = attackDelay;
+                return true;
+            }
 
             return false;
         }
-
-        if (remainAttackDelay > 0f)
-        {
-            remainAttackDelay -= Time.fixedDeltaTime;
-        }
-        else
-        {
-            remainAttackDelay = attackDelay;
-            return true;
-        }
-
-        return false;
     }
 }
 

@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// TODO 카메라 쉐이크 기능 추가 (진폭, 감쇄, 지속시간)
-public class CameraManager : MonoBehaviour
+namespace VEPT
 {
-    public static CameraManager manager;
-
-    void Awake()
+    // TODO 카메라 쉐이크 기능 추가 (진폭, 감쇄, 지속시간)
+    // toggle 인지 아닌지
+    public class CameraManager : MonoBehaviour
     {
-        manager = this;
+        public static CameraManager manager;
+
+        void Awake()
+        {
+            manager = this;
+        }
     }
 }

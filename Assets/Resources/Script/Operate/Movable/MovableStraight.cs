@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MovableStraight : Movable
+namespace VEPT
 {
-    // 직선 등속 이동
-    protected override void MoveFrame()
+    public class MovableStraight : Movable
     {
-        float moveDistance = speed * Time.fixedDeltaTime;
+        // 직선 등속 이동
+        protected override void MoveFrame()
+        {
+            float moveDistance = speed * Time.fixedDeltaTime;
 
-        Vector2 moveVector = VEasyCalc.GetRotatedPosition(owner.moveDir, moveDistance);
-        Vector2 v2Pos = owner.transform.position;
-        owner.transform.position = v2Pos + moveVector;
+            Vector2 moveVector = VEasyCalc.GetRotatedPosition(owner.moveDir, moveDistance);
+            Vector2 v2Pos = owner.transform.position;
+            owner.transform.position = v2Pos + moveVector;
+        }
     }
 }

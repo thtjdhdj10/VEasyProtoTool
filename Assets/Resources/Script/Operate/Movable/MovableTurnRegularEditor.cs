@@ -2,25 +2,28 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(MovableTurnRegular))]
-[CanEditMultipleObjects]
-public class MovableTurnRegularEditor : MovableEditor
+namespace VEPT
 {
-    SerializedProperty turnFactorProp;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(MovableTurnRegular))]
+    [CanEditMultipleObjects]
+    public class MovableTurnRegularEditor : MovableEditor
     {
-        base.OnEnable();
+        SerializedProperty turnFactorProp;
 
-        turnFactorProp = serializedObject.FindProperty("turnFactor");
-    }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
 
-    protected override void ContentsUpdate()
-    {
-        base.ContentsUpdate();
+            turnFactorProp = serializedObject.FindProperty("turnFactor");
+        }
 
-        EditorGUILayout.Space();
+        protected override void ContentsUpdate()
+        {
+            base.ContentsUpdate();
 
-        EditorGUILayout.PropertyField(turnFactorProp);
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(turnFactorProp);
+        }
     }
 }

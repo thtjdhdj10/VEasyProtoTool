@@ -2,60 +2,63 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(UnitStatus))]
-[CanEditMultipleObjects]
-public class UnitStatusEditor : Editor
+namespace VEPT
 {
-    SerializedProperty scriptProp;
-    SerializedProperty ownerProp;
-    SerializedProperty hpProp;
-    SerializedProperty currentHpProp;
-    SerializedProperty enableVitalColorProp;
-    SerializedProperty enableHPDisplayProp;
-    SerializedProperty vitalProp;
-    SerializedProperty spriteProp;
-
-    UnitStatus obj = null;
-
-    protected virtual void OnEnable()
+    [CustomEditor(typeof(UnitStatus))]
+    [CanEditMultipleObjects]
+    public class UnitStatusEditor : Editor
     {
-        obj = target as UnitStatus;
+        SerializedProperty scriptProp;
+        SerializedProperty ownerProp;
+        SerializedProperty hpProp;
+        SerializedProperty currentHpProp;
+        SerializedProperty enableVitalColorProp;
+        SerializedProperty enableHPDisplayProp;
+        SerializedProperty vitalProp;
+        SerializedProperty spriteProp;
 
-        scriptProp = serializedObject.FindProperty("m_Script");
-        ownerProp = serializedObject.FindProperty("owner");
-        hpProp = serializedObject.FindProperty("hp");
-        currentHpProp = serializedObject.FindProperty("currentHp");
-        enableVitalColorProp = serializedObject.FindProperty("enableVitalColor");
-        enableHPDisplayProp = serializedObject.FindProperty("enableHPDisplay");
-        vitalProp = serializedObject.FindProperty("vital");
-        spriteProp = serializedObject.FindProperty("sprite");
-    }
+        UnitStatus obj = null;
 
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-
-        ContentsUpdate();
-
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    protected virtual void ContentsUpdate()
-    {
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.PropertyField(scriptProp);
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.PropertyField(ownerProp);
-        EditorGUILayout.PropertyField(hpProp);
-        EditorGUILayout.PropertyField(currentHpProp);
-        EditorGUILayout.PropertyField(enableVitalColorProp);
-        EditorGUILayout.PropertyField(enableHPDisplayProp);
-
-        if(obj.enableVitalColor)
+        protected virtual void OnEnable()
         {
-            EditorGUILayout.PropertyField(vitalProp);
-            EditorGUILayout.PropertyField(spriteProp);
+            obj = target as UnitStatus;
+
+            scriptProp = serializedObject.FindProperty("m_Script");
+            ownerProp = serializedObject.FindProperty("owner");
+            hpProp = serializedObject.FindProperty("hp");
+            currentHpProp = serializedObject.FindProperty("currentHp");
+            enableVitalColorProp = serializedObject.FindProperty("enableVitalColor");
+            enableHPDisplayProp = serializedObject.FindProperty("enableHPDisplay");
+            vitalProp = serializedObject.FindProperty("vital");
+            spriteProp = serializedObject.FindProperty("sprite");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            ContentsUpdate();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void ContentsUpdate()
+        {
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.PropertyField(scriptProp);
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.PropertyField(ownerProp);
+            EditorGUILayout.PropertyField(hpProp);
+            EditorGUILayout.PropertyField(currentHpProp);
+            EditorGUILayout.PropertyField(enableVitalColorProp);
+            EditorGUILayout.PropertyField(enableHPDisplayProp);
+
+            if (obj.enableVitalColor)
+            {
+                EditorGUILayout.PropertyField(vitalProp);
+                EditorGUILayout.PropertyField(spriteProp);
+            }
         }
     }
 }

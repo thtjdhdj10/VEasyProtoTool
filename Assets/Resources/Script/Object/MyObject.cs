@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MyObject : MonoBehaviour
+namespace VEPT
 {
+    public class MyObject : MonoBehaviour
+    {
 
 
 
+    }
 }

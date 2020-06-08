@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Unit
+namespace VEPT
 {
+    public class Enemy : Unit
+    {
 
 
 
+    }
 }

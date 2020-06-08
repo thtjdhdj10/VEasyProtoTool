@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Controllable : Operable
+namespace VEPT
 {
-    public delegate void KeyInputDelegate(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType);
-    public KeyInputDelegate keyInputDlg = new KeyInputDelegate(EmptyMethod);
-    public static void EmptyMethod(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType) { }
-
-    public virtual void KeyInput(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType)
+    public class Controllable : Operable
     {
-        if (state == false) return;
+        public delegate void KeyInputDelegate(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType);
+        public KeyInputDelegate keyInputDlg = new KeyInputDelegate(EmptyMethod);
+        public static void EmptyMethod(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType) { }
 
-        keyInputDlg(command, pressType);
+        public virtual void KeyInput(KeyManager.EKeyCommand command, KeyManager.EKeyPressType pressType)
+        {
+            if (state == false) return;
+
+            keyInputDlg(command, pressType);
+        }
     }
 }

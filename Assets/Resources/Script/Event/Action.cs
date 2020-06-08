@@ -4,728 +4,732 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public abstract class Action
+namespace VEPT
 {
-    public float delay = 0f;
-
-    public Action(Trigger trigger)
+    public abstract class Action
     {
-        trigger.actionList.Add(this);
-    }
+        public float delay = 0f;
 
-    protected abstract void ActionProcess(Trigger trigger);
-
-    public void Activate(Trigger trigger)
-    {
-        if (delay == 0f) ActionProcess(trigger);
-        else GameManager.gm.StartCoroutine(DelayedActivate(trigger));
-    }
-
-    public virtual void Init()
-    {
-
-    }
-
-    private IEnumerator DelayedActivate(Trigger trigger)
-    {
-        yield return new WaitForSeconds(delay);
-        ActionProcess(trigger);
-    }
-}
-
-public class ActSetRefValue<T> : Action where T : struct
-{
-    public RefValue<T> target;
-    public T value;
-
-    public ActSetRefValue(Trigger trigger, RefValue<T> _target, T _value)
-        : base(trigger)
-    {
-        target = _target;
-        value = _value;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        target.value = value;
-    }
-}
-
-public class ActDirectionToMouse : Action
-{
-    public Actor target;
-    
-    public ActDirectionToMouse(Trigger trigger, Actor _target)
-        : base(trigger)
-    {
-        target = _target;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Vector2 mouseWorldPos = VEasyCalc.ScreenToWorldPos(Input.mousePosition);
-        target.targetDir = VEasyCalc.GetDirection(target.transform.position, mouseWorldPos);
-    }
-}
-
-public class ActDirectionToTarget : Action
-{
-    public Actor from;
-    public Actor to;
-
-    public ActDirectionToTarget(Trigger trigger, Actor _from, Actor _to)
-        :base(trigger)
-    {
-        from = _from;
-        to = _to;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        from.targetDir = VEasyCalc.GetDirection(from, to);
-    }
-}
-
-public class ActSetAnimatorSpeed : Action
-{
-    public GameObject target;
-    public float speed;
-
-    public ActSetAnimatorSpeed(Trigger trigger, GameObject _target, float _speed)
-        :base(trigger)
-    {
-        target = _target;
-        speed = _speed;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if(target.TryGetComponent(out Animator anim))
+        public Action(Trigger trigger)
         {
-            anim.speed = speed;
+            trigger.actionList.Add(this);
+        }
+
+        protected abstract void ActionProcess(Trigger trigger);
+
+        public void Activate(Trigger trigger)
+        {
+            if (delay == 0f) ActionProcess(trigger);
+            else GameManager.gm.StartCoroutine(DelayedActivate(trigger));
+        }
+
+        public virtual void Init()
+        {
+
+        }
+
+        private IEnumerator DelayedActivate(Trigger trigger)
+        {
+            yield return new WaitForSeconds(delay);
+            ActionProcess(trigger);
         }
     }
-}
 
-public class ActSetComponent<T> : Action where T : Component
-{
-    public GameObject target;
-    public bool isAdd;
-
-    public ActSetComponent(Trigger trigger, GameObject _target, bool _isAdd)
-        : base(trigger)
+    public class ActSetRefValue<T> : Action where T : struct
     {
-        target = _target;
-        isAdd = _isAdd;
-    }
+        public ValueTypeWrapper<T> target;
+        public T value;
 
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if (isAdd) target.AddComponent<T>();
-        else
+        public ActSetRefValue(Trigger trigger, ValueTypeWrapper<T> _target, T _value)
+            : base(trigger)
         {
-            if (target.TryGetComponent<T>(out T component))
-            {
-                GameObject.Destroy(component);
-            }
-        } 
-    }
-}
+            target = _target;
+            value = _value;
+        }
 
-public class ActSetController : Action
-{
-    public GameObject target;
-    public RuntimeAnimatorController controller;
-
-    public ActSetController(Trigger trigger, GameObject _target, RuntimeAnimatorController _controller)
-        :base(trigger)
-    {
-        target = _target;
-        controller = _controller;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if(target.TryGetComponent(out Animator anim))
+        protected override void ActionProcess(Trigger trigger)
         {
-            anim.runtimeAnimatorController = controller;
+            target.value = value;
         }
     }
-}
 
-public class ActSetSprite : Action
-{
-    public SpriteRenderer spriteRenderer;
-    public Sprite sprite;
-
-    public ActSetSprite(Trigger trigger, SpriteRenderer _spriteRenderer, Sprite _sprite)
-        :base(trigger)
+    public class ActDirectionToMouse : Action
     {
-        spriteRenderer = _spriteRenderer;
-        sprite = _sprite;
-    }
+        public Actor target;
 
-    protected override void ActionProcess(Trigger trigger)
-    {
-        spriteRenderer.sprite = sprite;
-    }
-}
-
-public class ActSetSpriteColor : Action
-{
-    public SpriteRenderer sprite;
-    public Color color;
-
-    public ActSetSpriteColor(Trigger trigger, SpriteRenderer _sprite, Color _color)
-        : base(trigger)
-    {
-        sprite = _sprite;
-        color = _color;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        sprite.color = color;
-    }
-}
-
-public class ActInitTrigger : Action
-{
-    public Trigger target;
-
-    public ActInitTrigger(Trigger trigger, Trigger _target)
-        : base(trigger)
-    {
-        target = _target;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        target.Init();
-    }
-}
-
-public class ActSetSpeed : Action
-{
-    public float speed;
-
-    public ActSetSpeed(Trigger trigger, float _speed)
-        : base(trigger)
-    {
-        speed = _speed;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Movable move = trigger.owner.GetOperable<Movable>();
-        if (move == null) return;
-
-        move.speed = speed;
-    }
-}
-
-public class ActPrintLog : Action
-{
-    public string log;
-
-    public ActPrintLog(Trigger trigger, string _log)
-        : base(trigger)
-    {
-        log = _log;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Debug.Log(log);
-    }
-}
-
-public class ActKnockback : Action
-{
-    public Actor target;
-    public float speed;
-    public float deceleration; // 초당 속도 감소
-
-    public ActKnockback(Trigger trigger, Actor _target, float _speed, float _deceleration)
-        : base(trigger)
-    {
-        target = _target;
-        speed = _speed;
-        deceleration = _deceleration;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if (Const.TryCast(trigger, out TrgCollision trgCol))
+        public ActDirectionToMouse(Trigger trigger, Actor _target)
+            : base(trigger)
         {
-            if (trgCol.target != null)
+            target = _target;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Vector2 mouseWorldPos = VEasyCalc.ScreenToWorldPos(Input.mousePosition);
+            target.targetDir = VEasyCalc.GetDirection(target.transform.position, mouseWorldPos);
+        }
+    }
+
+    public class ActDirectionToTarget : Action
+    {
+        public Actor from;
+        public Actor to;
+
+        public ActDirectionToTarget(Trigger trigger, Actor _from, Actor _to)
+            : base(trigger)
+        {
+            from = _from;
+            to = _to;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            from.targetDir = VEasyCalc.GetDirection(from, to);
+        }
+    }
+
+    public class ActSetAnimatorSpeed : Action
+    {
+        public GameObject target;
+        public float speed;
+
+        public ActSetAnimatorSpeed(Trigger trigger, GameObject _target, float _speed)
+            : base(trigger)
+        {
+            target = _target;
+            speed = _speed;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            if (target.TryGetComponent(out Animator anim))
             {
-                target.moveDir = VEasyCalc.GetDirection(trgCol.target, target);
+                anim.speed = speed;
             }
         }
-        else
-        {
-            target.moveDir += 180f;
-        }
-
-        GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
     }
 
-    // 기존 Movable 일시 중지, 새로운 Movable 생성해서 넉백 이동
-    private IEnumerator DecelerationProcess(Trigger trigger)
+    public class ActSetComponent<T> : Action where T : Component
     {
-        List<Movable> moves = target.GetOperableList<Movable>();
+        public GameObject target;
+        public bool isAdd;
 
-        if (moves != null)
-            foreach (var move in moves)
-                move.state.SetState(Multistat.EStateType.KNOCKBACK, true);
-
-        Actor.ERotateTo originRotateTo = target.rotateTo;
-
-        MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
-        target.rotateTo = Actor.ERotateTo.NONE;
-
-        float currentSpeed = speed;
-
-        while (currentSpeed > 0f && deceleration > 0f)
+        public ActSetComponent(Trigger trigger, GameObject _target, bool _isAdd)
+            : base(trigger)
         {
-            knockbackMove.speed = currentSpeed;
-            currentSpeed -= deceleration * Time.fixedDeltaTime;
-
-            yield return new WaitForFixedUpdate();
+            target = _target;
+            isAdd = _isAdd;
         }
 
-        target.rotateTo = originRotateTo;
-        knockbackMove.speed = 0f;
-
-        GameObject.Destroy(knockbackMove);
-
-        if (moves != null)
-            foreach (var move in moves)
-                move.state.SetState(Multistat.EStateType.KNOCKBACK, false);
-    }
-}
-
-public class ActBlockMove : Action
-{
-    public ActBlockMove(Trigger trigger)
-        :base(trigger)
-    {
-
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Vector2 targetPos;
-        float targetDir;
-        float distance = 0f;
-
-        Collidable col = trigger.owner.GetOperable<Collidable>();
-
-        if (Const.TryCast(trigger, out TrgCollision trgCol))
+        protected override void ActionProcess(Trigger trigger)
         {
-            Actor target = trgCol.target;
-            targetPos = target.transform.position;
-            targetDir = VEasyCalc.GetDirection(trigger.owner, target);
-
-            // TODO 유닛간 block 처리 구현
-            // Contact, Raycast 등 활용?
-        }
-        else if (Const.TryCast(trigger, out TrgBoundaryTouch trgBndTch))
-        {
-            targetPos = trgBndTch.targetPos;
-            targetDir = trgBndTch.bounceTo;
-
-            if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+            if (isAdd) target.AddComponent<T>();
+            else
             {
-                distance = circleCol.radius;
-            }
-            // TODO box collider 처리
-        }
-        else if (Const.TryCast(trigger, out TrgBoundaryOut regBndOut))
-        {
-            targetPos = regBndOut.targetPos;
-            targetDir = regBndOut.bounceTo;
-
-            if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
-            {
-                distance = circleCol.radius;
+                if (target.TryGetComponent<T>(out T component))
+                {
+                    GameObject.Destroy(component);
+                }
             }
         }
-        else return;
-
-        Vector2 delta = VEasyCalc.GetRotatedPosition(targetDir + 180f, distance);
-
-        trigger.owner.transform.position = targetPos + delta;
-    }
-}
-
-public class ActTurnReverse : Action
-{
-    public ActTurnReverse(Trigger trigger)
-        : base(trigger)
-    {
-
     }
 
-    protected override void ActionProcess(Trigger trigger)
+    public class ActSetController : Action
     {
-        trigger.owner.moveDir += 180f;
-    }
-}
+        public GameObject target;
+        public RuntimeAnimatorController controller;
 
-public class ActTurnReflect : Action
-{
-    public ActTurnReflect(Trigger trigger)
-        : base(trigger)
-    {
-
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Actor owner = trigger?.owner;
-
-        owner.moveDir = VEasyCalc.GetReflectedDirection(owner.moveDir, owner.targetDir);
-    }
-}
-
-public class ActTurnTarget : Action
-{
-    public ActTurnTarget(Trigger trigger)
-        : base(trigger)
-    {
-
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        trigger.owner.moveDir = trigger.owner.targetDir;
-    }
-}
-
-public class ActActivatePattern : Action
-{
-    public Pattern pattern;
-
-    public ActActivatePattern(Trigger trigger, Pattern _pattern)
-        : base(trigger)
-    {
-        pattern = _pattern;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        pattern.Activate();
-    }
-}
-
-public class ActActiveOperable<T> : Action where T : Operable
-{
-    protected bool doActive;
-    protected Multistat.EStateType stateType;
-
-    public ActActiveOperable(Trigger trigger, Multistat.EStateType _type, bool _doActive)
-        : base(trigger)
-    {
-        stateType = _type;
-        doActive = _doActive;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Operable operable = trigger.owner.GetOperable<T>();
-        operable.state.SetState(stateType, doActive);
-    }
-}
-
-public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
-{
-    public ActActiveTargetOperable(TrgCollision trigger,
-        Multistat.EStateType _type, bool _doActive)
-        : base(trigger, _type, _doActive)
-    {
-
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if (trigger == null) return;
-
-        Actor target = trigger.owner;
-        if (trigger is TrgCollision)
-            target = (trigger as TrgCollision).target;
-
-        if (target == null) return;
-
-        Operable operable = target.GetOperable<T>();
-        operable.state.SetState(stateType, doActive);
-    }
-}
-
-//public class ActAddOperable : Action
-//{
-//    public ActAddOperable(Trigger trigger)
-//        : base(trigger)
-//    {
-
-//    }
-
-//    protected override void ActionProcess(Trigger trigger)
-//    {
-//        // TODO
-
-//    }
-//}
-
-public class ActCreateActor : Action
-{
-    public Actor target;
-    public Vector2 position;
-    public bool isMovingActor;
-    public float direction;
-    public float speed;
-
-    public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos)
-        : base(trigger)
-    {
-        target = _target;
-        position = _pos;
-
-        isMovingActor = false;
-    }
-
-    public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos, float _direction, float _speed)
-        : base(trigger)
-    {
-        target = _target;
-        position = _pos;
-
-        isMovingActor = true;
-
-        direction = _direction;
-        speed = _speed;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Actor actor = UnityEngine.Object.Instantiate(target);
-        actor.transform.position = position;
-
-        if (isMovingActor)
+        public ActSetController(Trigger trigger, GameObject _target, RuntimeAnimatorController _controller)
+            : base(trigger)
         {
-            Movable move = actor.GetOperable<Movable>();
-            move.owner.moveDir = direction;
+            target = _target;
+            controller = _controller;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            if (target.TryGetComponent(out Animator anim))
+            {
+                anim.runtimeAnimatorController = controller;
+            }
+        }
+    }
+
+    public class ActSetSprite : Action
+    {
+        public SpriteRenderer spriteRenderer;
+        public Sprite sprite;
+
+        public ActSetSprite(Trigger trigger, SpriteRenderer _spriteRenderer, Sprite _sprite)
+            : base(trigger)
+        {
+            spriteRenderer = _spriteRenderer;
+            sprite = _sprite;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            spriteRenderer.sprite = sprite;
+        }
+    }
+
+    public class ActSetSpriteColor : Action
+    {
+        public SpriteRenderer sprite;
+        public Color color;
+
+        public ActSetSpriteColor(Trigger trigger, SpriteRenderer _sprite, Color _color)
+            : base(trigger)
+        {
+            sprite = _sprite;
+            color = _color;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            sprite.color = color;
+        }
+    }
+
+    public class ActInitTrigger : Action
+    {
+        public Trigger target;
+
+        public ActInitTrigger(Trigger trigger, Trigger _target)
+            : base(trigger)
+        {
+            target = _target;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            target.Init();
+        }
+    }
+
+    public class ActSetSpeed : Action
+    {
+        public float speed;
+
+        public ActSetSpeed(Trigger trigger, float _speed)
+            : base(trigger)
+        {
+            speed = _speed;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Movable move = trigger.owner.GetOperable<Movable>();
+            if (move == null) return;
+
             move.speed = speed;
         }
     }
-}
 
-public class ActCreateObject : Action
-{
-    public GameObject prefab;
-    public Vector2 position;
-    public float direction;
-
-    public ActCreateObject(Trigger trigger, GameObject _prefab, Vector2 _position, float _direction)
-        : base(trigger)
+    public class ActPrintLog : Action
     {
-        prefab = _prefab;
-        position = _position;
-        direction = _direction;
-    }
+        public string log;
 
-    protected override void ActionProcess(Trigger trigger)
-    {
-        try
+        public ActPrintLog(Trigger trigger, string _log)
+            : base(trigger)
         {
-            GameObject go = UnityEngine.Object.Instantiate(prefab);
-
-            go.transform.position = position;
-            go.transform.rotation = Quaternion.Euler(0, 0, direction);
-        }
-        catch(Exception e)
-        {
-            Debug.LogWarning(e);
-        }
-    }
-}
-
-public class ActCreateObjectDynamic : Action
-{
-    public GameObject prefab;
-    public Transform transform;
-
-    public ActCreateObjectDynamic(Trigger trigger, GameObject _prefab, Transform _transform)
-        : base(trigger)
-    {
-        prefab = _prefab;
-        transform = _transform;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        try
-        {
-            GameObject go = UnityEngine.Object.Instantiate(prefab);
-
-            go.transform.position = transform.position;
-            go.transform.rotation = transform.rotation;
-        }
-        catch(Exception e)
-        {
-            Debug.LogError(e);
-        }
-    }
-}
-
-public class ActDealDamage : Action
-{
-    public int damage;
-
-    public ActDealDamage(TrgCollision trigger, int _damage)
-        : base(trigger)
-    {
-        damage = _damage;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        TrgCollision trgCol = trigger as TrgCollision;
-        if (trgCol == null) return;
-
-        if (trgCol.target == null) return;
-
-        Unit targetUnit = trgCol.target as Unit;
-        if (targetUnit == null) return;
-
-        if (targetUnit.unitStatus == null) return;
-
-        if (targetUnit.TryGetOperable(out ShieldOwnable shield) &&
-            shield.enableShield)
-            shield.ShieldBreak();
-        else targetUnit.unitStatus.CurrentHp -= damage;
-    }
-}
-
-public class ActGetDamage : Action
-{
-    public int damage;
-
-    public ActGetDamage(Trigger trigger, int _damage)
-        : base(trigger)
-    {
-        damage = _damage;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        Unit unit = trigger.owner as Unit;
-        if (unit == null) return;
-        if (unit.unitStatus == null) return;
-
-        if (unit.TryGetOperable(out ShieldOwnable shield) &&
-            shield.enableShield)
-            shield.ShieldBreak();
-        else unit.unitStatus.CurrentHp -= damage;
-    }
-}
-
-public class ActDestroyActor : Action
-{
-    public Actor target;
-
-    public ActDestroyActor(Trigger trigger, Actor _target)
-        : base(trigger)
-    {
-        target = _target;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        target.willDestroy = true;
-    }
-}
-
-// TriggerKeyInputs 로만 활용이 가능한 액션
-public class ActVectorMoveActor : Action
-{
-    public override void Init()
-    {
-        base.Init();
-        moveDir = new bool[4];
-    }
-    public float speed;
-
-    bool[] moveDir = new bool[4];
-
-    Dictionary<Const.EDirection, KeyManager.EKeyCommand> dirKeyDic =
-        new Dictionary<Const.EDirection, KeyManager.EKeyCommand>();
-    Dictionary<Const.EDirection, Const.EDirection> dirRevdirDic =
-        new Dictionary<Const.EDirection, Const.EDirection>();
-
-    public ActVectorMoveActor(Trigger trigger, float _speed)
-        : base(trigger)
-    {
-        speed = _speed;
-
-        dirKeyDic[Const.EDirection.LEFT] = KeyManager.EKeyCommand.MOVE_LEFT;
-        dirKeyDic[Const.EDirection.RIGHT] = KeyManager.EKeyCommand.MOVE_RIGHT;
-        dirKeyDic[Const.EDirection.UP] = KeyManager.EKeyCommand.MOVE_UP;
-        dirKeyDic[Const.EDirection.DOWN] = KeyManager.EKeyCommand.MOVE_DOWN;
-
-        dirRevdirDic[Const.EDirection.LEFT] = Const.EDirection.RIGHT;
-        dirRevdirDic[Const.EDirection.RIGHT] = Const.EDirection.LEFT;
-        dirRevdirDic[Const.EDirection.UP] = Const.EDirection.DOWN;
-        dirRevdirDic[Const.EDirection.DOWN] = Const.EDirection.UP;
-    }
-
-    protected override void ActionProcess(Trigger trigger)
-    {
-        if (trigger.GetType() != typeof(TrgKeyInputs))
-            return;
-
-        TrgKeyInputs triggerKeyInputs = (TrgKeyInputs)trigger;
-
-        UpdateMoveState(triggerKeyInputs.command, triggerKeyInputs.pressType);
-
-        MovableVector vm = triggerKeyInputs.owner.GetOperable<Movable>() as MovableVector;
-
-        if (vm == null)
-        {
-            vm = triggerKeyInputs.owner.gameObject.AddComponent<MovableVector>();
-            vm.speed = speed;
+            log = _log;
         }
 
-        vm.moveDir = moveDir;
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Debug.Log(log);
+        }
     }
 
-    void UpdateMoveState(KeyManager.EKeyCommand command, KeyManager.EKeyPressType type)
+    public class ActKnockback : Action
     {
-        for (int d = 0; d < 4; ++d)
+        public Actor target;
+        public float speed;
+        public float deceleration; // 초당 속도 감소
+
+        public ActKnockback(Trigger trigger, Actor _target, float _speed, float _deceleration)
+            : base(trigger)
         {
-            Const.EDirection dir = (Const.EDirection)d;
-            if (command == dirKeyDic[dir])
+            target = _target;
+            speed = _speed;
+            deceleration = _deceleration;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            if (Const.TryCast(trigger, out TrgCollision trgCol))
             {
-                if (type == KeyManager.EKeyPressType.DOWN)
+                if (trgCol.target != null)
                 {
-                    moveDir[(int)dir] = true;
-
-                    moveDir[(int)dirRevdirDic[dir]] = false;
+                    target.moveDir = VEasyCalc.GetDirection(trgCol.target, target);
                 }
-                else if (type == KeyManager.EKeyPressType.PRESS)
+            }
+            else
+            {
+                target.moveDir += 180f;
+            }
+
+            GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
+        }
+
+        // 기존 Movable 일시 중지, 새로운 Movable 생성해서 넉백 이동
+        private IEnumerator DecelerationProcess(Trigger trigger)
+        {
+            List<Movable> moves = target.GetOperableList<Movable>();
+
+            if (moves != null)
+                foreach (var move in moves)
+                    move.state.SetState(MultiState.EStateType.KNOCKBACK, true);
+
+            Actor.ERotateTo originRotateTo = target.rotateTo;
+
+            MovableStraight knockbackMove = target.gameObject.AddComponent<MovableStraight>();
+            target.rotateTo = Actor.ERotateTo.NONE;
+
+            float currentSpeed = speed;
+
+            while (currentSpeed > 0f && deceleration > 0f)
+            {
+                knockbackMove.speed = currentSpeed;
+                currentSpeed -= deceleration * Time.fixedDeltaTime;
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            target.rotateTo = originRotateTo;
+            knockbackMove.speed = 0f;
+
+            GameObject.Destroy(knockbackMove);
+
+            if (moves != null)
+                foreach (var move in moves)
+                    move.state.SetState(MultiState.EStateType.KNOCKBACK, false);
+        }
+    }
+
+    public class ActBlockMove : Action
+    {
+        public ActBlockMove(Trigger trigger)
+            : base(trigger)
+        {
+
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Vector2 targetPos;
+            float targetDir;
+            float distance = 0f;
+
+            Collidable col = trigger.owner.GetOperable<Collidable>();
+
+            if (Const.TryCast(trigger, out TrgCollision trgCol))
+            {
+                Actor target = trgCol.target;
+                targetPos = target.transform.position;
+                targetDir = VEasyCalc.GetDirection(trigger.owner, target);
+
+                // TODO 유닛간 block 처리 구현
+                // Contact, Raycast 등 활용?
+            }
+            else if (Const.TryCast(trigger, out TrgBoundaryTouch trgBndTch))
+            {
+                targetPos = trgBndTch.targetPos;
+                targetDir = trgBndTch.bounceTo;
+
+                if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
                 {
-                    if (moveDir[(int)dirRevdirDic[dir]] == false)
+                    distance = circleCol.radius;
+                }
+                // TODO box collider 처리
+            }
+            else if (Const.TryCast(trigger, out TrgBoundaryOut regBndOut))
+            {
+                targetPos = regBndOut.targetPos;
+                targetDir = regBndOut.bounceTo;
+
+                if (Const.TryCast(col?.collider, out CircleCollider2D circleCol))
+                {
+                    distance = circleCol.radius;
+                }
+            }
+            else return;
+
+            Vector2 delta = VEasyCalc.GetRotatedPosition(targetDir + 180f, distance);
+
+            trigger.owner.transform.position = targetPos + delta;
+        }
+    }
+
+    public class ActTurnReverse : Action
+    {
+        public ActTurnReverse(Trigger trigger)
+            : base(trigger)
+        {
+
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            trigger.owner.moveDir += 180f;
+        }
+    }
+
+    public class ActTurnReflect : Action
+    {
+        public ActTurnReflect(Trigger trigger)
+            : base(trigger)
+        {
+
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Actor owner = trigger?.owner;
+
+            owner.moveDir = VEasyCalc.GetReflectedDirection(owner.moveDir, owner.targetDir);
+        }
+    }
+
+    public class ActTurnTarget : Action
+    {
+        public ActTurnTarget(Trigger trigger)
+            : base(trigger)
+        {
+
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            trigger.owner.moveDir = trigger.owner.targetDir;
+        }
+    }
+
+    public class ActActivatePattern : Action
+    {
+        public Pattern pattern;
+
+        public ActActivatePattern(Trigger trigger, Pattern _pattern)
+            : base(trigger)
+        {
+            pattern = _pattern;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            pattern.Activate();
+        }
+    }
+
+    public class ActActiveOperable<T> : Action where T : Operable
+    {
+        protected bool doActive;
+        protected MultiState.EStateType stateType;
+
+        public ActActiveOperable(Trigger trigger, MultiState.EStateType _type, bool _doActive)
+            : base(trigger)
+        {
+            stateType = _type;
+            doActive = _doActive;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Operable operable = trigger.owner.GetOperable<T>();
+            operable.state.SetState(stateType, doActive);
+        }
+    }
+
+    public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
+    {
+        public ActActiveTargetOperable(TrgCollision trigger,
+            MultiState.EStateType _type, bool _doActive)
+            : base(trigger, _type, _doActive)
+        {
+
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            if (trigger == null) return;
+
+            Actor target = trigger.owner;
+            if (trigger is TrgCollision)
+                target = (trigger as TrgCollision).target;
+
+            if (target == null) return;
+
+            Operable operable = target.GetOperable<T>();
+            operable.state.SetState(stateType, doActive);
+        }
+    }
+
+    //public class ActAddOperable : Action
+    //{
+    //    public ActAddOperable(Trigger trigger)
+    //        : base(trigger)
+    //    {
+
+    //    }
+
+    //    protected override void ActionProcess(Trigger trigger)
+    //    {
+    //        // TODO
+
+    //    }
+    //}
+
+    public class ActCreateActor : Action
+    {
+        public Actor target;
+        public Vector2 position;
+        public bool isMovingActor;
+        public float direction;
+        public float speed;
+
+        public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos)
+            : base(trigger)
+        {
+            target = _target;
+            position = _pos;
+
+            isMovingActor = false;
+        }
+
+        public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos, float _direction, float _speed)
+            : base(trigger)
+        {
+            target = _target;
+            position = _pos;
+
+            isMovingActor = true;
+
+            direction = _direction;
+            speed = _speed;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Actor actor = UnityEngine.Object.Instantiate(target);
+            actor.transform.position = position;
+
+            if (isMovingActor)
+            {
+                Movable move = actor.GetOperable<Movable>();
+                move.owner.moveDir = direction;
+                move.speed = speed;
+            }
+        }
+    }
+
+    public class ActCreateObject : Action
+    {
+        public GameObject prefab;
+        public Vector2 position;
+        public float direction;
+
+        public ActCreateObject(Trigger trigger, GameObject _prefab, Vector2 _position, float _direction)
+            : base(trigger)
+        {
+            prefab = _prefab;
+            position = _position;
+            direction = _direction;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            try
+            {
+                GameObject go = UnityEngine.Object.Instantiate(prefab);
+
+                go.transform.position = position;
+                go.transform.rotation = Quaternion.Euler(0, 0, direction);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e);
+            }
+        }
+    }
+
+    public class ActCreateObjectDynamic : Action
+    {
+        public GameObject prefab;
+        public Transform transform;
+
+        public ActCreateObjectDynamic(Trigger trigger, GameObject _prefab, Transform _transform)
+            : base(trigger)
+        {
+            prefab = _prefab;
+            transform = _transform;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            try
+            {
+                GameObject go = UnityEngine.Object.Instantiate(prefab);
+
+                go.transform.position = transform.position;
+                go.transform.rotation = transform.rotation;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+    }
+
+    public class ActDealDamage : Action
+    {
+        public int damage;
+
+        public ActDealDamage(TrgCollision trigger, int _damage)
+            : base(trigger)
+        {
+            damage = _damage;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            TrgCollision trgCol = trigger as TrgCollision;
+            if (trgCol == null) return;
+
+            if (trgCol.target == null) return;
+
+            Unit targetUnit = trgCol.target as Unit;
+            if (targetUnit == null) return;
+
+            if (targetUnit.unitStatus == null) return;
+
+            if (targetUnit.TryGetOperable(out ShieldOwnable shield) &&
+                shield.enableShield)
+                shield.ShieldBreak();
+            else targetUnit.unitStatus.CurrentHp -= damage;
+        }
+    }
+
+    public class ActGetDamage : Action
+    {
+        public int damage;
+
+        public ActGetDamage(Trigger trigger, int _damage)
+            : base(trigger)
+        {
+            damage = _damage;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            Unit unit = trigger.owner as Unit;
+            if (unit == null) return;
+            if (unit.unitStatus == null) return;
+
+            if (unit.TryGetOperable(out ShieldOwnable shield) &&
+                shield.enableShield)
+                shield.ShieldBreak();
+            else unit.unitStatus.CurrentHp -= damage;
+        }
+    }
+
+    public class ActDestroyActor : Action
+    {
+        public Actor target;
+
+        public ActDestroyActor(Trigger trigger, Actor _target)
+            : base(trigger)
+        {
+            target = _target;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            target.willDestroy = true;
+        }
+    }
+
+    public class ActVectorMoveActor : Action
+    {
+        public override void Init()
+        {
+            base.Init();
+            moveVector = new bool[4];
+        }
+        public float speed;
+
+        bool[] moveVector = new bool[4];
+
+        Dictionary<Const.EDirection, KeyManager.EKeyCommand> dirKeyDic =
+            new Dictionary<Const.EDirection, KeyManager.EKeyCommand>();
+        Dictionary<Const.EDirection, Const.EDirection> dirRevdirDic =
+            new Dictionary<Const.EDirection, Const.EDirection>();
+
+        public ActVectorMoveActor(TrgKeyInputs trigger, float _speed)
+            : base(trigger)
+        {
+            speed = _speed;
+
+            dirKeyDic[Const.EDirection.LEFT] = KeyManager.EKeyCommand.MOVE_LEFT;
+            dirKeyDic[Const.EDirection.RIGHT] = KeyManager.EKeyCommand.MOVE_RIGHT;
+            dirKeyDic[Const.EDirection.UP] = KeyManager.EKeyCommand.MOVE_UP;
+            dirKeyDic[Const.EDirection.DOWN] = KeyManager.EKeyCommand.MOVE_DOWN;
+
+            dirRevdirDic[Const.EDirection.LEFT] = Const.EDirection.RIGHT;
+            dirRevdirDic[Const.EDirection.RIGHT] = Const.EDirection.LEFT;
+            dirRevdirDic[Const.EDirection.UP] = Const.EDirection.DOWN;
+            dirRevdirDic[Const.EDirection.DOWN] = Const.EDirection.UP;
+        }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            if (Const.TryCast(trigger, out TrgKeyInputs inpputs))
+            {
+
+            }
+
+            TrgKeyInputs inputs = (TrgKeyInputs)trigger;
+
+            UpdateMoveState(inputs.command, inputs.pressType);
+
+            MovableVector mv = inputs.owner.GetOperable<Movable>() as MovableVector;
+
+            if (mv == null)
+            {
+                mv = inputs.owner.gameObject.AddComponent<MovableVector>();
+                mv.speed = speed;
+            }
+
+            mv.moveVector = moveVector;
+        }
+
+        void UpdateMoveState(KeyManager.EKeyCommand command, KeyManager.EKeyPressType type)
+        {
+            for (int d = 0; d < 4; ++d)
+            {
+                Const.EDirection dir = (Const.EDirection)d;
+                if (command == dirKeyDic[dir])
+                {
+                    if (type == KeyManager.EKeyPressType.DOWN)
                     {
-                        moveDir[(int)dir] = true;
-                    }
-                }
-                else if (type == KeyManager.EKeyPressType.UP)
-                {
-                    moveDir[(int)dir] = false;
-                }
+                        moveVector[(int)dir] = true;
 
-                return;
+                        moveVector[(int)dirRevdirDic[dir]] = false;
+                    }
+                    else if (type == KeyManager.EKeyPressType.PRESS)
+                    {
+                        if (moveVector[(int)dirRevdirDic[dir]] == false)
+                        {
+                            moveVector[(int)dir] = true;
+                        }
+                    }
+                    else if (type == KeyManager.EKeyPressType.UP)
+                    {
+                        moveVector[(int)dir] = false;
+                    }
+
+                    return;
+                }
             }
         }
     }

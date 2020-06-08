@@ -1,446 +1,446 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
-public abstract class Trigger
+namespace VEPT
 {
-    // 검사하기 쉬운 조건을 먼저 Add 할 것.
-    public List<Condition> conditionList = new List<Condition>();
-    public List<Action> actionList = new List<Action>();
-
-    public Actor owner;
-
-    // Option
-    public bool isDisposableTrigger = false; // Trigger 가 작동할 때 까지 존재.
-    public bool isDisposableAction = false; // Action 이 한 번 실행될 때 까지 존재.
-
-    public Trigger(Actor _owner)
+    public abstract class Trigger
     {
-        owner = _owner;
-        owner.triggerList.Add(this);
-    }
+        // 검사하기 쉬운 조건을 먼저 Add 할 것.
+        public List<Condition> conditionList = new List<Condition>();
+        public List<Action> actionList = new List<Action>();
 
-    ~Trigger()
-    {
-        owner.triggerList.Remove(this);
-    }
+        public Actor owner;
 
-    public virtual void Init()
-    {
-        actionList.ForEach(a => a.Init());
-        conditionList.ForEach(c => c.Init());
-    }
+        // Option
+        public bool isDisposableTrigger = false; // Trigger 가 작동할 때 까지 존재.
+        public bool isDisposableAction = false; // Action 이 한 번 실행될 때 까지 존재.
 
-    public virtual void ActivateTrigger()
-    {
-        if (conditionList.Any(c => c.CheckCondition() == false)) return;
-
-        actionList.ForEach(a =>
+        public Trigger(Actor _owner)
         {
-            a.Activate(this);
-            if (isDisposableAction)
-                owner.triggerList.Remove(this);
-        });
+            owner = _owner;
+            owner.triggerList.Add(this);
+        }
 
-        if (isDisposableTrigger == true)
+        ~Trigger()
+        {
             owner.triggerList.Remove(this);
-    }
+        }
 
-}
-
-public class TrgCollision : Trigger
-{
-    public System.Type[] targetTypes;
-    public Collidable collider;
-    public Actor target;
-
-    public TrgCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
-        : base(_owner)
-    {
-        collider = _collider;
-        targetTypes = _targetTypes;
-
-        collider.onHitDlg += HandleOnHit;
-    }
-
-    public override void Init()
-    {
-        base.Init();
-        target = null;
-    }
-
-    private void HandleOnHit(Actor from, Actor to)
-    {
-        if (from != owner) return;
-
-        foreach (var targetType in targetTypes)
+        public virtual void Init()
         {
-            if (to.GetType().IsSubclassOf(targetType) ||
-                to.GetType() == targetType)
+            actionList.ForEach(a => a.Init());
+            conditionList.ForEach(c => c.Init());
+        }
+
+        public virtual void ActivateTrigger()
+        {
+            if (conditionList.Any(c => c.CheckCondition() == false)) return;
+
+            actionList.ForEach(a =>
             {
-                target = to;
-                ActivateTrigger();
+                a.Activate(this);
+                if (isDisposableAction)
+                    owner.triggerList.Remove(this);
+            });
+
+            if (isDisposableTrigger == true)
+                owner.triggerList.Remove(this);
+        }
+
+    }
+
+    public class TrgCollision : Trigger
+    {
+        public System.Type[] targetTypes;
+        public Collidable collider;
+        public Actor target;
+
+        public TrgCollision(Actor _owner, Collidable _collider, params System.Type[] _targetTypes)
+            : base(_owner)
+        {
+            collider = _collider;
+            targetTypes = _targetTypes;
+
+            collider.onHitDlg += HandleOnHit;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            target = null;
+        }
+
+        private void HandleOnHit(Actor from, Actor to)
+        {
+            if (from != owner) return;
+
+            foreach (var targetType in targetTypes)
+            {
+                if (to.GetType().IsSubclassOf(targetType) ||
+                    to.GetType() == targetType)
+                {
+                    target = to;
+                    ActivateTrigger();
+                }
             }
         }
     }
-}
 
-public class TrgBoundaryTouch : Trigger
-{
-    public Vector2 targetPos;
-    public float bounceTo;
-
-    public TrgBoundaryTouch(Actor _owner)
-        :base(_owner)
+    public class TrgBoundaryTouch : Trigger
     {
-        _owner.fixedUpdateDlg += HandleFixedUpdate;
-    }
+        public Vector2 targetPos;
+        public float bounceTo;
 
-    private void HandleFixedUpdate()
-    {
-        Collidable col = owner.GetOperable<Collidable>();
-        Const.EDirection bounceByDir = VEasyCalc.CheckTerritory2D(col.collider);
-
-        switch (bounceByDir)
+        public TrgBoundaryTouch(Actor _owner)
+            : base(_owner)
         {
-            case Const.EDirection.UP:
-                targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
-                bounceTo = 90f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.DOWN:
-                targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
-                bounceTo = 270f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.LEFT:
-                targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
-                bounceTo = 180f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.RIGHT:
-                targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
-                bounceTo = 0f;
-                ActivateTrigger();
-                break;
+            _owner.fixedUpdateDlg += HandleFixedUpdate;
         }
-    }
-}
 
-public class TrgBoundaryOut : Trigger
-{
-    public Vector2 targetPos;
-    public float bounceTo;
-
-    public TrgBoundaryOut(Actor _owner)
-        : base(_owner)
-    {
-        _owner.fixedUpdateDlg += HandleFixedUpdate;
-    }
-
-    private void HandleFixedUpdate()
-    {
-        Collidable col = owner.GetOperable<Collidable>();
-        Const.EDirection bounceByDir = VEasyCalc.CheckOutside2D(col.collider);
-
-        switch (bounceByDir)
+        private void HandleFixedUpdate()
         {
-            case Const.EDirection.UP:
-                targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
-                bounceTo = 90f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.DOWN:
-                targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
-                bounceTo = 270f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.LEFT:
-                targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
-                bounceTo = 180f;
-                ActivateTrigger();
-                break;
-            case Const.EDirection.RIGHT:
-                targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
-                bounceTo = 0f;
-                ActivateTrigger();
-                break;
-        }
-    }
-}
+            Collidable col = owner.GetOperable<Collidable>();
+            Const.EDirection bounceByDir = VEasyCalc.CheckTerritory2D(col.collider);
 
-public class TrgFrame : Trigger
-{
-    public TrgFrame(Actor _owner, int _passCount)
-        : base(_owner)
-    {
-        passCount = _passCount;
-
-        _owner.fixedUpdateDlg += HandleFixedUpdate;
-    }
-
-    public int passCount = 0;
-    int counter;
-
-    public override void Init()
-    {
-        base.Init();
-
-        counter = 0;
-    }
-
-    private void HandleFixedUpdate()
-    {
-        if (passCount == 0)
-        {
-            ActivateTrigger();
-        }
-        else
-        {
-            if (counter < passCount)
+            switch (bounceByDir)
             {
-                counter++;
+                case Const.EDirection.UP:
+                    targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
+                    bounceTo = 90f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.DOWN:
+                    targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
+                    bounceTo = 270f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.LEFT:
+                    targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
+                    bounceTo = 180f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.RIGHT:
+                    targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
+                    bounceTo = 0f;
+                    ActivateTrigger();
+                    break;
+            }
+        }
+    }
+
+    public class TrgBoundaryOut : Trigger
+    {
+        public Vector2 targetPos;
+        public float bounceTo;
+
+        public TrgBoundaryOut(Actor _owner)
+            : base(_owner)
+        {
+            _owner.fixedUpdateDlg += HandleFixedUpdate;
+        }
+
+        private void HandleFixedUpdate()
+        {
+            Collidable col = owner.GetOperable<Collidable>();
+            Const.EDirection bounceByDir = VEasyCalc.CheckOutside2D(col.collider);
+
+            switch (bounceByDir)
+            {
+                case Const.EDirection.UP:
+                    targetPos = new Vector2(owner.transform.position.x, Const.worldHeightHalf);
+                    bounceTo = 90f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.DOWN:
+                    targetPos = new Vector2(owner.transform.position.x, -Const.worldHeightHalf);
+                    bounceTo = 270f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.LEFT:
+                    targetPos = new Vector2(-Const.worldWidthHalf, owner.transform.position.y);
+                    bounceTo = 180f;
+                    ActivateTrigger();
+                    break;
+                case Const.EDirection.RIGHT:
+                    targetPos = new Vector2(Const.worldWidthHalf, owner.transform.position.y);
+                    bounceTo = 0f;
+                    ActivateTrigger();
+                    break;
+            }
+        }
+    }
+
+    public class TrgFrame : Trigger
+    {
+        public TrgFrame(Actor _owner, int _passCount)
+            : base(_owner)
+        {
+            passCount = _passCount;
+
+            _owner.fixedUpdateDlg += HandleFixedUpdate;
+        }
+
+        public int passCount = 0;
+        int counter;
+
+        public override void Init()
+        {
+            base.Init();
+
+            counter = 0;
+        }
+
+        private void HandleFixedUpdate()
+        {
+            if (passCount == 0)
+            {
+                ActivateTrigger();
             }
             else
             {
-                counter = 0;
-                ActivateTrigger();
+                if (counter < passCount)
+                {
+                    counter++;
+                }
+                else
+                {
+                    counter = 0;
+                    ActivateTrigger();
+                }
             }
         }
     }
-}
 
-// TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
-public class TrgKeyInput : Trigger
-{
-    private KeyManager.EKeyCommand command;
-    private KeyManager.EKeyPressType pressType;
-
-    public TrgKeyInput(Actor _owner, KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
-        : base(_owner)
+    // TriggerForKeyInput 은 정해진 키 입력에 대해서만 Activate() 를 호출.
+    public class TrgKeyInput : Trigger
     {
-        command = _command;
-        pressType = _pressType;
+        private KeyManager.EKeyCommand command;
+        private KeyManager.EKeyPressType pressType;
 
-        if(owner.TryGetOperable(out Controllable control))
+        public TrgKeyInput(Actor _owner, KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
+            : base(_owner)
         {
-            control.keyInputDlg += HandleKeyInput;
+            command = _command;
+            pressType = _pressType;
+
+            if (owner.TryGetOperable(out Controllable control))
+            {
+                control.keyInputDlg += HandleKeyInput;
+            }
+        }
+
+        ~TrgKeyInput()
+        {
+            if (owner.TryGetOperable(out Controllable control))
+            {
+                control.keyInputDlg -= HandleKeyInput;
+            }
+        }
+
+        private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
+        {
+            if (command == _command && pressType == _pressType)
+                ActivateTrigger();
         }
     }
 
-    ~TrgKeyInput()
+    // TriggerKeyInput 과 달리 정해진 Object 에의 모든 키 입력에서 Activate() 호출
+    // Action 내에서 명령어를 선별해서 사용.
+    // 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
+    public class TrgKeyInputs : Trigger
     {
-        if (owner.TryGetOperable(out Controllable control))
-        {
-            control.keyInputDlg -= HandleKeyInput;
-        }
-    }
+        public KeyManager.EKeyCommand command;
+        public KeyManager.EKeyPressType pressType;
 
-    private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
-    {
-        if (command == _command && pressType == _pressType)
+        public TrgKeyInputs(Actor _owner)
+            : base(_owner)
+        {
+            if (owner.TryGetOperable(out Controllable control))
+            {
+                control.keyInputDlg += HandleKeyInput;
+            }
+        }
+
+        ~TrgKeyInputs()
+        {
+            if (owner.TryGetOperable(out Controllable control))
+            {
+                control.keyInputDlg -= HandleKeyInput;
+            }
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            command = KeyManager.EKeyCommand.NONE;
+            pressType = KeyManager.EKeyPressType.NONE;
+        }
+
+        private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
+        {
+            command = _command;
+            pressType = _pressType;
             ActivateTrigger();
+        }
+    }
+
+    public class TrgTimer : Trigger
+    {
+        public TrgTimer(Actor _owner, float _delay, bool _isActivateOnStart)
+            : base(_owner)
+        {
+            delay = _delay;
+            isActivateOnStart = _isActivateOnStart;
+
+            _owner.fixedUpdateDlg += HandleFixedUpdate;
+
+            if (isActivateOnStart == true)
+                remainDelay = delay;
+            else remainDelay = 0f;
+        }
+
+        public float delay;
+        private float remainDelay;
+        private bool isActivateOnStart;
+
+        public override void Init()
+        {
+            base.Init();
+
+            if (isActivateOnStart == true)
+                remainDelay = delay;
+            else remainDelay = 0f;
+        }
+
+        private void HandleFixedUpdate()
+        {
+            if (remainDelay >= delay)
+            {
+                ActivateTrigger();
+                remainDelay = 0f;
+            }
+            else
+            {
+                remainDelay += Time.fixedDeltaTime;
+            }
+        }
+    }
+
+    // 특정한 유닛의 생성/파괴/초기화 시 Activate
+    public class TrgUnitEvent : Trigger
+    {
+        private Unit target;
+        private ETriggerType type;
+
+        public TrgUnitEvent(Actor _owner, Unit _target, ETriggerType _type)
+            : base(_owner)
+        {
+            target = _target;
+            type = _type;
+
+            switch (type)
+            {
+                case ETriggerType.AWAKE:
+                    target.awakeDlg += ActivateTrigger;
+                    break;
+                case ETriggerType.INIT:
+                    target.initDlg += ActivateTrigger;
+                    break;
+                case ETriggerType.ON_DESTROY:
+                    target.onDestroyDlg += ActivateTrigger;
+                    break;
+            }
+        }
+
+        ~TrgUnitEvent()
+        {
+            switch (type)
+            {
+                case ETriggerType.AWAKE:
+                    target.awakeDlg -= ActivateTrigger;
+                    break;
+                case ETriggerType.INIT:
+                    target.initDlg -= ActivateTrigger;
+                    break;
+                case ETriggerType.ON_DESTROY:
+                    target.onDestroyDlg -= ActivateTrigger;
+                    break;
+            }
+        }
+
+        public enum ETriggerType
+        {
+            AWAKE,
+            INIT,
+            ON_DESTROY,
+        }
+    }
+
+    // 특정 type의 유닛 생성/파괴/초기화 시 동작
+    public class TrgAnyUnitEvent : Trigger
+    {
+        private System.Type targetType;
+        private ETriggerType type;
+
+        public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, ETriggerType _type)
+            : base(_owner)
+        {
+            targetType = _unitType;
+            type = _type;
+
+            foreach (var unit in Unit.unitList)
+            {
+                LinkEventHandle(unit, true);
+            }
+
+            Actor.onActorAddedDlg += HandleAddedUnit;
+        }
+
+        ~TrgAnyUnitEvent()
+        {
+            foreach (var unit in Unit.unitList)
+            {
+                LinkEventHandle(unit, false);
+            }
+        }
+
+        private void LinkEventHandle(Unit unit, bool isAdd)
+        {
+            switch (type)
+            {
+                case ETriggerType.AWAKE:
+                    if (isAdd) unit.awakeDlg += ActivateTrigger;
+                    else unit.awakeDlg -= ActivateTrigger;
+                    break;
+                case ETriggerType.INIT:
+                    if (isAdd) unit.initDlg += ActivateTrigger;
+                    else unit.initDlg -= ActivateTrigger;
+                    break;
+                case ETriggerType.ON_DESTROY:
+                    if (isAdd) unit.onDestroyDlg += ActivateTrigger;
+                    else unit.onDestroyDlg -= ActivateTrigger;
+                    break;
+            }
+        }
+
+        private void HandleAddedUnit(Actor actor)
+        {
+            Unit unit = actor as Unit;
+            if (unit == null) return;
+
+            if (actor.GetType().IsSubclassOf(targetType) ||
+                actor.GetType() == targetType)
+            {
+                LinkEventHandle(unit, true);
+            }
+        }
+
+        public enum ETriggerType
+        {
+            AWAKE,
+            INIT,
+            ON_DESTROY,
+        }
     }
 }
-
-// TriggerKeyInput 과 달리 정해진 Object 에의 모든 키 입력에서 Activate() 호출
-// Action 내에서 명령어를 선별해서 사용.
-// 하나의 Action 에 복수의 명령어가 입력될 수 있을 때 사용할 것.
-public class TrgKeyInputs : Trigger
-{
-    public KeyManager.EKeyCommand command;
-    public KeyManager.EKeyPressType pressType;
-
-    public TrgKeyInputs(Actor _owner)
-        : base(_owner)
-    {
-        if (owner.TryGetOperable(out Controllable control))
-        {
-            control.keyInputDlg += HandleKeyInput;
-        }
-    }
-
-    ~TrgKeyInputs()
-    {
-        if (owner.TryGetOperable(out Controllable control))
-        {
-            control.keyInputDlg -= HandleKeyInput;
-        }
-    }
-
-    public override void Init()
-    {
-        base.Init();
-        command = KeyManager.EKeyCommand.NONE;
-        pressType = KeyManager.EKeyPressType.NONE;
-    }
-
-    private void HandleKeyInput(KeyManager.EKeyCommand _command, KeyManager.EKeyPressType _pressType)
-    {
-        command = _command;
-        pressType = _pressType;
-        ActivateTrigger();
-    }
-}
-
-public class TrgTimer : Trigger
-{
-    public TrgTimer(Actor _owner, float _delay, bool _isActivateOnStart)
-        : base(_owner)
-    {
-        delay = _delay;
-        isActivateOnStart = _isActivateOnStart;
-
-        _owner.fixedUpdateDlg += HandleFixedUpdate;
-
-        if (isActivateOnStart == true)
-            remainDelay = delay;
-        else remainDelay = 0f;
-    }
-
-    public float delay;
-    private float remainDelay;
-    private bool isActivateOnStart;
-
-    public override void Init()
-    {
-        base.Init();
-
-        if (isActivateOnStart == true)
-            remainDelay = delay;
-        else remainDelay = 0f;
-    }
-
-    private void HandleFixedUpdate()
-    {
-        if (remainDelay >= delay)
-        {
-            ActivateTrigger();
-            remainDelay = 0f;
-        }
-        else
-        {
-            remainDelay += Time.fixedDeltaTime;
-        }
-    }
-}
-
-// 특정한 유닛의 생성/파괴/초기화 시 Activate
-public class TrgUnitEvent : Trigger
-{
-    private Unit target;
-    private ETriggerType type;
-
-    public TrgUnitEvent(Actor _owner, Unit _target, ETriggerType _type)
-        : base(_owner)
-    {
-        target = _target;
-        type = _type;
-
-        switch (type)
-        {
-            case ETriggerType.AWAKE:
-                target.awakeDlg += ActivateTrigger;
-                break;
-            case ETriggerType.INIT:
-                target.initDlg += ActivateTrigger;
-                break;
-            case ETriggerType.ON_DESTROY:
-                target.onDestroyDlg += ActivateTrigger;
-                break;
-        }
-    }
-
-    ~TrgUnitEvent()
-    {
-        switch (type)
-        {
-            case ETriggerType.AWAKE:
-                target.awakeDlg -= ActivateTrigger;
-                break;
-            case ETriggerType.INIT:
-                target.initDlg -= ActivateTrigger;
-                break;
-            case ETriggerType.ON_DESTROY:
-                target.onDestroyDlg -= ActivateTrigger;
-                break;
-        }
-    }
-
-    public enum ETriggerType
-    {
-        AWAKE,
-        INIT,
-        ON_DESTROY,
-    }
-}
-
-// 특정 type의 유닛 생성/파괴/초기화 시 동작
-public class TrgAnyUnitEvent : Trigger
-{
-    private System.Type targetType;
-    private ETriggerType type;
-
-    public TrgAnyUnitEvent(Actor _owner, System.Type _unitType, ETriggerType _type)
-        : base(_owner)
-    {
-        targetType = _unitType;
-        type = _type;
-
-        foreach (var unit in Unit.unitList)
-        {
-            LinkEventHandle(unit, true);
-        }
-
-        Actor.onActorAddedDlg += HandleAddedUnit;
-    }
-
-    ~TrgAnyUnitEvent()
-    {
-        foreach(var unit in Unit.unitList)
-        {
-            LinkEventHandle(unit, false);
-        }
-    }
-
-    private void LinkEventHandle(Unit unit, bool isAdd)
-    {
-        switch (type)
-        {
-            case ETriggerType.AWAKE:
-                if(isAdd) unit.awakeDlg += ActivateTrigger;
-                else unit.awakeDlg -= ActivateTrigger;
-                break;
-            case ETriggerType.INIT:
-                if(isAdd) unit.initDlg += ActivateTrigger;
-                else unit.initDlg -= ActivateTrigger;
-                break;
-            case ETriggerType.ON_DESTROY:
-                if(isAdd) unit.onDestroyDlg += ActivateTrigger;
-                else unit.onDestroyDlg -= ActivateTrigger;
-                break;
-        }
-    }
-
-    private void HandleAddedUnit(Actor actor)
-    {
-        Unit unit = actor as Unit;
-        if (unit == null) return;
-
-        if (actor.GetType().IsSubclassOf(targetType) ||
-            actor.GetType() == targetType)
-        {
-            LinkEventHandle(unit, true);
-        }
-    }
-
-    public enum ETriggerType
-    {
-        AWAKE,
-        INIT,
-        ON_DESTROY,
-    }
-}
-

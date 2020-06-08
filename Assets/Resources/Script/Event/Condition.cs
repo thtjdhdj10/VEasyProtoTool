@@ -2,34 +2,37 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Condition
+namespace VEPT
 {
-    public Condition(Trigger trigger)
+    public abstract class Condition
     {
-        trigger.conditionList.Add(this);
+        public Condition(Trigger trigger)
+        {
+            trigger.conditionList.Add(this);
+        }
+
+        public abstract bool CheckCondition();
+
+        public virtual void Init()
+        {
+
+        }
+
     }
 
-    public abstract bool CheckCondition();
-
-    public virtual void Init()
+    public class CndEnable : Condition
     {
+        public ValueTypeWrapper<bool> state;
 
-    }
+        public CndEnable(Trigger trigger, ValueTypeWrapper<bool> _state)
+            : base(trigger)
+        {
+            state = _state;
+        }
 
-}
-
-public class CndEnable : Condition
-{
-    public RefValue<bool> state;
-
-    public CndEnable(Trigger trigger, RefValue<bool> _state)
-        : base(trigger)
-    {
-        state = _state;
-    }
-
-    public override bool CheckCondition()
-    {
-        return state.value;
+        public override bool CheckCondition()
+        {
+            return state.value;
+        }
     }
 }

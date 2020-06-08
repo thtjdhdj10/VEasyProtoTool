@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovableTarget : Movable
+namespace VEPT
 {
-    protected override void MoveFrame()
+    public class MovableTarget : Movable
     {
-        // TODO target으로 이동
+        protected override void MoveFrame()
+        {
+            // TODO target으로 이동
+        }
     }
 }

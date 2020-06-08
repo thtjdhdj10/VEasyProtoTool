@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MovableTurnRegular : Movable
+namespace VEPT
 {
-    public float turnFactor;
-
-    // 균일한 선회
-    protected override void MoveFrame()
+    public class MovableTurnRegular : Movable
     {
-        float moveDistance = speed * Time.fixedDeltaTime;
+        public float turnFactor;
 
-        float dirToPlayer = VEasyCalc.GetDirection(owner.transform.position, _targetPos);
+        // 균일한 선회
+        protected override void MoveFrame()
+        {
+            float moveDistance = speed * Time.fixedDeltaTime;
 
-        owner.moveDir = VEasyCalc.GetTurningDirection(
-            owner.moveDir, dirToPlayer, turnFactor * Time.fixedDeltaTime);
+            float dirToPlayer = VEasyCalc.GetDirection(owner.transform.position, _targetPos);
 
-        Vector2 moveVector = VEasyCalc.GetRotatedPosition(owner.moveDir, moveDistance);
+            owner.moveDir = VEasyCalc.GetTurningDirection(
+                owner.moveDir, dirToPlayer, turnFactor * Time.fixedDeltaTime);
 
-        Vector2 v2Pos = owner.transform.position;
-        owner.transform.position = v2Pos + moveVector;
+            Vector2 moveVector = VEasyCalc.GetRotatedPosition(owner.moveDir, moveDistance);
+
+            Vector2 v2Pos = owner.transform.position;
+            owner.transform.position = v2Pos + moveVector;
+        }
     }
 }

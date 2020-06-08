@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBoss : Enemy
+namespace VEPT
 {
+    public class EnemyBoss : Enemy
+    {
 
 
 
 
 
+    }
 }

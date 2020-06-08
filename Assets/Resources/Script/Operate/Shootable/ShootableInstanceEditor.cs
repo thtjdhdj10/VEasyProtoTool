@@ -2,28 +2,31 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(ShootableInstance))]
-[CanEditMultipleObjects]
-public class ShootableInstanceEditor : ShootableEditor
+namespace VEPT
 {
-    SerializedProperty damageProp;
-
-    ShootableInstance subObj = null;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(ShootableInstance))]
+    [CanEditMultipleObjects]
+    public class ShootableInstanceEditor : ShootableEditor
     {
-        base.OnEnable();
-        subObj = target as ShootableInstance;
+        SerializedProperty damageProp;
 
-        damageProp = serializedObject.FindProperty("damage");
-    }
+        ShootableInstance subObj = null;
 
-    protected override void ContentsUpdate()
-    {
-        base.ContentsUpdate();
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            subObj = target as ShootableInstance;
 
-        EditorGUILayout.Space();
+            damageProp = serializedObject.FindProperty("damage");
+        }
 
-        EditorGUILayout.PropertyField(damageProp);
+        protected override void ContentsUpdate()
+        {
+            base.ContentsUpdate();
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(damageProp);
+        }
     }
 }

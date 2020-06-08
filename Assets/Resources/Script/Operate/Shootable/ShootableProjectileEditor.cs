@@ -2,25 +2,28 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(ShootableProjectile))]
-[CanEditMultipleObjects]
-public class ShootableProjectileEditor : ShootableEditor
+namespace VEPT
 {
-    SerializedProperty projectileProp;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(ShootableProjectile))]
+    [CanEditMultipleObjects]
+    public class ShootableProjectileEditor : ShootableEditor
     {
-        base.OnEnable();
+        SerializedProperty projectileProp;
 
-        projectileProp = serializedObject.FindProperty("projectile");
-    }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
 
-    protected override void ContentsUpdate()
-    {
-        base.ContentsUpdate();
+            projectileProp = serializedObject.FindProperty("projectile");
+        }
 
-        EditorGUILayout.Space();
+        protected override void ContentsUpdate()
+        {
+            base.ContentsUpdate();
 
-        EditorGUILayout.PropertyField(projectileProp);
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(projectileProp);
+        }
     }
 }

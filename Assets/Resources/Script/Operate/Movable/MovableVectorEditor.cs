@@ -2,17 +2,20 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(MovableVector))]
-[CanEditMultipleObjects]
-public class MovableVectorEditor : MovableEditor
+namespace VEPT
 {
-    protected override void OnEnable()
+    [CustomEditor(typeof(MovableVector))]
+    [CanEditMultipleObjects]
+    public class MovableVectorEditor : MovableEditor
     {
-        base.OnEnable();
-    }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
 
-    protected override void ContentsUpdate()
-    {
-        base.ContentsUpdate();
+        protected override void ContentsUpdate()
+        {
+            base.ContentsUpdate();
+        }
     }
 }

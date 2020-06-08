@@ -2,102 +2,104 @@
 using System.Collections.Generic;
 using System;
 
-public abstract class Movable : Operable
+namespace VEPT
 {
-    public float speed = 1f;
-    public RefBoolean _enableBounceRef = new RefBoolean(false);
-
-    // KeyValuePair 를 쓰면 Custom Editor 적용 불가
-    // SetDirty 해도 저장이 안되고, FindProperty() 가 null을 리턴함
-    public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
-    public List<EBounceAction> _bounceActionList = new List<EBounceAction>();
-
-    protected Vector2 _targetPos;
-
-    protected abstract void MoveFrame();
-
-    public enum EBounceTrigger
+    public abstract class Movable : Operable
     {
-        NONE = 0,
-        BOUNDARY_TOUCH,
-        BOUNDARY_OUT,
-        COLLISION,
-    }
+        public float speed = 1f;
+        public BooleanWrapper _enableBounceRef = new BooleanWrapper(false);
 
-    public enum EBounceAction
-    {
-        NONE = 0,
-        TARGET,
-        REVERSE, // dir +180
-        REFLECT, // 거울반사
-        BLOCK, // 길막
-        DESTROY,
-    }
+        // KeyValuePair 를 쓰면 Custom Editor 적용 불가
+        // SetDirty 해도 저장이 안되고, FindProperty() 가 null을 리턴함
+        public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
+        public List<EBounceAction> _bounceActionList = new List<EBounceAction>();
 
-    private void Start()
-    {
-        // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리 필요
-        SetTriggerAction();
-    }
+        protected Vector2 _targetPos;
 
-    protected virtual void FixedUpdate()
-    {
-        if (state == false) return;
+        protected abstract void MoveFrame();
 
-        if (owner.TryGetOperable(out Targetable ownerTarget))
+        public enum EBounceTrigger
         {
-            if (ownerTarget.target != null)
-                _targetPos = ownerTarget.target.transform.position;
+            NONE = 0,
+            BOUNDARY_TOUCH,
+            BOUNDARY_OUT,
+            COLLISION,
         }
 
-        MoveFrame();
-    }
-
-    protected virtual void SetTriggerAction()
-    {
-        for(int i = 0; i < _bounceTriggerList.Count; ++i)
+        public enum EBounceAction
         {
-            Trigger trigger = null;
-            switch (_bounceTriggerList[i])
+            NONE = 0,
+            TARGET,
+            REVERSE, // dir +180
+            REFLECT, // 거울반사
+            BLOCK, // 길막
+            DESTROY,
+        }
+
+        private void Start()
+        {
+            // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리 필요
+            SetTriggerAction();
+        }
+
+        protected virtual void FixedUpdate()
+        {
+            if (state == false) return;
+
+            if (owner.TryGetOperable(out Targetable ownerTarget))
             {
-                case EBounceTrigger.BOUNDARY_TOUCH:
-                    trigger = new TrgBoundaryTouch(owner);
-                    break;
-                case EBounceTrigger.BOUNDARY_OUT:
-                    trigger = new TrgBoundaryOut(owner);
-                    break;
-                case EBounceTrigger.COLLISION:
-                    Collidable col = owner.GetOperable<Collidable>();
-                    trigger = new TrgCollision(owner, col, typeof(Unit));
-                    break;
+                if (ownerTarget.target != null)
+                    _targetPos = ownerTarget.target.transform.position;
             }
 
-            if (trigger == null) return;
+            MoveFrame();
+        }
 
-            new CndEnable(trigger, _enableBounceRef);
-
-            switch (_bounceActionList[i])
+        protected virtual void SetTriggerAction()
+        {
+            for (int i = 0; i < _bounceTriggerList.Count; ++i)
             {
-                case EBounceAction.REVERSE:
-                    new ActTurnReverse(trigger);
-                    break;
-                case EBounceAction.REFLECT:
-                    new ActTurnReflect(trigger);
-                    break;
-                case EBounceAction.TARGET:
-                    new ActTurnTarget(trigger);
-                    break;
-                case EBounceAction.BLOCK:
-                    new ActBlockMove(trigger);
-                    break;
-                case EBounceAction.DESTROY:
-                    new ActDestroyActor(trigger, owner);
-                    break;
+                Trigger trigger = null;
+                switch (_bounceTriggerList[i])
+                {
+                    case EBounceTrigger.BOUNDARY_TOUCH:
+                        trigger = new TrgBoundaryTouch(owner);
+                        break;
+                    case EBounceTrigger.BOUNDARY_OUT:
+                        trigger = new TrgBoundaryOut(owner);
+                        break;
+                    case EBounceTrigger.COLLISION:
+                        Collidable col = owner.GetOperable<Collidable>();
+                        trigger = new TrgCollision(owner, col, typeof(Unit));
+                        break;
+                }
+
+                if (trigger == null) return;
+
+                new CndEnable(trigger, _enableBounceRef);
+
+                switch (_bounceActionList[i])
+                {
+                    case EBounceAction.REVERSE:
+                        new ActTurnReverse(trigger);
+                        break;
+                    case EBounceAction.REFLECT:
+                        new ActTurnReflect(trigger);
+                        break;
+                    case EBounceAction.TARGET:
+                        new ActTurnTarget(trigger);
+                        break;
+                    case EBounceAction.BLOCK:
+                        new ActBlockMove(trigger);
+                        break;
+                    case EBounceAction.DESTROY:
+                        new ActDestroyActor(trigger, owner);
+                        break;
+                }
             }
         }
     }
 }
-
 
 //
 

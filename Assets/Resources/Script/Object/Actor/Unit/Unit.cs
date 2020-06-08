@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Unit : Actor
+namespace VEPT
 {
-    public static List<Unit> unitList = new List<Unit>();
-
-    [System.NonSerialized]
-    public UnitStatus unitStatus;
-
-    //
-
-    protected override void Awake()
+    public class Unit : Actor
     {
-        base.Awake();
-        unitList.Add(this);
-    }
+        public static List<Unit> unitList = new List<Unit>();
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        unitList.Remove(this);
+        [System.NonSerialized]
+        public UnitStatus unitStatus;
+
+        //
+
+        protected override void Awake()
+        {
+            base.Awake();
+            unitList.Add(this);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            unitList.Remove(this);
+        }
     }
 }
