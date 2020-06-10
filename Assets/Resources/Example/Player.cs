@@ -55,11 +55,9 @@ namespace VEPT
             new ActSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
             new ActSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 1f)) { delay = dodgeTime };
             new ActSetSprite(triCol, sprite,
-                ResourcesManager.LoadResource<Sprite>(
-                    EResourceName.Player_Damaged_strip5));
+                ResourcesManager.LoadResource<Sprite>(EResourceName.Player_Damaged_strip5));
             new ActSetSprite(triCol, sprite,
-                ResourcesManager.LoadResource<Sprite>(
-                    EResourceName.Player))
+                ResourcesManager.LoadResource<Sprite>(EResourceName.Player))
             { delay = dodgeTime };
             new ActSetController(triCol, gameObject,
                 ResourcesManager.LoadResource<RuntimeAnimatorController>(
