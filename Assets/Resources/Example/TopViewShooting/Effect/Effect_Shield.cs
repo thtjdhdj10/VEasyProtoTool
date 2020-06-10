@@ -47,7 +47,7 @@ namespace VEPT
 
         private void OnDestroy()
         {
-            if (GameManager.isQuitting == false)
+            if (GameManager.Instance.isQuitting == false)
             {
                 GameObject go = Instantiate(ResourcesManager.LoadResource<GameObject>(
                     EResourceName.Effect_ShieldBreak));

@@ -20,7 +20,7 @@ namespace VEPT
         public void Activate(Trigger trigger)
         {
             if (delay == 0f) ActionProcess(trigger);
-            else GameManager.gm.StartCoroutine(DelayedActivate(trigger));
+            else GameManager.Instance.StartCoroutine(DelayedActivate(trigger));
         }
 
         public virtual void Init()
@@ -270,7 +270,7 @@ namespace VEPT
                 target.moveDir += 180f;
             }
 
-            GameManager.gm.StartCoroutine(DecelerationProcess(trigger));
+            GameManager.Instance.StartCoroutine(DecelerationProcess(trigger));
         }
 
         // 기존 Movable 일시 중지, 새로운 Movable 생성해서 넉백 이동

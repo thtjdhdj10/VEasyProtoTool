@@ -2,28 +2,9 @@
 
 namespace VEPT
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : SingletonComponent<GameManager>
     {
-        public static GameManager gm;
-        public static bool isQuitting = false;
-        private ResourcesManager _resManager;
-
-        private void Awake()
-        {
-            gm = this;
-
-            _resManager = new ResourcesManager();
-
-            Init();
-        }
-
-        public void Init()
-        {
-            float widthRatio = (float)Screen.width / Screen.height;
-
-            CameraManager.worldHeightHalf = Camera.main.orthographicSize;
-            CameraManager.worldWidthHalf = CameraManager.worldHeightHalf * widthRatio;
-        }
+        public bool isQuitting = false;
 
         private void FixedUpdate()
         {

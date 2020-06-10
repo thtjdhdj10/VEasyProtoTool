@@ -9,18 +9,27 @@ using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type
 
 namespace VEPT
 {
-    // TODO: scriptable object 등을 이용해서 awake 시점이 아닌 에디터 시점에서 리소스 불러오게 하기
+    // TODO: 현재는 최초 LoadResource 시점에 리소스를 로딩함
+    // scriptable object 등을 이용해서 에디터 시점에서 리소스 불러오게 하기
+
     // Resources 하위 경로에 있는 모든 폴더를 검사해서
     // LoadResource() 로 적재된 리소스를 불러올 수 있다
     public class ResourcesManager
     {
         // 파일이름인식해서 prefabName의 타입이랑 일치하는거 있으면 prefabDic에 Add
         // 모든 prefab 다 할 필요는 없고, 필요할 때 마다 추가
-        private static Dictionary<NameTypePair, UObject> _resNameObjDic =
+        private Dictionary<NameTypePair, UObject> _resNameObjDic =
             new Dictionary<NameTypePair, UObject>();
 
         private List<UObject> _loadedResDic = new List<UObject>();
         private const string RESOURCES = "Resources";
+
+        private static ResourcesManager instance;
+
+        private ResourcesManager()
+        {
+            LoadResources();
+        }
 
         public static T LoadResource<T>(EResourceName resourceType) where T : UObject
         {
@@ -34,7 +43,12 @@ namespace VEPT
 
             try
             {
-                return _resNameObjDic[nameType] as T;
+                return instance._resNameObjDic[nameType] as T;
+            }
+            catch(NullReferenceException)
+            {
+                instance = new ResourcesManager();
+                return instance._resNameObjDic[nameType] as T;
             }
             catch (KeyNotFoundException e)
             {
@@ -43,7 +57,9 @@ namespace VEPT
             }
         }
 
-        private static string ResourceTypeToExtension(Type type)
+        //
+
+        private string ResourceTypeToExtension(Type type)
         {
             // TODO 리소스 타입이 추가될 때 마다 수정 1
             if (type == typeof(GameObject))
@@ -54,11 +70,6 @@ namespace VEPT
                 return "*.controller";
 
             return "";
-        }
-
-        public ResourcesManager()
-        {
-            LoadResources();
         }
 
         private void LoadResources()

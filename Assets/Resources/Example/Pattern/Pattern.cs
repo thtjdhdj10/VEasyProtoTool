@@ -26,22 +26,22 @@ namespace VEPT
 
         public void Activate()
         {
-            GameManager.gm.StartCoroutine(PatternProcess());
+            GameManager.Instance.StartCoroutine(PatternProcess());
         }
 
         private IEnumerator PatternProcess()
         {
             isPatternRunning = true;
 
-            yield return GameManager.gm.StartCoroutine(PreFire());
+            yield return GameManager.Instance.StartCoroutine(PreFire());
 
             yield return new WaitForSeconds(preDelay);
 
-            yield return GameManager.gm.StartCoroutine(Fire());
+            yield return GameManager.Instance.StartCoroutine(Fire());
 
             yield return new WaitForSeconds(postDelay);
 
-            yield return GameManager.gm.StartCoroutine(PostFire());
+            yield return GameManager.Instance.StartCoroutine(PostFire());
 
             isPatternRunning = false;
         }

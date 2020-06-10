@@ -5,36 +5,34 @@ namespace VEPT
 {
     public class VEasyPoolerManager : SingletonComponent<VEasyPoolerManager>
     {
+        private static Dictionary<string, VEasyPooler> poolerDic =
+            new Dictionary<string, VEasyPooler>();
+
         // true 시 매 Request 시 GetComponent 발생
         public bool usePoolingObjectComponent;
 
+        //public bool useDebugFlow = true;
+        //public bool getOnResetTransform = true;
 
+        //// use this, than can changing object`s parents
+        //// please NOT change whan runtime
+        //public bool visualizeObjectList = false;
 
-        public bool useDebugFlow = true;
-        public bool getOnResetTransform = true;
+        //public int countOfAll = 0;
 
-        // use this, than can changing object`s parents
-        // please NOT change whan runtime
-        public bool visualizeObjectList = false;
+        //[System.Serializable]
+        //private struct NameCount
+        //{
+        //    public string name;
+        //    public int count;
+        //}
 
-        public int countOfAll = 0;
-
-        [System.Serializable]
-        private struct NameCount
-        {
-            public string name;
-            public int count;
-        }
-
-        [SerializeField]
-        private List<NameCount> prePoolingList = new List<NameCount>();
-        public List<string> poolingFromHierarchy = new List<string>();
-        public List<string> excludeLogTags = new List<string>();
-        public List<string> excludeLogNames = new List<string>();
-        public List<string> includePrefabPath = new List<string>();
-
-        private static Dictionary<string, VEasyPooler> poolerDic =
-            new Dictionary<string, VEasyPooler>();
+        //[SerializeField]
+        //private List<NameCount> prePoolingList = new List<NameCount>();
+        //public List<string> poolingFromHierarchy = new List<string>();
+        //public List<string> excludeLogTags = new List<string>();
+        //public List<string> excludeLogNames = new List<string>();
+        //public List<string> includePrefabPath = new List<string>();
 
         public enum TargetObject
         {

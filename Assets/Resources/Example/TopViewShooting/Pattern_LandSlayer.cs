@@ -70,9 +70,9 @@ namespace VEPT
         {
             move.state.SetState(MultiState.EStateType.ACTIVATING_PATTERN, true);
 
-            GameManager.gm.StartCoroutine(patternList[0].Fire());
-            GameManager.gm.StartCoroutine(patternList[1].Fire());
-            yield return GameManager.gm.StartCoroutine(patternList[2].Fire());
+            GameManager.Instance.StartCoroutine(patternList[0].Fire());
+            GameManager.Instance.StartCoroutine(patternList[1].Fire());
+            yield return GameManager.Instance.StartCoroutine(patternList[2].Fire());
         }
 
         private Actor.ERotateTo originRotateTo;
@@ -132,7 +132,7 @@ namespace VEPT
 
             for (int i = 0; i < count; ++i)
             {
-                GameManager.gm.StartCoroutine(patterns[i].Fire());
+                GameManager.Instance.StartCoroutine(patterns[i].Fire());
                 if (i < count - 1)
                     yield return new WaitForSeconds(term);
             }
