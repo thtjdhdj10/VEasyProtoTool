@@ -65,15 +65,33 @@ namespace VEPT
             new ActSetController(triCol, gameObject, null) { delay = knockbackTime };
             new ActSetAnimatorSpeed(triCol, gameObject, 0.8f);
 
-            new ActSetRefValue<bool>(triCol, doTrackMouse, false);
-            new ActSetRefValue<bool>(triCol, doTrackMouse, true) { delay = knockbackTime };
+            new ActSetValue<bool>(triCol, doTrackMouse, false);
+            new ActSetValue<bool>(triCol, doTrackMouse, true) { delay = knockbackTime };
 
-            // 우클릭 시 테스트
-            //TriggerKeyInput trgRightClick = new TriggerKeyInput(
-            //    this, KeyManager.KeyCommand.COMMAND_SKILL, KeyManager.KeyPressType.DOWN);
+            // 키보드 1~6 클릭 시 작동하는 테스트 코드
+            TrgKeyInput trgPress1 = new TrgKeyInput(
+                this, KeyManager.EKeyCommand.ITEM_1, KeyManager.EKeyPressType.DOWN);
+            new ActCreateActor(trgPress1, EResourceName.Enemy_Wing);
+
+            TrgKeyInput trgPress2 = new TrgKeyInput(
+                this, KeyManager.EKeyCommand.ITEM_2, KeyManager.EKeyPressType.DOWN);
+            new ActDestroyRandomRandom(trgPress2);
+
             //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
             //ActionActivatePattern actActivatePattern =
             //    new ActionActivatePattern(trgRightClick, pattern_S1);
+        }
+    }
+
+    public class ActDestroyRandomRandom : Action
+    {
+        public ActDestroyRandomRandom(Trigger trigger)
+            : base(trigger) { }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+            var enemy = GameObject.FindObjectOfType<Enemy>();
+            enemy.Destroy(enemy.gameObject);
         }
     }
 }

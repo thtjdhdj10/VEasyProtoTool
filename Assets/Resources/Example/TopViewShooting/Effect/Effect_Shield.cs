@@ -11,6 +11,8 @@ namespace VEPT
 
         public float progress = 0f;
 
+        private bool isQuitting = false;
+
         public void Start()
         {
             StartCoroutine(RegenProcess());
@@ -45,12 +47,18 @@ namespace VEPT
             transform.localScale = toScale / parentScale;
         }
 
+        private void OnApplicationQuit()
+        {
+            isQuitting = true;
+        }
+
         private void OnDestroy()
         {
-            if (GameManager.Instance.isQuitting == false)
+            if (isQuitting == false)
             {
                 GameObject go = Instantiate(ResourcesManager.LoadResource<GameObject>(
                     EResourceName.Effect_ShieldBreak));
+
                 go.transform.parent = transform.parent;
                 go.transform.position = transform.position;
             }

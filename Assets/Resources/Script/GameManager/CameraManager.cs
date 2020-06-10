@@ -8,8 +8,12 @@ namespace VEPT
     // toggle 인지 아닌지
     public class CameraManager : SingletonComponent<CameraManager>
     {
-        public static float worldWidthHalf;
-        public static float worldHeightHalf;
+        public static float WorldWidthHalf { get => Instance.worldWidthHalf; }
+        public static float WorldHeightHalf { get => Instance.worldHeightHalf; }
+
+        private float worldWidthHalf;
+        private float worldHeightHalf;
+
 
         protected override void Awake()
         {
@@ -25,10 +29,10 @@ namespace VEPT
         {
             return new Rect()
             {
-                xMin = -worldWidthHalf,
-                xMax = worldWidthHalf,
-                yMin = -worldHeightHalf,
-                yMax = worldHeightHalf,
+                xMin = -WorldWidthHalf,
+                xMax = WorldWidthHalf,
+                yMin = -WorldHeightHalf,
+                yMax = WorldHeightHalf,
             };
         }
     }

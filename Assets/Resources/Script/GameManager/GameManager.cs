@@ -4,16 +4,17 @@ namespace VEPT
 {
     public class GameManager : SingletonComponent<GameManager>
     {
-        public bool isQuitting = false;
+        protected override void Awake()
+        {
+            base.Awake();
+
+            // vsync(수직동기화) 꺼야 정상 적용됨
+            Application.targetFrameRate = 60;
+        }
 
         private void FixedUpdate()
         {
             Operable.GetOperableList<Collidable>()?.ForEach(o => o.isCollisionInFrame = false);
-        }
-
-        private void OnApplicationQuit()
-        {
-            isQuitting = true;
         }
 
         //private void Update()

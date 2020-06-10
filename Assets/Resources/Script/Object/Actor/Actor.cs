@@ -102,9 +102,15 @@ namespace VEPT
             if (willDestroy) Destroy(gameObject);
         }
 
-        public virtual void Init()
+        public override void Init()
         {
+            willDestroy = false;
+
             initDlg();
+
+            triggerList.ForEach(t => t.Init());
+            foreach (var list in operableListDic.Values)
+                list.ForEach(o => o.Init());
         }
 
         //

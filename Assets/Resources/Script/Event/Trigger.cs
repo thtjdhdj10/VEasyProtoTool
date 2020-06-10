@@ -5,6 +5,7 @@ using System;
 
 namespace VEPT
 {
+    // TODO: 각 trigger의 init 구현
     public abstract class Trigger
     {
         public Actor owner;
@@ -112,22 +113,22 @@ namespace VEPT
             switch (bounceByDir)
             {
                 case EDirection.UP:
-                    targetPos = new Vector2(owner.transform.position.x, CameraManager.worldHeightHalf);
+                    targetPos = new Vector2(owner.transform.position.x, CameraManager.WorldHeightHalf);
                     bounceTo = 90f;
                     ActivateTrigger();
                     break;
                 case EDirection.DOWN:
-                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.worldHeightHalf);
+                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.WorldHeightHalf);
                     bounceTo = 270f;
                     ActivateTrigger();
                     break;
                 case EDirection.LEFT:
-                    targetPos = new Vector2(-CameraManager.worldWidthHalf, owner.transform.position.y);
+                    targetPos = new Vector2(-CameraManager.WorldWidthHalf, owner.transform.position.y);
                     bounceTo = 180f;
                     ActivateTrigger();
                     break;
                 case EDirection.RIGHT:
-                    targetPos = new Vector2(CameraManager.worldWidthHalf, owner.transform.position.y);
+                    targetPos = new Vector2(CameraManager.WorldWidthHalf, owner.transform.position.y);
                     bounceTo = 0f;
                     ActivateTrigger();
                     break;
@@ -154,22 +155,22 @@ namespace VEPT
             switch (bounceByDir)
             {
                 case EDirection.UP:
-                    targetPos = new Vector2(owner.transform.position.x, CameraManager.worldHeightHalf);
+                    targetPos = new Vector2(owner.transform.position.x, CameraManager.WorldHeightHalf);
                     bounceTo = 90f;
                     ActivateTrigger();
                     break;
                 case EDirection.DOWN:
-                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.worldHeightHalf);
+                    targetPos = new Vector2(owner.transform.position.x, -CameraManager.WorldHeightHalf);
                     bounceTo = 270f;
                     ActivateTrigger();
                     break;
                 case EDirection.LEFT:
-                    targetPos = new Vector2(-CameraManager.worldWidthHalf, owner.transform.position.y);
+                    targetPos = new Vector2(-CameraManager.WorldWidthHalf, owner.transform.position.y);
                     bounceTo = 180f;
                     ActivateTrigger();
                     break;
                 case EDirection.RIGHT:
-                    targetPos = new Vector2(CameraManager.worldWidthHalf, owner.transform.position.y);
+                    targetPos = new Vector2(CameraManager.WorldWidthHalf, owner.transform.position.y);
                     bounceTo = 0f;
                     ActivateTrigger();
                     break;

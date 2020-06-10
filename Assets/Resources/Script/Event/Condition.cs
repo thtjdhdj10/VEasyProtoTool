@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace VEPT
 {
+    // TODO: 각 condition의 init 구현
     public abstract class Condition
     {
         public Condition(Trigger trigger)

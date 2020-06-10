@@ -5,11 +5,16 @@ namespace VEPT
 {
     public class VEasyPoolerManager : SingletonComponent<VEasyPoolerManager>
     {
+        [SerializeField]
+        private bool categorizePooledObject = true;
+        public static bool CategorizePooledObject
+            { get => Instance.categorizePooledObject; }
+
+        // TODO 카테고라이즈 안할것들
+        // public List<EResourceName> nonCategorizingObjects = new List<EResourceName>();
+
         private static Dictionary<string, VEasyPooler> poolerDic =
             new Dictionary<string, VEasyPooler>();
-
-        // true 시 매 Request 시 GetComponent 발생
-        public bool usePoolingObjectComponent;
 
         //public bool useDebugFlow = true;
         //public bool getOnResetTransform = true;
@@ -46,45 +51,65 @@ namespace VEPT
             base.Awake();
         }
 
-        public GameObject GetObjectRequest(EResourceName name)
+        public static GameObject GetObjectRequest(EResourceName originalName)
         {
-            return GetObjectPooler(name).GetObject();
+            return Instance.GetObjectPooler(originalName).GetObject();
         }
 
-        public GameObject GetObjectRequest(string name)
+        public static GameObject GetObjectRequest(string originalName)
         {
-            return GetObjectPooler(name).GetObject();
+            return Instance.GetObjectPooler(originalName).GetObject();
         }
 
-        public bool ReleaseObjectRequest(List<GameObject> objs, EResourceName name)
+        public static void ReleaseObjectRequest(List<Object> objs, EResourceName originalName)
         {
-            return GetObjectPooler(name).ReleaseObject(objs);
+            Instance.GetObjectPooler(originalName).ReleaseObject(objs);
         }
 
-        public bool ReleaseObjectRequest(List<GameObject> objs, string name)
+        public static void ReleaseObjectRequest(List<Object> objs, string originalName)
         {
-            return GetObjectPooler(name).ReleaseObject(objs);
+            Instance.GetObjectPooler(originalName).ReleaseObject(objs);
         }
 
-        public bool ReleaseObjectRequest(GameObject obj, EResourceName name)
+        public static void ReleaseObjectRequest(List<GameObject> objs, EResourceName originalName)
         {
-            return GetObjectPooler(name).ReleaseObject(obj);
+            Instance.GetObjectPooler(originalName).ReleaseObject(objs);
         }
 
-        public bool ReleaseObjectRequest(GameObject obj, string name)
+        public static void ReleaseObjectRequest(List<GameObject> objs, string originalName)
         {
-            return GetObjectPooler(name).ReleaseObject(obj);
+            Instance.GetObjectPooler(originalName).ReleaseObject(objs);
+        }
+
+        public static void ReleaseObjectRequest(Object obj, EResourceName originalName)
+        {
+            Instance.GetObjectPooler(originalName).ReleaseObject(obj);
+        }
+
+        public static void ReleaseObjectRequest(Object obj, string originalName)
+        {
+            Instance.GetObjectPooler(originalName).ReleaseObject(obj);
+        }
+
+        public static void ReleaseObjectRequest(GameObject obj, EResourceName originalName)
+        {
+            Instance.GetObjectPooler(originalName).ReleaseObject(obj);
+        }
+
+        public static void ReleaseObjectRequest(GameObject obj, string originalName)
+        {
+            Instance.GetObjectPooler(originalName).ReleaseObject(obj);
         }
 
         // 하이어라키에 배치된 오브젝트 추가하는 용도
-        public void AssignObjectRequest(GameObject obj, EResourceName name)
+        public static  void AssignObjectRequest(GameObject obj, EResourceName originalName)
         {
-            GetObjectPooler(name).AssignObject(obj);
+            Instance.GetObjectPooler(originalName).AssignObject(obj);
         }
 
-        public void AssignObjectRequest(GameObject obj, string name)
+        public static void AssignObjectRequest(GameObject obj, string originalName)
         {
-            GetObjectPooler(name).AssignObject(obj);
+            Instance.GetObjectPooler(originalName).AssignObject(obj);
         }
 
         //

@@ -5,7 +5,8 @@ namespace VEPT
 {
     public class PooledObject : MonoBehaviour
     {
+        public string originName;
         public int index = -1;
-        public GameObject originalPrefab;
+        public GameObject origin;
     }
 }

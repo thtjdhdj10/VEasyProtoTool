@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System;
 
+using UObject = UnityEngine.Object;
+
 namespace VEPT
 {
     public class VEasyPooler
     {
+        private GameObject rootObject;
+        
         private GameObject prefab;
         private string prefabName;
         private EResourceName prefabType;
@@ -24,61 +28,41 @@ namespace VEPT
 
         public VEasyPooler(string name)
         {
-            // prefab 생성
+            if (VEasyPoolerManager.CategorizePooledObject)
+                rootObject = new GameObject(name);
+
             prefabName = name;
 
             prefab = ResourcesManager.LoadResource<GameObject>(name);
         }
 
-        public VEasyPooler(EResourceName name)
+        public VEasyPooler(EResourceName type)
+            :this(type.ToString())
         {
-            prefabType = name;
-            prefabName = name.ToString();
-
-            prefab = ResourcesManager.LoadResource<GameObject>(name);
+            prefabType = type;
         }
 
         public GameObject GetObject()
         {
-            try
-            {
-                if (inactived == 0)
-                    objectList.Add(AddInactiveObject());
-
-                GameObject obj = objectList[StartIdxInactived];
-
-                Activate(obj);
-
-                return obj;
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                Debug.LogError(e);
-                return null;
-            }
+            if (inactived == 0) return InstanciateOne();
+            else return ActivateOne();
         }
 
         public List<GameObject> GetObject(int count)
         {
             try
             {
-                if (inactived < count)
-                {
-                    int required = inactived - count;
-                    for (int i = 0; i < required; ++i)
-                    {
-                        objectList.Add(AddInactiveObject());
-                    }
-                }
+                List<GameObject> ret = new List<GameObject>();
+
+                for (int i = 0; i < count - inactived; ++i)
+                    ret.Add(InstanciateOne());
+
+                for (int i = 0; i < Math.Min(count, inactived); ++i)
+                    ret.Add(ActivateOne());
 
                 int startIndexOfActivating = StartIdxInactived;
 
-                for (int i = startIndexOfActivating; i < startIndexOfActivating + count; ++i)
-                {
-                    Activate(objectList[i]);
-                }
-
-                return objectList.GetRange(startIndexOfActivating, count);
+                return ret;
             }
             catch (IndexOutOfRangeException e)
             {
@@ -87,47 +71,44 @@ namespace VEPT
             }
         }
 
-        public bool ReleaseObject(GameObject obj)
+        public void ReleaseObject(UObject obj)
+        {
+            ReleaseObject(obj as GameObject);
+        }
+
+        public void ReleaseObject(GameObject obj)
         {
             int idx = objectList.IndexOf(obj);
 
-            if (idx != -1 && obj.activeSelf == false)
+            if (idx != -1 && obj.activeSelf == true)
             {
                 obj.SetActive(false);
                 SwapSafty(idx, LastIdxActived);
 
                 --actived;
                 ++inactived;
-
-                return true;
             }
-
-            return false;
+            else
+            {
+                Debug.LogWarning("ReleaseObjectRequest Failure: " + obj.name);
+            }
         }
 
-        // false: 하나 이상이 release 실패함
-        public bool ReleaseObject(List<GameObject> objs)
+        public void ReleaseObject(List<UObject> objs)
         {
-            for(int i = 0; i < objs.Count;++i)
-            {
-                int idx = objectList.IndexOf(objs[i]);
-                if (idx != -1 && objs[i].activeSelf == false)
-                {
-                    objectList[i].SetActive(false);
-                    SwapSafty(idx, LastIdxActived);
+            objs.ForEach(o => ReleaseObject(o));
+        }
 
-                    --actived;
-                    ++inactived;
-                }
-                else return false;
-            }
-
-            return true;
+        public void ReleaseObject(List<GameObject> objs)
+        {
+            objs.ForEach(o => ReleaseObject(o));
         }
 
         public void AssignObject(GameObject obj)
         {
             AddPooledObjectComponent(obj);
+
+            Categorize(obj);
 
             if (obj.activeSelf)
             {
@@ -158,19 +139,21 @@ namespace VEPT
 
         private void InitObject(GameObject obj)
         {
-            // TODO
+            var mo = obj.GetComponent<MyObject>();
+            if (mo != null) mo.Init();
         }
 
-        private GameObject AddInactiveObject()
+        private GameObject InstanciateOne()
         {
             try
             {
-                GameObject obj = GameObject.Instantiate(prefab) as GameObject;
-                obj.SetActive(false);
-                objectList.Add(obj);
-                ++inactived;
+                GameObject obj = UObject.Instantiate(prefab) as GameObject;
+                objectList.Insert(StartIdxInactived, obj);
+                ++actived;
 
                 AddPooledObjectComponent(obj);
+
+                Categorize(obj);
 
                 return obj;
             }
@@ -181,30 +164,52 @@ namespace VEPT
             }
         }
 
-        private void AddPooledObjectComponent(GameObject obj)
+        private void Categorize(GameObject obj)
         {
-            if (VEasyPoolerManager.Instance.usePoolingObjectComponent &&
-                obj.GetComponent<PooledObject>() == null)
+            if (VEasyPoolerManager.CategorizePooledObject)
             {
-                var po = obj.AddComponent<PooledObject>();
-                po.index = objectList.Count - 1;
-                po.originalPrefab = prefab;
+                obj.transform.parent = rootObject.transform;
+
+                rootObject.name = string.Format("{0} ({1})", prefabName, objectList.Count);
             }
         }
 
-        private void Activate(GameObject obj)
+        private void AddPooledObjectComponent(GameObject obj)
+        {
+            if (obj.GetComponent<PooledObject>() == null)
+            {
+                var po = obj.AddComponent<PooledObject>();
+                po.index = objectList.Count - 1;
+                po.origin = prefab;
+                po.originName = prefabName;
+
+                obj.name = string.Format("{0} ({1})", prefabName, po.index);
+            }
+        }
+
+        private GameObject ActivateOne()
         {
             try
             {
+                GameObject obj = objectList[StartIdxInactived];
                 obj.SetActive(true);
                 InitObject(obj);
+
                 --inactived;
                 ++actived;
+
+                return obj;
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Debug.LogError(e);
             }
             catch (NullReferenceException e)
             {
                 Debug.LogError(e);
             }
+
+            return null;
         }
 
         private void SwapSafty(int idxA, int idxB)

@@ -6,6 +6,7 @@ using System;
 
 namespace VEPT
 {
+    // TODO: 각 action의 init 구현
     public abstract class Action
     {
         public float delay = 0f;
@@ -35,12 +36,12 @@ namespace VEPT
         }
     }
 
-    public class ActSetRefValue<T> : Action where T : struct
+    public class ActSetValue<T> : Action where T : struct
     {
         public ValueTypeWrapper<T> target;
         public T value;
 
-        public ActSetRefValue(Trigger trigger, ValueTypeWrapper<T> _target, T _value)
+        public ActSetValue(Trigger trigger, ValueTypeWrapper<T> _target, T _value)
             : base(trigger)
         {
             target = _target;
@@ -482,25 +483,34 @@ namespace VEPT
 
     public class ActCreateActor : Action
     {
-        public Actor target;
+        public string prefabName;
         public Vector2 position;
         public bool isMovingActor;
         public float direction;
         public float speed;
 
-        public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos)
+        public ActCreateActor(Trigger trigger, string _prefabName)
             : base(trigger)
         {
-            target = _target;
+            prefabName = _prefabName;
+            position = new Vector2(0, 0);
+
+            isMovingActor = false;
+        }
+
+        public ActCreateActor(Trigger trigger, string _prefabName, Vector2 _pos)
+            : base(trigger)
+        {
+            prefabName = _prefabName;
             position = _pos;
 
             isMovingActor = false;
         }
 
-        public ActCreateActor(Trigger trigger, Actor _target, Vector2 _pos, float _direction, float _speed)
+        public ActCreateActor(Trigger trigger, string _prefabName, Vector2 _pos, float _direction, float _speed)
             : base(trigger)
         {
-            target = _target;
+            prefabName = _prefabName;
             position = _pos;
 
             isMovingActor = true;
@@ -509,39 +519,60 @@ namespace VEPT
             speed = _speed;
         }
 
+        public ActCreateActor(Trigger trigger, EResourceName _prefabName)
+            : this(trigger, _prefabName.ToString()) { }
+
+        public ActCreateActor(Trigger trigger, EResourceName _prefabName, Vector2 _pos)
+            : this(trigger, _prefabName.ToString(), _pos) { }
+
+        public ActCreateActor(Trigger trigger, EResourceName _prefabName,
+            Vector2 _pos, float _direction, float _speed)
+            : this(trigger, _prefabName.ToString(), _pos, _direction, _speed) { }
+
         protected override void ActionProcess(Trigger trigger)
         {
-            Actor actor = UnityEngine.Object.Instantiate(target);
-            actor.transform.position = position;
+            Actor actor = VEasyPoolerManager.GetObjectRequest(prefabName).GetComponent<Actor>();
 
-            if (isMovingActor)
+            try
             {
-                Movable move = actor.GetOperable<Movable>();
-                move.owner.moveDir = direction;
-                move.speed = speed;
+                actor.transform.position = position;
+                actor.moveDir = direction;
+
+                if (isMovingActor)
+                {
+                    Movable move = actor.GetOperable<Movable>();
+                    move.speed = speed;
+                }
+            }
+            catch(NullReferenceException e)
+            {
+                Debug.LogError(e);
             }
         }
     }
 
     public class ActCreateObject : Action
     {
-        public GameObject prefab;
+        public string prefabName;
         public Vector2 position;
         public float direction;
 
-        public ActCreateObject(Trigger trigger, GameObject _prefab, Vector2 _position, float _direction)
+        public ActCreateObject(Trigger trigger, string _prefabName, Vector2 _position, float _direction)
             : base(trigger)
         {
-            prefab = _prefab;
+            prefabName = _prefabName;
             position = _position;
             direction = _direction;
         }
+
+        public ActCreateObject(Trigger trigger, EResourceName _prefabName, Vector2 _position, float _direction)
+            : this(trigger, _prefabName.ToString(), _position, _direction) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
             try
             {
-                GameObject go = UnityEngine.Object.Instantiate(prefab);
+                GameObject go = VEasyPoolerManager.GetObjectRequest(prefabName);
 
                 go.transform.position = position;
                 go.transform.rotation = Quaternion.Euler(0, 0, direction);

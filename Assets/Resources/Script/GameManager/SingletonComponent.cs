@@ -29,6 +29,8 @@ public class SingletonComponent<T> : MonoBehaviour where T : SingletonComponent<
         if (objs.Length > 1)
             Destroy(this);
 
+        instance = objs[0];
+
         DontDestroyOnLoad(this);
     }
 
