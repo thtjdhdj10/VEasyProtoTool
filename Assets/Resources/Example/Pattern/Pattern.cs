@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace VEPT
@@ -59,7 +60,7 @@ namespace VEPT
 
     public class PtnFire : Pattern
     {
-        public Actor firePrefab;
+        public string bulletPrefabName;
 
         public Actor posRoot;
         public Vector2 position;
@@ -67,7 +68,7 @@ namespace VEPT
 
         public Actor dirRoot;
         public float direction;
-        public float deltaDir;
+        public float fireAngle;
 
         public int count = 1;
         protected int firedCount = 0;
@@ -97,20 +98,24 @@ namespace VEPT
 
         public virtual void FireProcess()
         {
-            Actor actor = GameObject.Instantiate(firePrefab);
-            if (actor == null) return;
-
-            if (actor is Bullet)
+            try
             {
-                (actor as Bullet).owner = owner as Unit;
+                var go = PoolerManager.GetObjectRequest(bulletPrefabName);
+                Bullet bullet = go.GetComponent<Bullet>();
+
+                bullet.owner = owner as Unit;
+
+                if (posRoot != null) position = posRoot.transform.position;
+                bullet.transform.position = position + deltaPos;
+
+                if (dirRoot != null) direction = dirRoot.targetDir;
+                bullet.targetDir = direction + fireAngle;
+                bullet.moveDir = direction + fireAngle;
             }
-
-            if (posRoot != null) position = posRoot.transform.position;
-            actor.transform.position = position + deltaPos;
-
-            if (dirRoot != null) direction = dirRoot.targetDir;
-            actor.targetDir = direction + deltaDir;
-            actor.moveDir = direction + deltaDir;
+            catch(NullReferenceException e)
+            {
+                Debug.LogError(e);
+            }
         }
     }
 
@@ -159,7 +164,7 @@ namespace VEPT
             if (target != null) targetPos = target.transform.position;
             direction = VEasyCalc.GetDirection(position, targetPos);
 
-            deltaDir = angle * (Random.Range(0f, 1f) - 0.5f);
+            fireAngle = angle * (UnityEngine.Random.Range(0f, 1f) - 0.5f);
         }
     }
 
@@ -174,7 +179,7 @@ namespace VEPT
             if (target != null) targetPos = target.transform.position;
             direction = VEasyCalc.GetDirection(position, targetPos);
 
-            float deltaDistance = length * (Random.Range(0f, 1f) - 0.5f);
+            float deltaDistance = length * (UnityEngine.Random.Range(0f, 1f) - 0.5f);
             deltaPos = VEasyCalc.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
         }
     }
@@ -189,7 +194,7 @@ namespace VEPT
         {
             if (count == 1) return;
 
-            deltaDir = angle * (Random.Range(0f, 1f) - 0.5f);
+            fireAngle = angle * (UnityEngine.Random.Range(0f, 1f) - 0.5f);
         }
     }
 
@@ -203,7 +208,7 @@ namespace VEPT
         {
             if (count == 1) return;
 
-            float deltaDistance = length * (Random.Range(0f, 1f) - 0.5f);
+            float deltaDistance = length * (UnityEngine.Random.Range(0f, 1f) - 0.5f);
             deltaPos = VEasyCalc.GetRotatedPosition(direction, new Vector2(deltaDistance, 0f));
         }
     }
@@ -220,7 +225,7 @@ namespace VEPT
 
             float fireIndex = (float)firedCount / count;
             if (isClockwise) fireIndex = -fireIndex;
-            deltaDir = 360f * fireIndex;
+            fireAngle = 360f * fireIndex;
         }
     }
 
@@ -238,7 +243,7 @@ namespace VEPT
 
             float fireIndex = (float)firedCount / (count - 1) - 0.5f;
             if (isClockwise) fireIndex = -fireIndex;
-            deltaDir = angle * fireIndex;
+            fireAngle = angle * fireIndex;
         }
     }
 

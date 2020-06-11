@@ -58,8 +58,8 @@ namespace VEPT
             if (enableHpDisplay)
             {
                 var pos = (Vector2)transform.position + new Vector2(0, 0.3f);
-                TextDisplayer.AssignNewText(gameObject, "",
-                    new Color(1, 0, 0), pos, new Vector2(50, 20));
+                TextDisplayer.AssignNewText(gameObject, "", new Color(1, 0, 0)
+                    , pos, new Vector2(50, 20), TextAnchor.MiddleCenter);
             }
         }
 

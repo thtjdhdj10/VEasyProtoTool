@@ -12,7 +12,8 @@ namespace VEPT
         private static Dictionary<GameObject, TextDisplayer> textDisplayerDic =
             new Dictionary<GameObject, TextDisplayer>();
 
-        public static void AssignNewText(GameObject root, string str, Color color, Vector2 worldPos, Vector2 guiRectSize)
+        public static void AssignNewText(GameObject root, string str, Color color,
+            Vector2 worldPos, Vector2 guiRectSize, TextAnchor alignment)
         {
             var canvas = GUIManager.MainCanvas;
             var go = new GameObject(root.name + " Text");
@@ -27,6 +28,7 @@ namespace VEPT
             text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
             text.color = color;
             text.text = str;
+            text.alignment = alignment;
 
             textDisplayerDic.Add(root, new TextDisplayer { text = text });
         }

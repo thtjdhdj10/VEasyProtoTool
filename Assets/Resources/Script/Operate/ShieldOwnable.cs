@@ -40,8 +40,7 @@ namespace VEPT
 
             for (int i = 0; i < ShieldCount; ++i)
             {
-                GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                    EResourceName.Effect_Shield));
+                GameObject shield = PoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
                 _shieldList.Add(shield);
@@ -63,8 +62,7 @@ namespace VEPT
                     _regenProgress = 0f;
                     ++_shieldCount;
 
-                    GameObject shield = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                        EResourceName.Effect_Shield));
+                    GameObject shield = PoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
                     shield.transform.position = transform.position;
                     shield.transform.parent = transform;
                     _shieldList.Add(shield);

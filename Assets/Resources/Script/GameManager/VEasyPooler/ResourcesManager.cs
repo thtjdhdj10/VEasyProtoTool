@@ -9,6 +9,8 @@ using NameTypePair = System.Collections.Generic.KeyValuePair<string, System.Type
 
 namespace VEPT
 {
+    // TODO: EResourceName을 순회하여 해당 리소스가 있는지 확인하고 없으면 warning
+
     // TODO: 현재는 최초 LoadResource 시점에 리소스를 로딩함
     // scriptable object 등을 이용해서 에디터 시점에서 리소스 불러오게 하기
 
@@ -52,6 +54,7 @@ namespace VEPT
             }
             catch (KeyNotFoundException e)
             {
+                Debug.Log(resourceName + " is invalid resource name");
                 Debug.LogError(e);
                 return default;
             }

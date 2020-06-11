@@ -11,6 +11,7 @@ namespace VEPT
         {
             FPS,
             UNIT_COUNT,
+            KEY,
         }
 
         public List<EStatus> displayStatusList = new List<EStatus>();
@@ -28,8 +29,8 @@ namespace VEPT
             pos.x += worldRect.x * 0.5f;
             pos.y -= worldRect.y * 0.5f;
 
-            TextDisplayer.AssignNewText(
-                gameObject, "", new Color(1, 1, 1), pos, rect);
+            TextDisplayer.AssignNewText(gameObject, "", new Color(1, 1, 1),
+                pos, rect, TextAnchor.UpperLeft);
         }
 
         private void Update()
@@ -67,6 +68,11 @@ namespace VEPT
                     case EStatus.UNIT_COUNT:
                         {
                             str += "UNITS: " + Unit.unitList.Count.ToString();
+                        }
+                        break;
+                    case EStatus.KEY:
+                        {
+                            str += "KEYS: [WASD], [1~3], Mouse";
                         }
                         break;
                 }

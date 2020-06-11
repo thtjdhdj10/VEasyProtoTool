@@ -111,6 +111,9 @@ namespace VEPT
             triggerList.ForEach(t => t.Init());
             foreach (var list in operableListDic.Values)
                 list.ForEach(o => o.Init());
+
+            var status = GetComponent<UnitStatus>();
+            if(status != null) status.Init();
         }
 
         //

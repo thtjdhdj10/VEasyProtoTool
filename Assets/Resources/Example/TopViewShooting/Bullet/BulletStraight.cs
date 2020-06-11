@@ -13,13 +13,10 @@ namespace VEPT
             if (force == EForce.A) targetType = typeof(Enemy);
             else targetType = typeof(Player);
 
-            GameObject effectPrefab = ResourcesManager.LoadResource<GameObject>(
-                EResourceName.Effect_Bullet);
-
             TrgCollision trgCol = new TrgCollision(this, targetType);
             new ActDealDamage(trgCol, damage);
             new ActDestroyActor(trgCol, this);
-            new ActCreateObjectDynamic(trgCol, effectPrefab, transform);
+            new ActCreateObjectDynamic(trgCol, EResourceName.Effect_BulletSpark.ToString(), transform);
         }
     }
 }

@@ -12,7 +12,7 @@
         Bullet_Straight_1,
         Bullet_Straight_2,
 
-        Effect_Bullet,
+        Effect_BulletSpark,
         Effect_LaserBody,
         Effect_LaserRoot,
         Effect_Shield,

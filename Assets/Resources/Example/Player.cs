@@ -40,6 +40,8 @@ namespace VEPT
             TrgCollision triCol = new TrgCollision(this, typeof(Bullet), typeof(Enemy));
             new ActInitTrigger(triCol, triKeyInput);
 
+            new ActGetDamage(triCol, 1);
+
             new ActKnockback(triCol, this, 8f, 20f);
             new ActSetSpeed(triCol, _hitSpeed);
             new ActSetSpeed(triCol, _speed) { delay = dodgeTime };

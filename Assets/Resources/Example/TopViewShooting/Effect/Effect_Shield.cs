@@ -56,8 +56,7 @@ namespace VEPT
         {
             if (isQuitting == false)
             {
-                GameObject go = Instantiate(ResourcesManager.LoadResource<GameObject>(
-                    EResourceName.Effect_ShieldBreak));
+                GameObject go = PoolerManager.GetObjectRequest(EResourceName.Effect_ShieldBreak);
 
                 go.transform.parent = transform.parent;
                 go.transform.position = transform.position;

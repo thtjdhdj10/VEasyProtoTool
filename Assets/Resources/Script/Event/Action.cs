@@ -586,21 +586,24 @@ namespace VEPT
 
     public class ActCreateObjectDynamic : Action
     {
-        public GameObject prefab;
+        public string prefabName;
         public Transform transform;
 
-        public ActCreateObjectDynamic(Trigger trigger, GameObject _prefab, Transform _transform)
+        public ActCreateObjectDynamic(Trigger trigger, string _prefabName, Transform _transform)
             : base(trigger)
         {
-            prefab = _prefab;
+            prefabName = _prefabName;
             transform = _transform;
         }
+
+        public ActCreateObjectDynamic(Trigger trigger, EResourceName _prefabName, Transform _transform)
+            : this(trigger, _prefabName.ToString(), _transform) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
             try
             {
-                GameObject go = UnityEngine.Object.Instantiate(prefab);
+                GameObject go = PoolerManager.GetObjectRequest(prefabName);
 
                 go.transform.position = transform.position;
                 go.transform.rotation = transform.rotation;

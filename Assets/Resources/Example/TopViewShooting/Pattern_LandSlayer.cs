@@ -19,48 +19,43 @@ namespace VEPT
 
         private Movable move;
 
+        private const float duration = 5f;
+        private const int bulletCount1 = 80;
+        private const int bulletCount2 = 30;
+        private const float fireAngle = 60f;
+
         public Ptn_Slayer_1(Unit _owner) : base(_owner)
         {
             postDelay = 3f;
 
             move = _owner.GetOperable<Movable>();
 
-            PtnFireTarget_AngleRandom pattern1 = new PtnFireTarget_AngleRandom(_owner);
-
-            GameObject go = ResourcesManager.LoadResource<GameObject>(
-                EResourceName.Bullet_Slayer_1);
-
-            Bullet_Slayer_1 bullet = go.GetComponent<Bullet_Slayer_1>();
-            bullet.owner = _owner;
-
-            pattern1.owner = _owner;
-
-            pattern1.firePrefab = bullet;
-
-            float duration = 5f;
-
-            pattern1.count = 80;
-            pattern1.term = duration / pattern1.count;
-            pattern1.angle = 110f;
-
-            pattern1.posRoot = _owner;
-            pattern1.dirRoot = _owner;
+            PtnFireTarget_AngleRandom pattern1 = new PtnFireTarget_AngleRandom(_owner)
+            {
+                owner = _owner,
+                bulletPrefabName = EResourceName.Bullet_Slayer_1.ToString(),
+                count = bulletCount1,
+                term = duration / bulletCount1,
+                angle = 110f,
+                posRoot = _owner,
+                dirRoot = _owner,
+            };
 
             patternList.Add(pattern1);
+
 
             PtnFire[] pattern2 = new PtnFire[2];
             for (int i = 0; i < 2; ++i)
             {
-                pattern2[i] = new PtnFire(_owner);
-                pattern2[i].firePrefab = bullet;
-
-                pattern2[i].count = 30;
-                pattern2[i].term = duration / pattern2[i].count;
-                if (i == 0) pattern2[i].deltaDir = -60f;
-                else pattern2[i].deltaDir = 60f;
-
-                pattern2[i].posRoot = _owner;
-                pattern2[i].dirRoot = _owner;
+                pattern2[i] = new PtnFire(_owner)
+                {
+                    bulletPrefabName = EResourceName.Bullet_Slayer_1.ToString(),
+                    count = bulletCount2,
+                    posRoot = _owner,
+                    dirRoot = _owner,
+                    term = duration / bulletCount2,
+                    fireAngle = (i == 0) ? -fireAngle : fireAngle,
+                };
 
                 patternList.Add(pattern2[i]);
             }
@@ -96,11 +91,12 @@ namespace VEPT
     {
         public List<Pattern> patternList = new List<Pattern>();
 
+        private Movable move;
+        private PtnFireCircle[] patterns = new PtnFireCircle[count];
+
         private const int count = 100;
         private const float duration = 5f;
         private const float term = duration / count;
-        private PtnFireCircle[] patterns = new PtnFireCircle[count];
-        private Movable move;
 
         public Ptn_Slayer_2(Unit _owner) : base(_owner)
         {
@@ -113,16 +109,15 @@ namespace VEPT
 
             for (int i = 0; i < count; ++i)
             {
-                patterns[i] = new PtnFireCircle(_owner);
-
-                patterns[i].firePrefab = go.GetComponent<Bullet>();
-
-                patterns[i].count = 6;
-                patterns[i].term = 0f;
-
-                patterns[i].posRoot = _owner;
-                patterns[i].dirRoot = null;
-                patterns[i].direction = i * 2f;
+                patterns[i] = new PtnFireCircle(_owner)
+                {
+                    bulletPrefabName = EResourceName.Bullet_Slayer_2.ToString(),
+                    count = 6,
+                    term = 0f,
+                    posRoot = _owner,
+                    dirRoot = null,
+                    direction = i * 2f
+                };
             }
         }
 
