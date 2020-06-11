@@ -6,7 +6,7 @@ using UObject = UnityEngine.Object;
 
 namespace VEPT
 {
-    public class VEasyPooler
+    public class ObjectPooler
     {
         private GameObject rootObject;
         
@@ -26,9 +26,9 @@ namespace VEPT
         private int LastIdxInactived { get => All - 1; }
         public int All { get => actived + inactived; }
 
-        public VEasyPooler(string name)
+        public ObjectPooler(string name)
         {
-            if (VEasyPoolerManager.CategorizePooledObject)
+            if (PoolerManager.CategorizePooledObject)
                 rootObject = new GameObject(name);
 
             prefabName = name;
@@ -36,10 +36,21 @@ namespace VEPT
             prefab = ResourcesManager.LoadResource<GameObject>(name);
         }
 
-        public VEasyPooler(EResourceName type)
+        public ObjectPooler(EResourceName type)
             :this(type.ToString())
         {
             prefabType = type;
+        }
+
+        #region public method
+
+        public List<GameObject> GetObjects(int count)
+        {
+            List<GameObject> ret = new List<GameObject>();
+
+            for (int i = 0; i < count; ++i) ret.Add(GetObject());
+
+            return ret;
         }
 
         public GameObject GetObject()
@@ -135,7 +146,7 @@ namespace VEPT
             Debug.Log(state);
         }
 
-        //
+        #endregion
 
         private void InitObject(GameObject obj)
         {
@@ -166,7 +177,7 @@ namespace VEPT
 
         private void Categorize(GameObject obj)
         {
-            if (VEasyPoolerManager.CategorizePooledObject)
+            if (PoolerManager.CategorizePooledObject)
             {
                 obj.transform.parent = rootObject.transform;
 

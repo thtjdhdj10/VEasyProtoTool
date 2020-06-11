@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace VEPT
 {
@@ -119,22 +120,41 @@ namespace VEPT
             return Camera.main.ScreenToWorldPoint(screen);
         }
 
+        public static Vector3 ScreenToWorldPos(Vector3 screen)
+        {
+            return Camera.main.ScreenToWorldPoint(screen);
+        }
+
         public static Vector2 WorldToScreenPos(Vector2 world)
         {
             return Camera.main.WorldToScreenPoint(world);
         }
 
-        public static Vector2 ScreenToGUIPos(Vector2 screen)
+        public static Vector3 WorldToScreenPos(Vector3 world)
         {
-            screen.y = -screen.y;
-            return screen;
+            return Camera.main.WorldToScreenPoint(world);
         }
 
-        // GUI 좌표계는 스크린 좌표계와 y축이 반대임
-        public static Vector2 WorldToGUIPos(Vector2 world)
+        public static Vector3 WorldToGuiPos(Vector3 world)
         {
-            world.y = -world.y;
-            return Camera.main.WorldToScreenPoint(world);
+            world.x /= CameraManager.WorldWidth;
+            world.y /= CameraManager.WorldHeight;
+
+            world.x *= Screen.width;
+            world.y *= Screen.height;
+
+            return world;
+        }
+
+        public static Vector3 GuiToWorldPos(Vector3 guiPos)
+        {
+            guiPos.x /= Screen.width;
+            guiPos.y /= Screen.height;
+
+            guiPos.x *= CameraManager.WorldWidth;
+            guiPos.y *= CameraManager.WorldHeight;
+
+            return guiPos;
         }
 
         // 움직이는 두 Unit 이 n frame 뒤에 충돌하는지 체크

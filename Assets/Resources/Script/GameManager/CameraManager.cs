@@ -8,22 +8,43 @@ namespace VEPT
     // toggle 인지 아닌지
     public class CameraManager : SingletonComponent<CameraManager>
     {
-        public static float WorldWidthHalf { get => Instance.worldWidthHalf; }
-        public static float WorldHeightHalf { get => Instance.worldHeightHalf; }
+        public static float WorldWidth
+        {
+            get
+            {
+                Instance.Init();
+                return Instance.worldWidth;
+            }
+        }
+        public static float WorldWidthHalf
+        {
+            get
+            {
+                Instance.Init();
+                return Instance.worldWidthHalf;
+            }
+        }
+        public static float WorldHeight
+        {
+            get
+            {
+                Instance.Init();
+                return Instance.worldHeight;
+            }
+        }
+        public static float WorldHeightHalf
+        {
+            get
+            {
+                Instance.Init();
+                return Instance.worldHeightHalf;
+            }
+        }
 
         private float worldWidthHalf;
         private float worldHeightHalf;
-
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            float widthRatio = (float)Screen.width / Screen.height;
-
-            worldHeightHalf = Camera.main.orthographicSize;
-            worldWidthHalf = worldHeightHalf * widthRatio;
-        }
+        private float worldWidth;
+        private float worldHeight;
 
         public static Rect GetWorldSize()
         {
@@ -34,6 +55,17 @@ namespace VEPT
                 yMin = -WorldHeightHalf,
                 yMax = WorldHeightHalf,
             };
+        }
+
+        protected override void Init()
+        {
+            float widthRatio = (float)Screen.width / Screen.height;
+
+            worldHeightHalf = Camera.main.orthographicSize;
+            worldWidthHalf = worldHeightHalf * widthRatio;
+
+            worldHeight = worldHeightHalf * 2f;
+            worldWidth = worldWidthHalf * 2f;
         }
     }
 }

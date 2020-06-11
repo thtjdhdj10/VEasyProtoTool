@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace VEPT
 {
@@ -8,8 +9,11 @@ namespace VEPT
         {
             base.Awake();
 
-            // vsync(수직동기화) 꺼야 정상 적용됨
-            Application.targetFrameRate = 60;
+            if(isDestroying == false)
+            {
+                // vsync(수직동기화) 꺼야 정상 적용됨
+                Application.targetFrameRate = 60;
+            }
         }
 
         private void FixedUpdate()

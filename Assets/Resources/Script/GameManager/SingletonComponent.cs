@@ -2,6 +2,8 @@
 
 public class SingletonComponent<T> : MonoBehaviour where T : SingletonComponent<T>
 {
+    protected bool isDestroying = false;
+
     private static T instance;
     public static T Instance
     {
@@ -27,11 +29,16 @@ public class SingletonComponent<T> : MonoBehaviour where T : SingletonComponent<
     {
         T[] objs = FindObjectsOfType<T>();
         if (objs.Length > 1)
-            Destroy(this);
+        {
+            Destroy(gameObject);
+            isDestroying = true;
+            return;
+        }
 
         instance = objs[0];
 
         DontDestroyOnLoad(this);
     }
 
+    protected virtual void Init() { }
 }

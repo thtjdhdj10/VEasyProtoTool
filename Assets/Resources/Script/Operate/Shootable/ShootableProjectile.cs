@@ -9,7 +9,7 @@ namespace VEPT
 
         protected override void Shoot()
         {
-            GameObject go = VEasyPoolerManager.GetObjectRequest(projectile.name);
+            GameObject go = PoolerManager.GetObjectRequest(projectile.name);
             Bullet bullet = go.GetComponent<Bullet>();
 
             bullet.owner = owner as Unit;

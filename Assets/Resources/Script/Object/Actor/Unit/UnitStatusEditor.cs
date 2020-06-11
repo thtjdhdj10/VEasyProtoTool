@@ -13,7 +13,7 @@ namespace VEPT
         SerializedProperty hpProp;
         SerializedProperty currentHpProp;
         SerializedProperty enableVitalColorProp;
-        SerializedProperty enableHPDisplayProp;
+        SerializedProperty enableHpDisplayProp;
         SerializedProperty vitalProp;
         SerializedProperty spriteProp;
 
@@ -28,7 +28,7 @@ namespace VEPT
             hpProp = serializedObject.FindProperty("hp");
             currentHpProp = serializedObject.FindProperty("currentHp");
             enableVitalColorProp = serializedObject.FindProperty("enableVitalColor");
-            enableHPDisplayProp = serializedObject.FindProperty("enableHPDisplay");
+            enableHpDisplayProp = serializedObject.FindProperty("enableHpDisplay");
             vitalProp = serializedObject.FindProperty("vital");
             spriteProp = serializedObject.FindProperty("sprite");
         }
@@ -52,7 +52,7 @@ namespace VEPT
             EditorGUILayout.PropertyField(hpProp);
             EditorGUILayout.PropertyField(currentHpProp);
             EditorGUILayout.PropertyField(enableVitalColorProp);
-            EditorGUILayout.PropertyField(enableHPDisplayProp);
+            EditorGUILayout.PropertyField(enableHpDisplayProp);
 
             if (obj.enableVitalColor)
             {

@@ -68,7 +68,7 @@ namespace VEPT
             new ActSetValue<bool>(triCol, doTrackMouse, false);
             new ActSetValue<bool>(triCol, doTrackMouse, true) { delay = knockbackTime };
 
-            // 키보드 1~6 클릭 시 작동하는 테스트 코드
+            // test code: 키보드 숫자키 클릭 시 작동
             TrgKeyInput trgPress1 = new TrgKeyInput(
                 this, KeyManager.EKeyCommand.ITEM_1, KeyManager.EKeyPressType.DOWN);
             new ActCreateActor(trgPress1, EResourceName.Enemy_Wing);
@@ -77,9 +77,26 @@ namespace VEPT
                 this, KeyManager.EKeyCommand.ITEM_2, KeyManager.EKeyPressType.DOWN);
             new ActDestroyRandomRandom(trgPress2);
 
+            TrgKeyInput trgPress3 = new TrgKeyInput(
+                this, KeyManager.EKeyCommand.ITEM_3, KeyManager.EKeyPressType.DOWN);
+            new ActTest(trgPress3);
+
             //Pattern_Slayer_1 pattern_S1 = new Pattern_Slayer_1(this);
             //ActionActivatePattern actActivatePattern =
             //    new ActionActivatePattern(trgRightClick, pattern_S1);
+        }
+    }
+
+    // test code
+
+    public class ActTest : Action
+    {
+        public ActTest(Trigger trigger)
+            : base(trigger) { }
+
+        protected override void ActionProcess(Trigger trigger)
+        {
+
         }
     }
 
@@ -90,7 +107,7 @@ namespace VEPT
 
         protected override void ActionProcess(Trigger trigger)
         {
-            var enemy = GameObject.FindObjectOfType<Enemy>();
+            var enemy = Object.FindObjectOfType<Enemy>();
             enemy.Destroy(enemy.gameObject);
         }
     }

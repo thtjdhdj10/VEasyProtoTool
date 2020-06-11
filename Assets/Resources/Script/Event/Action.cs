@@ -531,7 +531,7 @@ namespace VEPT
 
         protected override void ActionProcess(Trigger trigger)
         {
-            Actor actor = VEasyPoolerManager.GetObjectRequest(prefabName).GetComponent<Actor>();
+            Actor actor = PoolerManager.GetObjectRequest(prefabName).GetComponent<Actor>();
 
             try
             {
@@ -572,7 +572,7 @@ namespace VEPT
         {
             try
             {
-                GameObject go = VEasyPoolerManager.GetObjectRequest(prefabName);
+                GameObject go = PoolerManager.GetObjectRequest(prefabName);
 
                 go.transform.position = position;
                 go.transform.rotation = Quaternion.Euler(0, 0, direction);

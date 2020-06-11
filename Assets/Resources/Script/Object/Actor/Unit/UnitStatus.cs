@@ -8,7 +8,8 @@ namespace VEPT
         public Unit owner;
 
         public bool enableVitalColor; // 남은체력에따라 컬러변경
-        public bool enableHPDisplay;
+        [SerializeField]
+        private bool enableHpDisplay = false;
         public EVitalSign vital;
         public SpriteRenderer sprite;
 
@@ -53,12 +54,27 @@ namespace VEPT
 
             if (enableVitalColor && sprite == null)
                 sprite = GetComponent<SpriteRenderer>();
+
+            if (enableHpDisplay)
+            {
+                var pos = (Vector2)transform.position + new Vector2(0, 0.3f);
+                TextDisplayer.AssignNewText(gameObject, "",
+                    new Color(1, 0, 0), pos, new Vector2(50, 20));
+            }
         }
 
         private void Update()
         {
-            if (enableHPDisplay)
-                TextDisplay.TextUpdate(gameObject, "HP", "HP: " + CurrentHp);
+            if (enableHpDisplay)
+            {
+                var pos = (Vector2)transform.position + new Vector2(0, 0.3f);
+                TextDisplayer.UpdateText(gameObject, "HP: " + CurrentHp, pos);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            TextDisplayer.RemoveText(gameObject);
         }
 
         private void Start()

@@ -18,7 +18,7 @@ namespace VEPT
             }
             else
             {
-                VEasyPoolerManager.ReleaseObjectRequest(obj, po.originName);
+                PoolerManager.ReleaseObjectRequest(obj, po.originName);
             }
         }
     }
