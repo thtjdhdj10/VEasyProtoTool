@@ -24,15 +24,14 @@ namespace VEPT
             else GameManager.Instance.StartCoroutine(DelayedActivate(trigger));
         }
 
-        public virtual void Init()
-        {
-
-        }
+        public virtual void Init() { }
 
         private IEnumerator DelayedActivate(Trigger trigger)
         {
             yield return new WaitForSeconds(delay);
-            ActionProcess(trigger);
+
+            if (trigger != null && trigger.owner != null)
+                ActionProcess(trigger);
         }
     }
 

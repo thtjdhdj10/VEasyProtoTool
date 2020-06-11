@@ -37,6 +37,7 @@ namespace VEPT
         {
             if(textDisplayerDic.ContainsKey(key))
             {
+                Object.Destroy(textDisplayerDic[key].text);
                 textDisplayerDic.Remove(key);
             }
         }
