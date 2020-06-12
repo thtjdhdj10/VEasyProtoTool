@@ -19,22 +19,23 @@ namespace VEPT
         public bool isCollisionInFrame = false;
 
         public delegate void OnHitDelegate(Actor from, Actor to);
-        public OnHitDelegate onHitDlg = new OnHitDelegate(OnHitMethod);
+        public OnHitDelegate onHitDel = new OnHitDelegate(OnHitMethod);
         public static void OnHitMethod(Actor from, Actor to) { }
 
-        protected override void Awake()
+        public override void Init()
         {
-            base.Awake();
+            base.Init();
 
-            // TODO 에디터에서 getcomponent해서 연결되게 수정
+            isCollisionInFrame = false;
+
             if (collider == null) collider = GetComponent<Collider2D>();
-            if (collider == null) Debug.LogWarning(this.name + " has not collider.");
+            if (collider == null) Debug.LogWarning(this.name + " have not collider");
         }
 
         protected virtual void Hit(Collidable target)
         {
-            onHitDlg(owner, target.owner);
-            target.onHitDlg(target.owner, owner);
+            onHitDel(owner, target.owner);
+            target.onHitDel(target.owner, owner);
 
             isCollisionInFrame = true;
             target.isCollisionInFrame = true;

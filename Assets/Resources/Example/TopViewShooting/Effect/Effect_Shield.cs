@@ -13,8 +13,10 @@ namespace VEPT
 
         private bool isQuitting = false;
 
-        public void Start()
+        public override void Init()
         {
+            base.Init();
+
             StartCoroutine(RegenProcess());
         }
 
@@ -56,7 +58,7 @@ namespace VEPT
         {
             if (isQuitting == false)
             {
-                GameObject go = PoolerManager.GetObjectRequest(EResourceName.Effect_ShieldBreak);
+                GameObject go = ObjectPoolerManager.GetObjectRequest(EResourceName.Effect_ShieldBreak);
 
                 go.transform.parent = transform.parent;
                 go.transform.position = transform.position;

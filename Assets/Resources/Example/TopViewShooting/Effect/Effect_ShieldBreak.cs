@@ -11,8 +11,10 @@ namespace VEPT
 
         public float progress = 0f;
 
-        public void Start()
+        public override void Init()
         {
+            base.Init();
+
             StartCoroutine(BreakProcess());
         }
 

@@ -16,6 +16,13 @@ namespace VEPT
 
         // TODO target update delay 기능 추가
 
+        public override void Init()
+        {
+            base.Init();
+
+            target = null;
+        }
+
         private void FixedUpdate()
         {
             if (state == false) return;

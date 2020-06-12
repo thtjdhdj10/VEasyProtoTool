@@ -28,7 +28,7 @@ namespace VEPT
 
         public ObjectPooler(string name)
         {
-            if (PoolerManager.CategorizePooledObject)
+            if (ObjectPoolerManager.CategorizePooledObject)
                 rootObject = new GameObject(name);
 
             prefabName = name;
@@ -148,12 +148,6 @@ namespace VEPT
 
         #endregion
 
-        private void InitObject(GameObject obj)
-        {
-            var mo = obj.GetComponent<MyObject>();
-            if (mo != null) mo.Init();
-        }
-
         private GameObject InstanciateOne()
         {
             try
@@ -177,7 +171,7 @@ namespace VEPT
 
         private void Categorize(GameObject obj)
         {
-            if (PoolerManager.CategorizePooledObject)
+            if (ObjectPoolerManager.CategorizePooledObject)
             {
                 obj.transform.parent = rootObject.transform;
 
@@ -187,9 +181,9 @@ namespace VEPT
 
         private void AddPooledObjectComponent(GameObject obj)
         {
-            if (obj.GetComponent<PooledObject>() == null)
+            if (obj.GetComponent<ObjectInfo>() == null)
             {
-                var po = obj.AddComponent<PooledObject>();
+                var po = obj.AddComponent<ObjectInfo>();
                 po.index = objectList.Count - 1;
                 po.origin = prefab;
                 po.originName = prefabName;
@@ -204,7 +198,6 @@ namespace VEPT
             {
                 GameObject obj = objectList[StartIdxInactived];
                 obj.SetActive(true);
-                InitObject(obj);
 
                 --inactived;
                 ++actived;

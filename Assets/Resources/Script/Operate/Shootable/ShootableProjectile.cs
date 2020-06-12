@@ -9,13 +9,9 @@ namespace VEPT
 
         protected override void Shoot()
         {
-            GameObject go = PoolerManager.GetObjectRequest(projectile.name);
+            GameObject go = ObjectPoolerManager.GetObjectRequest(projectile.name);
             Bullet bullet = go.GetComponent<Bullet>();
-
-            bullet.owner = owner as Unit;
-            bullet.transform.position = transform.position;
-            bullet.moveDir = owner.targetDir;
-            bullet.targetDir = owner.targetDir;
+            bullet.SetDefaultBulletSetting(owner as Unit);  
         }
     }
 }

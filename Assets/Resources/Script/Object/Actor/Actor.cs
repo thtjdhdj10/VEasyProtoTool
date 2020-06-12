@@ -23,6 +23,12 @@ namespace VEPT
 
         //
 
+        public delegate void FixedUpdateDel();
+        public FixedUpdateDel fixedUpdateDel = new FixedUpdateDel(FixedUpdateMethod);
+        public static void FixedUpdateMethod() { }
+
+        //
+
         public enum EForce
         {
             NONE = 0,
@@ -58,65 +64,40 @@ namespace VEPT
 
         //
 
-        public static void EmptyMethod() { }
-        public delegate void AwakeDel();
-        public AwakeDel awakeDlg = new AwakeDel(EmptyMethod);
-
-        public delegate void OnDestroyDel();
-        public OnDestroyDel onDestroyDlg = new OnDestroyDel(EmptyMethod);
-
-        public delegate void InitDel();
-        public InitDel initDlg = new InitDel(EmptyMethod);
-
-        public delegate void FixedUpdateDel();
-        public FixedUpdateDel fixedUpdateDlg = new FixedUpdateDel(EmptyMethod);
-
-        public static void EmptyMethod(Actor actor) { }
-        public delegate void OnActorAddedDel(Actor actor);
-        public static OnActorAddedDel onActorAddedDlg = new OnActorAddedDel(EmptyMethod);
-
-        //
-
-        protected virtual void Awake()
-        {
-            awakeDlg();
-        }
-
-        protected virtual void Start()
-        {
-            onActorAddedDlg(this);
-            Init();
-        }
-
-        protected virtual void OnDestroy()
-        {
-            onDestroyDlg();
-        }
-
         protected virtual void FixedUpdate()
         {
-            fixedUpdateDlg();
-
             SetSpriteAngle();
+
+            fixedUpdateDel();
 
             if (willDestroy) Destroy(gameObject);
         }
 
         public override void Init()
         {
+            base.Init();
+
             willDestroy = false;
 
-            initDlg();
-
-            triggerList.ForEach(t => t.Init());
-            foreach (var list in operableListDic.Values)
-                list.ForEach(o => o.Init());
+            while (triggerList.Count > 0)
+                triggerList.Last().RemoveSelf();
+            GetAllOperable().ForEach(o => o.Init());
 
             var status = GetComponent<UnitStatus>();
             if(status != null) status.Init();
         }
 
         //
+
+        public List<Operable> GetAllOperable()
+        {
+            List<Operable> opList = new List<Operable>();
+
+            foreach (var list in operableListDic.Values)
+                opList.AddRange(list);
+
+            return opList;
+        }
 
         public bool TryGetOperable<T>(out T operable) where T : Operable
         {

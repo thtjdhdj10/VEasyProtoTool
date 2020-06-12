@@ -43,7 +43,7 @@ namespace VEPT
         private Dictionary<EStateType, bool> stateDic = new Dictionary<EStateType, bool>();
 
         public delegate void UpdateDelegate(bool _state);
-        public UpdateDelegate updateDelegate = new UpdateDelegate(UpdateStateMethod);
+        public UpdateDelegate updateDel = new UpdateDelegate(UpdateStateMethod);
         public static void UpdateStateMethod(bool _state) { }
 
         public static bool operator ==(MultiState stateA, bool stateB)
@@ -93,7 +93,7 @@ namespace VEPT
                     break;
             }
 
-            if (state != preState) updateDelegate(state);
+            if (state != preState) updateDel(state);
         }
 
         public void SetStateForce(bool _state)

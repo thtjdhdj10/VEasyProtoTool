@@ -7,9 +7,9 @@ namespace VEPT
         private float _speed = 3.5f;
         private float _hitSpeed = 5f;
 
-        protected override void Start()
+        public override void Init()
         {
-            base.Start();
+            base.Init();
 
             GetOperable<Movable>().speed = _speed;
 
@@ -27,11 +27,11 @@ namespace VEPT
 
             TrgKeyInput triMouseDown = new TrgKeyInput(
                 this, KeyManager.EKeyCommand.COMMAND_ATTACK, KeyManager.EKeyPressType.DOWN);
-            new ActActiveOperable<Shootable>(triMouseDown, MultiState.EStateType.CLICK, true);
+            new ActActivateOperable<Shootable>(triMouseDown, MultiState.EStateType.CLICK, true);
 
             TrgKeyInput triMouseUp = new TrgKeyInput(
                 this, KeyManager.EKeyCommand.COMMAND_ATTACK, KeyManager.EKeyPressType.UP);
-            new ActActiveOperable<Shootable>(triMouseUp, MultiState.EStateType.CLICK, false);
+            new ActActivateOperable<Shootable>(triMouseUp, MultiState.EStateType.CLICK, false);
 
             // 플레이어 피격 처리
             float knockbackTime = 0.38f;
@@ -46,12 +46,12 @@ namespace VEPT
             new ActSetSpeed(triCol, _hitSpeed);
             new ActSetSpeed(triCol, _speed) { delay = dodgeTime };
 
-            new ActActiveOperable<Controllable>(triCol, MultiState.EStateType.KNOCKBACK, true);
-            new ActActiveOperable<Controllable>(triCol, MultiState.EStateType.KNOCKBACK, false) { delay = knockbackTime };
-            new ActActiveOperable<Collidable>(triCol, MultiState.EStateType.KNOCKBACK, true);
-            new ActActiveOperable<Collidable>(triCol, MultiState.EStateType.KNOCKBACK, false) { delay = dodgeTime };
-            new ActActiveOperable<Shootable>(triCol, MultiState.EStateType.KNOCKBACK, false);
-            new ActActiveOperable<Shootable>(triCol, MultiState.EStateType.KNOCKBACK, true) { delay = dodgeTime };
+            new ActActivateOperable<Controllable>(triCol, MultiState.EStateType.KNOCKBACK, true);
+            new ActActivateOperable<Controllable>(triCol, MultiState.EStateType.KNOCKBACK, false) { delay = knockbackTime };
+            new ActActivateOperable<Collidable>(triCol, MultiState.EStateType.KNOCKBACK, true);
+            new ActActivateOperable<Collidable>(triCol, MultiState.EStateType.KNOCKBACK, false) { delay = dodgeTime };
+            new ActActivateOperable<Shootable>(triCol, MultiState.EStateType.KNOCKBACK, false);
+            new ActActivateOperable<Shootable>(triCol, MultiState.EStateType.KNOCKBACK, true) { delay = dodgeTime };
 
             SpriteRenderer sprite = GetComponent<SpriteRenderer>();
             new ActSetSpriteColor(triCol, sprite, new Color(1f, 1f, 1f, 0.5f));
@@ -73,7 +73,7 @@ namespace VEPT
             // test code: 키보드 숫자키 클릭 시 작동
             TrgKeyInput trgPress1 = new TrgKeyInput(
                 this, KeyManager.EKeyCommand.ITEM_1, KeyManager.EKeyPressType.DOWN);
-            new ActCreateActor(trgPress1, EResourceName.Enemy_Wing);
+            new ActSpawnActor(trgPress1, EResourceName.Enemy_Wing);
 
             TrgKeyInput trgPress2 = new TrgKeyInput(
                 this, KeyManager.EKeyCommand.ITEM_2, KeyManager.EKeyPressType.DOWN);

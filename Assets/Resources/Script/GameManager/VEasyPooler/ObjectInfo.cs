@@ -3,10 +3,10 @@ using System.Collections;
 
 namespace VEPT
 {
-    public class PooledObject : MonoBehaviour
+    public class ObjectInfo : MonoBehaviour
     {
         public string originName;
-        public int index = -1;
         public GameObject origin;
+        public int index = -1;
     }
 }

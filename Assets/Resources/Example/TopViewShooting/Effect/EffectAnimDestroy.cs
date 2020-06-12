@@ -12,8 +12,10 @@ namespace VEPT
         public SpriteRenderer sprite;
         public Animator anim;
 
-        private void Awake()
+        public override void Init()
         {
+            base.Init();
+
             // TODO editor에서 getcomponent하게
             if (sprite == null) sprite = GetComponent<SpriteRenderer>();
             if (anim == null) anim = GetComponent<Animator>();

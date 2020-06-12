@@ -12,7 +12,7 @@ namespace VEPT
         {
             float moveDistance = speed * Time.fixedDeltaTime;
 
-            float dirToPlayer = VEasyCalc.GetDirection(owner.transform.position, _targetPos);
+            float dirToPlayer = VEasyCalc.GetDirection(owner.transform.position, targetPos);
 
             owner.moveDir = VEasyCalc.GetLerpDirection(
                 owner.moveDir, dirToPlayer, turnFactor * Time.fixedDeltaTime);

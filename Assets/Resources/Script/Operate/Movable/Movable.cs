@@ -6,15 +6,16 @@ namespace VEPT
 {
     public abstract class Movable : Operable
     {
+        // public float originSpeed
         public float speed = 1f;
-        public BooleanWrapper _enableBounceRef = new BooleanWrapper(false);
+        public BooleanWrapper enableBounce = new BooleanWrapper(false);
 
         // KeyValuePair 를 쓰면 Custom Editor 적용 불가
         // SetDirty 해도 저장이 안되고, FindProperty() 가 null을 리턴함
-        public List<EBounceTrigger> _bounceTriggerList = new List<EBounceTrigger>();
-        public List<EBounceAction> _bounceActionList = new List<EBounceAction>();
+        public List<EBounceTrigger> bounceTriggerList = new List<EBounceTrigger>();
+        public List<EBounceAction> bounceActionList = new List<EBounceAction>();
 
-        protected Vector2 _targetPos;
+        protected Vector2 targetPos;
 
         protected abstract void MoveFrame();
 
@@ -36,8 +37,10 @@ namespace VEPT
             DESTROY,
         }
 
-        private void Start()
+        public override void Init()
         {
+            base.Init();
+
             // TODO: 프로그램 실행 중간에 bounce trigger,bounce to 설정이 바뀌는 경우 처리 필요
             SetTriggerAction();
         }
@@ -49,7 +52,7 @@ namespace VEPT
             if (owner.TryGetOperable(out Targetable ownerTarget))
             {
                 if (ownerTarget.target != null)
-                    _targetPos = ownerTarget.target.transform.position;
+                    targetPos = ownerTarget.target.transform.position;
             }
 
             MoveFrame();
@@ -57,10 +60,10 @@ namespace VEPT
 
         protected virtual void SetTriggerAction()
         {
-            for (int i = 0; i < _bounceTriggerList.Count; ++i)
+            for (int i = 0; i < bounceTriggerList.Count; ++i)
             {
                 Trigger trigger = null;
-                switch (_bounceTriggerList[i])
+                switch (bounceTriggerList[i])
                 {
                     case EBounceTrigger.BOUNDARY_TOUCH:
                         trigger = new TrgBoundaryTouch(owner);
@@ -75,9 +78,9 @@ namespace VEPT
 
                 if (trigger == null) return;
 
-                new CndEnable(trigger, _enableBounceRef);
+                new CndEnable(trigger, enableBounce);
 
-                switch (_bounceActionList[i])
+                switch (bounceActionList[i])
                 {
                     case EBounceAction.REVERSE:
                         new ActTurnReverse(trigger);

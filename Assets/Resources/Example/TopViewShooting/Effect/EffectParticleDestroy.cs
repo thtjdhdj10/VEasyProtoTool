@@ -10,8 +10,10 @@ namespace VEPT
 
         public ParticleSystem particle;
 
-        private void Awake()
+        public override void Init()
         {
+            base.Init();
+
             duration = particle.main.startLifetime.constantMax;
 
             StartCoroutine(ParticleProcess());

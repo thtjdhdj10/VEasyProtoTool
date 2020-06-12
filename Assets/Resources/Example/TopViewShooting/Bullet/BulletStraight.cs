@@ -6,9 +6,15 @@ namespace VEPT
 {
     public class BulletStraight : Bullet
     {
-        protected override void SetDefaultBulletSetting()
+        public override void SetDefaultBulletSetting(Unit _owner)
         {
+            owner = _owner;
+
+            transform.position = owner.transform.position;
+            moveDir = owner.targetDir;
+            targetDir = owner.targetDir;
             force = owner.force;
+
             System.Type targetType;
             if (force == EForce.A) targetType = typeof(Enemy);
             else targetType = typeof(Player);

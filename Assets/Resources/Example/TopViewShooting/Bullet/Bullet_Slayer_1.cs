@@ -8,9 +8,9 @@ namespace VEPT
     {
         public float delay = 0.5f;
 
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
 
             StartCoroutine(Redirection());
         }

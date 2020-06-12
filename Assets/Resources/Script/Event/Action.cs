@@ -311,10 +311,7 @@ namespace VEPT
     public class ActBlockMove : Action
     {
         public ActBlockMove(Trigger trigger)
-            : base(trigger)
-        {
-
-        }
+            : base(trigger) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
@@ -365,10 +362,7 @@ namespace VEPT
     public class ActTurnReverse : Action
     {
         public ActTurnReverse(Trigger trigger)
-            : base(trigger)
-        {
-
-        }
+            : base(trigger) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
@@ -379,10 +373,7 @@ namespace VEPT
     public class ActTurnReflect : Action
     {
         public ActTurnReflect(Trigger trigger)
-            : base(trigger)
-        {
-
-        }
+            : base(trigger) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
@@ -422,12 +413,12 @@ namespace VEPT
         }
     }
 
-    public class ActActiveOperable<T> : Action where T : Operable
+    public class ActActivateOperable<T> : Action where T : Operable
     {
         protected bool doActive;
         protected MultiState.EStateType stateType;
 
-        public ActActiveOperable(Trigger trigger, MultiState.EStateType _type, bool _doActive)
+        public ActActivateOperable(Trigger trigger, MultiState.EStateType _type, bool _doActive)
             : base(trigger)
         {
             stateType = _type;
@@ -441,14 +432,11 @@ namespace VEPT
         }
     }
 
-    public class ActActiveTargetOperable<T> : ActActiveOperable<T> where T : Operable
+    public class ActActivateTargetOperable<T> : ActActivateOperable<T> where T : Operable
     {
-        public ActActiveTargetOperable(TrgCollision trigger,
+        public ActActivateTargetOperable(TrgCollision trigger,
             MultiState.EStateType _type, bool _doActive)
-            : base(trigger, _type, _doActive)
-        {
-
-        }
+            : base(trigger, _type, _doActive) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
@@ -480,7 +468,7 @@ namespace VEPT
     //    }
     //}
 
-    public class ActCreateActor : Action
+    public class ActSpawnActor : Action
     {
         public string prefabName;
         public Vector2 position;
@@ -488,7 +476,7 @@ namespace VEPT
         public float direction;
         public float speed;
 
-        public ActCreateActor(Trigger trigger, string _prefabName)
+        public ActSpawnActor(Trigger trigger, string _prefabName)
             : base(trigger)
         {
             prefabName = _prefabName;
@@ -497,7 +485,7 @@ namespace VEPT
             isMovingActor = false;
         }
 
-        public ActCreateActor(Trigger trigger, string _prefabName, Vector2 _pos)
+        public ActSpawnActor(Trigger trigger, string _prefabName, Vector2 _pos)
             : base(trigger)
         {
             prefabName = _prefabName;
@@ -506,7 +494,7 @@ namespace VEPT
             isMovingActor = false;
         }
 
-        public ActCreateActor(Trigger trigger, string _prefabName, Vector2 _pos, float _direction, float _speed)
+        public ActSpawnActor(Trigger trigger, string _prefabName, Vector2 _pos, float _direction, float _speed)
             : base(trigger)
         {
             prefabName = _prefabName;
@@ -518,19 +506,19 @@ namespace VEPT
             speed = _speed;
         }
 
-        public ActCreateActor(Trigger trigger, EResourceName _prefabName)
+        public ActSpawnActor(Trigger trigger, EResourceName _prefabName)
             : this(trigger, _prefabName.ToString()) { }
 
-        public ActCreateActor(Trigger trigger, EResourceName _prefabName, Vector2 _pos)
+        public ActSpawnActor(Trigger trigger, EResourceName _prefabName, Vector2 _pos)
             : this(trigger, _prefabName.ToString(), _pos) { }
 
-        public ActCreateActor(Trigger trigger, EResourceName _prefabName,
+        public ActSpawnActor(Trigger trigger, EResourceName _prefabName,
             Vector2 _pos, float _direction, float _speed)
             : this(trigger, _prefabName.ToString(), _pos, _direction, _speed) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
-            Actor actor = PoolerManager.GetObjectRequest(prefabName).GetComponent<Actor>();
+            Actor actor = ObjectPoolerManager.GetObjectRequest(prefabName).GetComponent<Actor>();
 
             try
             {
@@ -550,13 +538,13 @@ namespace VEPT
         }
     }
 
-    public class ActCreateObject : Action
+    public class ActSpawnGameObject : Action
     {
         public string prefabName;
         public Vector2 position;
         public float direction;
 
-        public ActCreateObject(Trigger trigger, string _prefabName, Vector2 _position, float _direction)
+        public ActSpawnGameObject(Trigger trigger, string _prefabName, Vector2 _position, float _direction)
             : base(trigger)
         {
             prefabName = _prefabName;
@@ -564,14 +552,14 @@ namespace VEPT
             direction = _direction;
         }
 
-        public ActCreateObject(Trigger trigger, EResourceName _prefabName, Vector2 _position, float _direction)
+        public ActSpawnGameObject(Trigger trigger, EResourceName _prefabName, Vector2 _position, float _direction)
             : this(trigger, _prefabName.ToString(), _position, _direction) { }
 
         protected override void ActionProcess(Trigger trigger)
         {
             try
             {
-                GameObject go = PoolerManager.GetObjectRequest(prefabName);
+                GameObject go = ObjectPoolerManager.GetObjectRequest(prefabName);
 
                 go.transform.position = position;
                 go.transform.rotation = Quaternion.Euler(0, 0, direction);
@@ -602,7 +590,7 @@ namespace VEPT
         {
             try
             {
-                GameObject go = PoolerManager.GetObjectRequest(prefabName);
+                GameObject go = ObjectPoolerManager.GetObjectRequest(prefabName);
 
                 go.transform.position = transform.position;
                 go.transform.rotation = transform.rotation;

@@ -7,7 +7,5 @@ namespace VEPT
     public class Enemy : Unit
     {
 
-
-
     }
 }

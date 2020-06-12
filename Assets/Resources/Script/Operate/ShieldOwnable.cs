@@ -32,15 +32,16 @@ namespace VEPT
 
         //
 
-        protected override void Awake()
+        public override void Init()
         {
-            base.Awake();
+            base.Init();
 
+            _shieldList.Clear();
             enableShield = false;
 
             for (int i = 0; i < ShieldCount; ++i)
             {
-                GameObject shield = PoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
+                GameObject shield = ObjectPoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
                 shield.transform.position = transform.position;
                 shield.transform.parent = transform;
                 _shieldList.Add(shield);
@@ -62,7 +63,7 @@ namespace VEPT
                     _regenProgress = 0f;
                     ++_shieldCount;
 
-                    GameObject shield = PoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
+                    GameObject shield = ObjectPoolerManager.GetObjectRequest(EResourceName.Effect_Shield);
                     shield.transform.position = transform.position;
                     shield.transform.parent = transform;
                     _shieldList.Add(shield);

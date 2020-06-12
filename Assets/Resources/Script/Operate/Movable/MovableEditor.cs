@@ -41,12 +41,12 @@ namespace VEPT
 
             EditorGUILayout.PropertyField(speedProp);
 
-            obj._enableBounceRef.value = EditorGUILayout.Toggle("Enable Bounce", obj._enableBounceRef.value);
+            obj.enableBounce.value = EditorGUILayout.Toggle("Enable Bounce", obj.enableBounce.value);
 
-            if (obj._enableBounceRef.value)
+            if (obj.enableBounce.value)
             {
-                List<Movable.EBounceTrigger> triggers = obj._bounceTriggerList;
-                List<Movable.EBounceAction> actions = obj._bounceActionList;
+                List<Movable.EBounceTrigger> triggers = obj.bounceTriggerList;
+                List<Movable.EBounceAction> actions = obj.bounceActionList;
 
                 int count = triggers.Count;
                 count = Mathf.Clamp(EditorGUILayout.IntField("Bounce Action List", count), 0, 3);

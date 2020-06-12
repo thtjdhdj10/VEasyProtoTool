@@ -12,15 +12,17 @@ namespace VEPT
 
         //
 
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
+
             unitList.Add(this);
         }
 
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
-            base.OnDestroy();
+            base.OnDisable();
+
             unitList.Remove(this);
         }
     }

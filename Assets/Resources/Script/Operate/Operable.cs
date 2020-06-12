@@ -18,12 +18,18 @@ namespace VEPT
 
         public virtual void Init()
         {
-
         }
 
         protected virtual void Awake()
         {
             if (owner == null) owner = GetComponent<Actor>();
+
+            state.updateDel += HandleUpdateState;
+        }
+
+        protected virtual void OnEnable()
+        {
+            Init();
 
             Type originType = GetOperableOriginType();
 
@@ -46,16 +52,13 @@ namespace VEPT
                     owner.operableListDic[originType] = new List<Operable>() { this };
             }
             else owner.operableListDic.Add(originType, new List<Operable>() { this });
-
-            state.updateDelegate += HandleUpdateState;
         }
 
-        protected virtual void OnDestroy()
+        protected virtual void OnDisable()
         {
             Type type = GetOperableOriginType();
-
-            owner.operableListDic[type].Remove(this);
             _allOperableListDic[type].Remove(this);
+            owner.operableListDic[type].Remove(this);
         }
 
         //

@@ -24,7 +24,7 @@ namespace VEPT
             owner.triggerList.Add(this);
         }
 
-        ~Trigger()
+        public virtual void RemoveSelf()
         {
             owner.triggerList.Remove(this);
         }
@@ -62,7 +62,7 @@ namespace VEPT
         {
             if (owner.TryGetOperable(out Collidable collidable))
             {
-                collidable.onHitDlg += HandleOnHit;
+                collidable.onHitDel += HandleOnHit;
             }
             else
             {
@@ -102,7 +102,7 @@ namespace VEPT
         public TrgBoundaryTouch(Actor _owner)
             : base(_owner)
         {
-            _owner.fixedUpdateDlg += HandleFixedUpdate;
+            _owner.fixedUpdateDel += HandleFixedUpdate;
         }
 
         private void HandleFixedUpdate()
@@ -144,7 +144,7 @@ namespace VEPT
         public TrgBoundaryOut(Actor _owner)
             : base(_owner)
         {
-            _owner.fixedUpdateDlg += HandleFixedUpdate;
+            _owner.fixedUpdateDel += HandleFixedUpdate;
         }
 
         private void HandleFixedUpdate()
@@ -185,7 +185,7 @@ namespace VEPT
         {
             passCount = _passCount;
 
-            _owner.fixedUpdateDlg += HandleFixedUpdate;
+            _owner.fixedUpdateDel += HandleFixedUpdate;
         }
 
         public int passCount = 0;
@@ -233,7 +233,7 @@ namespace VEPT
 
             if (owner.TryGetOperable(out Controllable control))
             {
-                control.keyInputDlg += HandleKeyInput;
+                control.keyInputDel += HandleKeyInput;
             }
             else
             {
@@ -241,11 +241,13 @@ namespace VEPT
             }
         }
 
-        ~TrgKeyInput()
+        public override void RemoveSelf()
         {
+            base.RemoveSelf();
+
             if (owner.TryGetOperable(out Controllable control))
             {
-                control.keyInputDlg -= HandleKeyInput;
+                control.keyInputDel -= HandleKeyInput;
             }
         }
 
@@ -269,7 +271,7 @@ namespace VEPT
         {
             if (owner.TryGetOperable(out Controllable control))
             {
-                control.keyInputDlg += HandleKeyInput;
+                control.keyInputDel += HandleKeyInput;
             }
             else
             {
@@ -277,11 +279,13 @@ namespace VEPT
             }
         }
 
-        ~TrgKeyInputs()
+        public override void RemoveSelf()
         {
+            base.RemoveSelf();
+
             if (owner.TryGetOperable(out Controllable control))
             {
-                control.keyInputDlg -= HandleKeyInput;
+                control.keyInputDel -= HandleKeyInput;
             }
         }
 
@@ -308,7 +312,7 @@ namespace VEPT
             delay = _delay;
             isActivateOnStart = _isActivateOnStart;
 
-            _owner.fixedUpdateDlg += HandleFixedUpdate;
+            _owner.fixedUpdateDel += HandleFixedUpdate;
 
             if (isActivateOnStart == true)
                 remainDelay = delay;
@@ -342,120 +346,121 @@ namespace VEPT
         }
     }
 
-    // 특정한 유닛의 생성/파괴/초기화 시 Activate
-    public class TrgUnitEvent : Trigger
-    {
-        private Unit target;
-        private ETriggerType type;
+    //// 특정한 유닛의 생성/파괴/초기화 시 Activate
+    //public class TrgUnitEvent : Trigger
+    //{
+    //    private Unit target;
+    //    private ETriggerType type;
 
-        public TrgUnitEvent(Actor _owner, Unit _target, ETriggerType _type)
-            : base(_owner)
-        {
-            target = _target;
-            type = _type;
+    //    public TrgUnitEvent(Actor _owner, Unit _target, ETriggerType _type)
+    //        : base(_owner)
+    //    {
+    //        target = _target;
+    //        type = _type;
 
-            switch (type)
-            {
-                case ETriggerType.AWAKE:
-                    target.awakeDlg += ActivateTrigger;
-                    break;
-                case ETriggerType.INIT:
-                    target.initDlg += ActivateTrigger;
-                    break;
-                case ETriggerType.ON_DESTROY:
-                    target.onDestroyDlg += ActivateTrigger;
-                    break;
-            }
-        }
+    //        switch (type)
+    //        {
+    //            case ETriggerType.AWAKE:
+    //                target.awakeDlg += ActivateTrigger;
+    //                break;
+    //            case ETriggerType.INIT:
+    //                target.initDlg += ActivateTrigger;
+    //                break;
+    //            case ETriggerType.ON_DESTROY:
+    //                target.onDestroyDlg += ActivateTrigger;
+    //                break;
+    //        }
+    //    }
 
-        ~TrgUnitEvent()
-        {
-            switch (type)
-            {
-                case ETriggerType.AWAKE:
-                    target.awakeDlg -= ActivateTrigger;
-                    break;
-                case ETriggerType.INIT:
-                    target.initDlg -= ActivateTrigger;
-                    break;
-                case ETriggerType.ON_DESTROY:
-                    target.onDestroyDlg -= ActivateTrigger;
-                    break;
-            }
-        }
+    //public override void RemoveSelf()
+    //{
+    //    base.RemoveSelf();
+    //    switch (type)
+    //    {
+    //        case ETriggerType.AWAKE:
+    //            target.awakeDlg -= ActivateTrigger;
+    //            break;
+    //        case ETriggerType.INIT:
+    //            target.initDlg -= ActivateTrigger;
+    //            break;
+    //        case ETriggerType.ON_DESTROY:
+    //            target.onDestroyDlg -= ActivateTrigger;
+    //            break;
+    //    }
+    //}
 
-        public enum ETriggerType
-        {
-            AWAKE,
-            INIT,
-            ON_DESTROY,
-        }
-    }
+    //    public enum ETriggerType
+    //    {
+    //        AWAKE,
+    //        INIT,
+    //        ON_DESTROY,
+    //    }
+    //}
 
-    // 특정 type의 유닛 생성/파괴/초기화 시 동작
-    public class TrgAnyUnitEvent : Trigger
-    {
-        private Type targetType;
-        private ETriggerType type;
+    //// 특정 type의 유닛 생성/파괴/초기화 시 동작
+    //public class TrgAnyUnitEvent : Trigger
+    //{
+    //    private Type targetType;
+    //    private ETriggerType type;
 
-        public TrgAnyUnitEvent(Actor _owner, Type _unitType, ETriggerType _type)
-            : base(_owner)
-        {
-            targetType = _unitType;
-            type = _type;
+    //    public TrgAnyUnitEvent(Actor _owner, Type _unitType, ETriggerType _type)
+    //        : base(_owner)
+    //    {
+    //        targetType = _unitType;
+    //        type = _type;
 
-            foreach (var unit in Unit.unitList)
-            {
-                LinkEventHandle(unit, true);
-            }
+    //        foreach (var unit in Unit.unitList)
+    //        {
+    //            LinkEventHandle(unit, true);
+    //        }
 
-            Actor.onActorAddedDlg += HandleAddedUnit;
-        }
+    //        Actor.onActorSpawnDlg += HandleAddedUnit;
+    //    }
 
-        ~TrgAnyUnitEvent()
-        {
-            foreach (var unit in Unit.unitList)
-            {
-                LinkEventHandle(unit, false);
-            }
-        }
+    //    RemoveSelf()
+    //    {
+    //        foreach (var unit in Unit.unitList)
+    //        {
+    //            LinkEventHandle(unit, false);
+    //        }
+    //    }
 
-        private void LinkEventHandle(Unit unit, bool isAdd)
-        {
-            switch (type)
-            {
-                case ETriggerType.AWAKE:
-                    if (isAdd) unit.awakeDlg += ActivateTrigger;
-                    else unit.awakeDlg -= ActivateTrigger;
-                    break;
-                case ETriggerType.INIT:
-                    if (isAdd) unit.initDlg += ActivateTrigger;
-                    else unit.initDlg -= ActivateTrigger;
-                    break;
-                case ETriggerType.ON_DESTROY:
-                    if (isAdd) unit.onDestroyDlg += ActivateTrigger;
-                    else unit.onDestroyDlg -= ActivateTrigger;
-                    break;
-            }
-        }
+    //    private void LinkEventHandle(Unit unit, bool isAdd)
+    //    {
+    //        switch (type)
+    //        {
+    //            case ETriggerType.AWAKE:
+    //                if (isAdd) unit.awakeDlg += ActivateTrigger;
+    //                else unit.awakeDlg -= ActivateTrigger;
+    //                break;
+    //            case ETriggerType.INIT:
+    //                if (isAdd) unit.initDlg += ActivateTrigger;
+    //                else unit.initDlg -= ActivateTrigger;
+    //                break;
+    //            case ETriggerType.ON_DESTROY:
+    //                if (isAdd) unit.onDestroyDlg += ActivateTrigger;
+    //                else unit.onDestroyDlg -= ActivateTrigger;
+    //                break;
+    //        }
+    //    }
 
-        private void HandleAddedUnit(Actor actor)
-        {
-            Unit unit = actor as Unit;
-            if (unit == null) return;
+    //    private void HandleAddedUnit(Actor actor)
+    //    {
+    //        Unit unit = actor as Unit;
+    //        if (unit == null) return;
 
-            if (actor.GetType().IsSubclassOf(targetType) ||
-                actor.GetType() == targetType)
-            {
-                LinkEventHandle(unit, true);
-            }
-        }
+    //        if (actor.GetType().IsSubclassOf(targetType) ||
+    //            actor.GetType() == targetType)
+    //        {
+    //            LinkEventHandle(unit, true);
+    //        }
+    //    }
 
-        public enum ETriggerType
-        {
-            AWAKE,
-            INIT,
-            ON_DESTROY,
-        }
-    }
+    //    public enum ETriggerType
+    //    {
+    //        AWAKE,
+    //        INIT,
+    //        ON_DESTROY,
+    //    }
+    //}
 }

@@ -9,8 +9,10 @@ namespace VEPT
         public Material material;
         private float duration;
 
-        private void Awake()
+        public override void Init()
         {
+            base.Init();
+
             material.SetFloat("_GeneratedTime", Time.time);
             duration = material.GetFloat("_Duration");
 

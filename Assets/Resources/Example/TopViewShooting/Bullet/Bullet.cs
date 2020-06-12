@@ -7,19 +7,17 @@ namespace VEPT
     public class Bullet : Actor
     {
         public Unit owner;
-
         public int damage;
 
-        protected override void Start()
+        public virtual void SetDefaultBulletSetting(Unit _owner)
         {
-            base.Start();
+            owner = _owner;
 
-            SetDefaultBulletSetting();
-        }
-
-        protected virtual void SetDefaultBulletSetting()
-        {
+            transform.position = owner.transform.position;
+            moveDir = owner.targetDir;
+            targetDir = owner.targetDir;
             force = owner.force;
+
             System.Type targetType;
             if (force == EForce.A) targetType = typeof(Enemy);
             else targetType = typeof(Player);

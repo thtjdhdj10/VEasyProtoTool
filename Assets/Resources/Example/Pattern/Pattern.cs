@@ -100,10 +100,10 @@ namespace VEPT
         {
             try
             {
-                var go = PoolerManager.GetObjectRequest(bulletPrefabName);
+                var go = ObjectPoolerManager.GetObjectRequest(bulletPrefabName);
                 Bullet bullet = go.GetComponent<Bullet>();
 
-                bullet.owner = owner as Unit;
+                bullet.SetDefaultBulletSetting(owner as Unit);
 
                 if (posRoot != null) position = posRoot.transform.position;
                 bullet.transform.position = position + deltaPos;

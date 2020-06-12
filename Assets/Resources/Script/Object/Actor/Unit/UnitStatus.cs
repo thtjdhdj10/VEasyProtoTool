@@ -72,14 +72,14 @@ namespace VEPT
             }
         }
 
-        private void OnDestroy()
-        {
-            TextDisplayer.RemoveText(gameObject);
-        }
-
-        private void Start()
+        private void OnEnable()
         {
             Init();
+        }
+
+        private void OnDisable()
+        {
+            TextDisplayer.RemoveText(gameObject);
         }
 
         public virtual void Init()
