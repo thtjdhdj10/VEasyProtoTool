@@ -22,7 +22,7 @@ GameObject 에 적용시킬 수 있는 다양한 행동 방식을 구현한 컴�
 
 Trigger는 복수의 Condition과 Action을 멤버로 소유하며 트리거가 호출되면 Condition을 체크하고 통과되면 Action을 동작시킨다.
 
-TrgKeyInputs, TrgCollision 등 사전에 정의된 몇개의 트리거는 Operable과 
+TrgKeyInputs, TrgCollision 등 사전에 정의된 몇개의 트리거는 Operable과 상호작용한다.
 
   
 ### ObjectPooler
