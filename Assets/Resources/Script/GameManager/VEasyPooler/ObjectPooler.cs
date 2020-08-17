@@ -14,17 +14,17 @@ namespace VEPT
         private string prefabName;
         private EResourceName prefabType;
 
-        // [0]~[actived - 1]: actived objects
-        // [actived]~[^1]: inactived objects
+        // [0]~[nActived - 1]: actived objects
+        // [nActived]~[^1]: deactived objects
         private List<GameObject> objectList = new List<GameObject>();
 
-        private int actived;
-        private int inactived;
-        private int StartIdxActived { get => 0; }
-        private int LastIdxActived { get => actived - 1; }
-        private int StartIdxInactived { get => actived; }
-        private int LastIdxInactived { get => All - 1; }
-        public int All { get => actived + inactived; }
+        private int nActived;
+        private int nDeactived;
+        private int IdxFirstActived { get => 0; }
+        private int IdxLastActived { get => nActived - 1; }
+        private int IdxFirstDeactived { get => nActived; }
+        private int IdxLastDeactived { get => NObjects - 1; }
+        public int NObjects { get => nActived + nDeactived; }
 
         public ObjectPooler(string name)
         {
@@ -55,7 +55,7 @@ namespace VEPT
 
         public GameObject GetObject()
         {
-            if (inactived == 0) return InstanciateOne();
+            if (nDeactived == 0) return InstanciateOne();
             else return ActivateOne();
         }
 
@@ -65,13 +65,13 @@ namespace VEPT
             {
                 List<GameObject> ret = new List<GameObject>();
 
-                for (int i = 0; i < count - inactived; ++i)
+                for (int i = 0; i < count - nDeactived; ++i)
                     ret.Add(InstanciateOne());
 
-                for (int i = 0; i < Math.Min(count, inactived); ++i)
+                for (int i = 0; i < Math.Min(count, nDeactived); ++i)
                     ret.Add(ActivateOne());
 
-                int startIndexOfActivating = StartIdxInactived;
+                int startIndexOfActivating = IdxFirstDeactived;
 
                 return ret;
             }
@@ -94,10 +94,10 @@ namespace VEPT
             if (idx != -1 && obj.activeSelf == true)
             {
                 obj.SetActive(false);
-                SwapSafty(idx, LastIdxActived);
+                SwapSafty(idx, IdxLastActived);
 
-                --actived;
-                ++inactived;
+                --nActived;
+                ++nDeactived;
             }
             else
             {
@@ -124,14 +124,14 @@ namespace VEPT
             if (obj.activeSelf)
             {
                 objectList.Add(obj);
-                ++actived;
+                ++nActived;
 
-                SwapSafty(LastIdxInactived, LastIdxActived);
+                SwapSafty(IdxLastDeactived, IdxLastActived);
             }
             else
             {
                 objectList.Add(obj);
-                ++inactived;
+                ++nDeactived;
             }
         }
 
@@ -153,8 +153,8 @@ namespace VEPT
             try
             {
                 GameObject obj = UObject.Instantiate(prefab) as GameObject;
-                objectList.Insert(StartIdxInactived, obj);
-                ++actived;
+                objectList.Insert(IdxFirstDeactived, obj);
+                ++nActived;
 
                 AddPooledObjectComponent(obj);
 
@@ -196,11 +196,11 @@ namespace VEPT
         {
             try
             {
-                GameObject obj = objectList[StartIdxInactived];
+                GameObject obj = objectList[IdxFirstDeactived];
                 obj.SetActive(true);
 
-                --inactived;
-                ++actived;
+                --nDeactived;
+                ++nActived;
 
                 return obj;
             }
@@ -219,7 +219,7 @@ namespace VEPT
         private void SwapSafty(int idxA, int idxB)
         {
             if (idxA < 0 || idxB < 0 ||
-                idxA > LastIdxInactived || idxB > LastIdxInactived)
+                idxA > IdxLastDeactived || idxB > IdxLastDeactived)
                 return;
 
             GameObject t = objectList[idxA];
